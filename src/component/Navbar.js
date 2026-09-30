@@ -233,7 +233,7 @@ function Logo() {
       <img
         src="/uploads/logo.png"
         alt="Estate"
-        className="h-28 w-auto object-contain sm:h-36"
+        className="h-28 w-auto object-contain sm:h-30"
       />
     </Link>
   );

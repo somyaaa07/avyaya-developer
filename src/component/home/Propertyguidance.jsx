@@ -57,25 +57,21 @@ export default function PropertyGuidance() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.15 + i * 0.1 }}
                   className={`flex items-center gap-5 rounded-2xl px-6 py-7 ${
-                    s.highlight ? "bg-[#52685B]" : "bg-[#f3f0E8]"
+                    s.highlight ? "bg-[#D4A62A]" : "bg-[#f3f0E8]"
                   }`}
                 >
                   <Icon
                     size={34}
                     strokeWidth={1.4}
-                    className={s.highlight ? "text-[#faf9f6]" : "text-[#1a2a22]"}
+                    className="text-[#1a2a22]"
                   />
                   <div>
-                    <p
-                      className={`text-[30px] font-semibold leading-none ${
-                        s.highlight ? "text-[#faf9f6]" : "text-[#1a2a22]"
-                      }`}
-                    >
+                    <p className="text-[30px] font-semibold leading-none text-[#1a2a22]">
                       {s.value}
                     </p>
                     <p
                       className={`mt-2 text-[15px] ${
-                        s.highlight ? "text-[#faf9f6]/90" : "text-[#52685B]"
+                        s.highlight ? "text-[#1a2a22]" : "text-[#52685B]"
                       }`}
                     >
                       {s.label}
@@ -109,8 +105,8 @@ export default function PropertyGuidance() {
           {/* Family */}
           <div className="absolute bottom-0 right-0 h-[62%] w-[60%] overflow-hidden rounded-2xl border-4 border-[#faf9f6] bg-[#f3f0E8]">
             <Image
-              src="/images/family.jpg"
-              alt="Family moving into a new home"
+              src="/building1.png"
+              alt="Modern residential building"
               fill
               sizes="(max-width: 1024px) 60vw, 375px"
               className="object-cover"
@@ -119,7 +115,7 @@ export default function PropertyGuidance() {
 
           {/* Tagline */}
           <div className="absolute right-0 top-[6%] hidden w-[16%] sm:block">
-            <span className="block h-px w-full bg-[#52685B]/50" />
+            <span className="block h-px w-full bg-[#D4A62A]/50" />
             <p
               className={`${marcellus.className} my-4 text-[20px] italic leading-[1.4] text-[#52685B] lg:text-[24px]`}
             >
@@ -130,7 +126,7 @@ export default function PropertyGuidance() {
               <br />
               Home
             </p>
-            <span className="block h-px w-full bg-[#52685B]/50" />
+            <span className="block h-px w-full bg-[#D4A62A]/50" />
           </div>
         </motion.div>
       </div>
