@@ -1,35 +1,31 @@
-import sequelize from '@/lib/db';
+import sequelize from "@/lib/db";
 
 // ── Import ALL models (order matters for associations) ─────
-import User from '@/models/User';
-import Agent from '@/models/Agent';
-import Property from '@/models/Property';
-import PropertyImage from '@/models/property_images';
-import Inquiry from '@/models/Inquiry';
-import SavedProperty from '@/models/SavedProperty';
-
-
-
+import User from "@/models/User";
+import Agent from "@/models/Agent";
+import Property from "@/models/Property";
+import PropertyImage from "@/models/property_images";
+import Inquiry from "@/models/Inquiry";
+import SavedProperty from "@/models/SavedProperty";
 
 // ── Associations ───────────────────────────────────────────
-Agent.hasMany(Property,           { foreignKey: 'agent_id', as: 'properties' });
-Property.belongsTo(Agent,         { foreignKey: 'agent_id', as: 'agent' });
+Agent.hasMany(Property, { foreignKey: "agent_id", as: "properties" });
+Property.belongsTo(Agent, { foreignKey: "agent_id", as: "agent" });
 
-Property.hasMany(PropertyImage,   { foreignKey: 'property_id', as: 'images' });
-PropertyImage.belongsTo(Property, { foreignKey: 'property_id' });
+Property.hasMany(PropertyImage, { foreignKey: "property_id", as: "images" });
+PropertyImage.belongsTo(Property, { foreignKey: "property_id" });
 
-Property.hasMany(Inquiry,         { foreignKey: 'property_id', as: 'inquiries' });
-Inquiry.belongsTo(Property, { foreignKey: 'property_id', as: 'property' });
+Property.hasMany(Inquiry, { foreignKey: "property_id", as: "inquiries" });
+Inquiry.belongsTo(Property, { foreignKey: "property_id", as: "property" });
 
-Property.hasMany(SavedProperty,   { foreignKey: 'property_id' });
-SavedProperty.belongsTo(Property, { foreignKey: 'property_id' });
+Property.hasMany(SavedProperty, { foreignKey: "property_id" });
+SavedProperty.belongsTo(Property, { foreignKey: "property_id" });
 
-User.hasMany(SavedProperty,       { foreignKey: 'user_id' });
-SavedProperty.belongsTo(User,     { foreignKey: 'user_id' });
+User.hasMany(SavedProperty, { foreignKey: "user_id" });
+SavedProperty.belongsTo(User, { foreignKey: "user_id" });
 
-User.hasMany(Property,       { foreignKey: 'user_id', as:'listings' });
-Property.belongsTo(User,          { foreignKey:'user_id', as:'owner' });
-
+User.hasMany(Property, { foreignKey: "user_id", as: "listings" });
+Property.belongsTo(User, { foreignKey: "user_id", as: "owner" });
 
 // Yeh line add karo existing associations ke saath
 
@@ -42,7 +38,6 @@ export { User, Agent, Property, PropertyImage, Inquiry, SavedProperty };
 // Sirf naye tables individually sync karo
 let initialized = false;
 let initPromise = null;
-
 
 const NEW_MODELS = [
   User,
@@ -74,7 +69,6 @@ const NEW_MODELS = [
 // }
 
 // export default dbInit;
-
 
 async function dbInit() {
   // Already initialized

@@ -1,0 +1,251 @@
+"use client";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Marcellus } from "next/font/google";
+import {
+  FiArrowRight,
+  FiPhone,
+  FiMapPin,
+  FiHome,
+  FiSearch,
+  FiTag,
+} from "react-icons/fi";
+
+const marcellus = Marcellus({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const HERO_IMAGE = {
+  src: "/banner/home-banner.png",
+  alt: "Premium residential towers in Greater Noida",
+};
+
+const stats = [
+  { value: "10+", label: "Years of Experience" },
+  { value: "50+", label: "Projects Delivered" },
+  { value: "1000+", label: "Happy Families" },
+];
+
+const locations = ["Noida", "Greater Noida", "Ghaziabad", "Delhi"];
+const propertyTypes = ["Residential", "Commercial", "Plots / Land"];
+const budgets = [
+  "Under ₹50 Lac",
+  "₹50 Lac – ₹1 Cr",
+  "₹1 Cr – ₹2 Cr",
+  "Above ₹2 Cr",
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, delay: 0.1 + i * 0.12, ease: "easeOut" },
+  }),
+};
+
+const fieldClass =
+  "w-full appearance-none rounded-xl border border-[#1a2a22]/15 bg-[#faf9f6] py-3 pl-10 pr-4 text-sm text-[#1a2a22] transition focus:border-[#52685B] focus:outline-none focus:ring-2 focus:ring-[#52685B]/30";
+const labelClass =
+  "mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#52685B]";
+const iconClass =
+  "pointer-events-none absolute bottom-3.5 left-3.5 text-[#52685B]";
+
+export default function HomeHero() {
+  return (
+    <section className="relative bg-[#faf9f6] pb-12 sm:pb-16">
+      {/* ================= HERO ================= */}
+      <div className="relative min-h-[640px] overflow-hidden bg-[#1a2a22] lg:min-h-[760px]">
+        {/* Background image */}
+        <motion.img
+          src={HERO_IMAGE.src}
+          alt={HERO_IMAGE.alt}
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.5, ease: "easeOut" }}
+          className="absolute inset-0 h-full w-full object-cover object-right"
+        />
+
+        {/* Mobile/tablet: even overlay for readability */}
+        <div className="absolute inset-0 bg-[#1a2a22]/75 lg:hidden" />
+        {/* Desktop: dark on the LEFT (text side), image clear on the RIGHT */}
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-[#1a2a22] via-[#1a2a22]/75 to-transparent lg:block" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1a2a22]/60 via-transparent to-transparent" />
+
+        {/* TEXT — left side, right side stays empty */}
+        <div className="relative mx-auto -mt-12 flex w-full max-w-7xl items-center px-4 pb-44 pt-32 sm:px-6 lg:min-h-[760px] lg:px-8 lg:pb-48 lg:pt-36">
+          <div className="max-w-2xl">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={0}
+              className="flex items-center gap-3"
+            >
+              <span className="h-px w-10 bg-[#f3f0E8]/70" aria-hidden="true" />
+              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-[#f3f0E8]">
+                Trusted Bringo Real Estate · Greater Noida
+              </span>
+            </motion.div>
+
+            <motion.h1
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={1}
+              className={`${marcellus.className} mt-6 text-[clamp(2.4rem,5.5vw,4.5rem)] font-normal leading-[1.06] tracking-tight text-[#faf9f6]`}
+            >
+              Find a Place You’ll Be{" "}
+              <span className="italic text-[#f3f0E8]/80">Proud</span> to Call
+              Home
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={2}
+              className="mt-6 max-w-xl text-base leading-relaxed text-[#faf9f6]/80 sm:text-lg"
+            >
+              Premium residential, commercial and plotting opportunities backed
+              by transparent guidance and long-term value.
+            </motion.p>
+
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={3}
+              className="mt-9 flex flex-col gap-3 sm:flex-row"
+            >
+              <Link
+                href="/properties"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#faf9f6] px-7 py-3.5 text-sm font-semibold text-[#1a2a22] shadow-lg transition hover:scale-[1.02] hover:bg-[#f3f0E8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#faf9f6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a2a22]"
+              >
+                Explore Properties
+                <FiArrowRight
+                  className="transition-transform group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#faf9f6]/40 px-7 py-3.5 text-sm font-semibold text-[#faf9f6] backdrop-blur-sm transition hover:border-[#faf9f6] hover:bg-[#faf9f6]/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#faf9f6]"
+              >
+                <FiPhone aria-hidden="true" />
+                Talk to an Expert
+              </Link>
+            </motion.div>
+
+            <motion.dl
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              custom={4}
+              className="mt-12 grid max-w-lg grid-cols-3 divide-x divide-[#faf9f6]/20"
+            >
+              {stats.map((s, i) => (
+                <div
+                  key={s.label}
+                  className={i === 0 ? "pr-4 sm:pr-6" : "px-4 sm:px-6"}
+                >
+                  <dd
+                    className={`${marcellus.className} text-2xl font-normal text-[#faf9f6] sm:text-3xl`}
+                  >
+                    {s.value}
+                  </dd>
+                  <dt className="mt-1 text-[11px] leading-snug text-[#faf9f6]/65 sm:text-sm">
+                    {s.label}
+                  </dt>
+                </div>
+              ))}
+            </motion.dl>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= SEARCH CARD ================= */}
+      <motion.form
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        custom={6}
+        action="/properties"
+        method="GET"
+        role="search"
+        aria-label="Search properties"
+        className="relative z-20 mx-4 -mt-24 grid max-w-6xl gap-4 rounded-2xl border border-[#1a2a22]/10 bg-[#f3f0E8] p-5 shadow-[0_25px_60px_-25px_rgba(26,42,34,0.5)] sm:mx-6 sm:grid-cols-2 sm:p-6 lg:mx-auto lg:-mt-20 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end"
+      >
+        <div className="relative">
+          <label htmlFor="hero-location" className={labelClass}>
+            Location
+          </label>
+          <FiMapPin className={iconClass} aria-hidden="true" />
+          <select
+            id="hero-location"
+            name="location"
+            defaultValue=""
+            className={fieldClass}
+          >
+            <option value="">All Locations</option>
+            {locations.map((l) => (
+              <option key={l} value={l}>
+                {l}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="relative">
+          <label htmlFor="hero-type" className={labelClass}>
+            Property Type
+          </label>
+          <FiHome className={iconClass} aria-hidden="true" />
+          <select
+            id="hero-type"
+            name="type"
+            defaultValue=""
+            className={fieldClass}
+          >
+            <option value="">All Types</option>
+            {propertyTypes.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="relative">
+          <label htmlFor="hero-budget" className={labelClass}>
+            Budget
+          </label>
+          <FiTag className={iconClass} aria-hidden="true" />
+          <select
+            id="hero-budget"
+            name="budget"
+            defaultValue=""
+            className={fieldClass}
+          >
+            <option value="">Any Budget</option>
+            {budgets.map((b) => (
+              <option key={b} value={b}>
+                {b}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className="inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#1a2a22] px-8 text-sm font-semibold text-[#faf9f6] transition hover:bg-[#52685B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#52685B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f3f0E8] sm:col-span-2 lg:col-span-1 lg:w-auto"
+        >
+          <FiSearch aria-hidden="true" />
+          Search
+        </button>
+      </motion.form>
+    </section>
+  );
+}
