@@ -8,8 +8,8 @@ export async function GET(req, { params }) {
   const property = await Property.findByPk(id, {
     include: [{ model: PropertyImage, as: 'images', order: [['order', 'ASC']] }, {
         model: Agent,
-        as: 'agent',   // ← yeh zaroori hai
-      },], // ✅ join images
+        as: 'agent', 
+      },], 
   });
 
   if (!property) return NextResponse.json({ error: 'Didnt find property' }, { status: 404 });
@@ -22,7 +22,7 @@ export async function PUT(req, { params }) {
   const body = await req.json();
   await Property.update(body, { where: { id } });
 
-  // ✅ Return updated property with images
+ 
   const property = await Property.findByPk(id, {
     include: [{ model: PropertyImage, as: 'images', order: [['order', 'ASC']] }],
   });

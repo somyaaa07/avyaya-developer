@@ -1,84 +1,127 @@
-// import Link from "next/link";
-// import { FiArrowRight } from "react-icons/fi";
-// import PropertyCard from "./PropertyCard";
-// import { getLatestProperties } from "@/lib/properties";
+'use client';
 
-// export default async function FeaturedProperties({ limit = 6 }) {
-//   const properties = await getLatestProperties(limit);
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Marcellus } from 'next/font/google';
 
-//   return (
-//     <section
-//       className="bg-white py-16 sm:py-20 lg:py-24"
-//       aria-labelledby="featured-heading"
-//     >
-//       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-//         {/* Header */}
-//         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-//           <div className="max-w-2xl">
-//             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2e5d42]">
-//               Featured Properties
-//             </span>
-//             <h2
-//               id="featured-heading"
-//               className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight text-[#1b2b23]"
-//             >
-//               Our Latest Properties
-//             </h2>
-//             <p className="mt-3 text-base text-[#66736c]">
-//               Hand-picked residential, commercial and plotting opportunities,
-//               updated regularly by our team.
-//             </p>
-//           </div>
+const marcellus = Marcellus({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+});
 
-//           <Link
-//             href="/properties"
-//             className="group hidden shrink-0 items-center gap-2 rounded-xl border border-[#2e5d42] px-6 py-3 text-sm font-semibold text-[#2e5d42] transition hover:bg-[#2e5d42] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2e5d42] focus-visible:ring-offset-2 sm:inline-flex"
-//           >
-//             View All Properties
-//             <FiArrowRight
-//               className="transition-transform group-hover:translate-x-1"
-//               aria-hidden="true"
-//             />
-//           </Link>
-//         </div>
+export default function PropertiesList({ type, heading, limit = 4 }) {
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-//         {/* Grid / empty state */}
-//         {properties.length > 0 ? (
-//           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-//             {properties.map((property, i) => (
-//               <PropertyCard key={property.id} property={property} index={i} />
-//             ))}
-//           </div>
-//         ) : (
-//           <div className="mt-10 rounded-2xl border border-dashed border-[#dce5df] bg-[#f0f4f1] px-6 py-14 text-center">
-//             <p className="text-base font-semibold text-[#1b2b23]">
-//               New properties are coming soon.
-//             </p>
-//             <p className="mt-1 text-sm text-[#66736c]">
-//               Contact our team to know about upcoming projects.
-//             </p>
-//           </div>
-//         )}
+  useEffect(() => {
+    const url = type
+      ? `/api/admin/properties?type=${type}`
+      : `/api/admin/properties`;
 
-//         {/* Mobile button */}
-//         <Link
-//           href="/properties"
-//           className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#2e5d42] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#173d2a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2e5d42] focus-visible:ring-offset-2 sm:hidden"
-//         >
-//           View All Properties
-//           <FiArrowRight aria-hidden="true" />
-//         </Link>
-//       </div>
-//     </section>
-//   );
-// }
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
 
-import React from 'react'
+        const newest = [...list]
+          .sort((a, b) => {
+            if (a.createdAt && b.createdAt) {
+              return new Date(b.createdAt) - new Date(a.createdAt);
+            }
+            return b.id - a.id;
+          })
+          .slice(0, limit);
 
-function FeaturedProperties() {
+        setProperties(newest);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Fetch error:', err);
+        setLoading(false);
+      });
+  }, [type, limit]);
+
+  if (loading) {
+    return (
+      <section className="w-full bg-[#f3f0E8] py-14 sm:py-16 lg:py-20">
+        <p className="text-center text-[15px] text-[#52685B]">Loading...</p>
+      </section>
+    );
+  }
+
+  if (!properties.length) {
+    return (
+      <section className="w-full bg-[#f3f0E8] py-14 sm:py-16 lg:py-20">
+        <p className="text-center text-[15px] text-[#52685B]">
+          No properties found.
+        </p>
+      </section>
+    );
+  }
+
   return (
-    <div>FeaturedProperties</div>
-  )
-}
+    <section className="w-full bg-[#f3f0E8] py-14 sm:py-16 lg:py-20">
+      <div className="mx-auto max-w-[1300px] px-5 sm:px-8 lg:px-10">
+             <motion.h2
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                    className={`${marcellus.className} text-[34px] leading-tight text-[#1a2a22] sm:text-[42px] lg:text-[48px]`}
+                  >
+                    Featured Properties
+                  </motion.h2>
+                 
+        {/* Heading */}
+        <div className="text-center">
+        
+          <motion.h2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className={`${marcellus.className} text-[34px] leading-tight text-[#1a2a22] sm:text-[42px] lg:text-[48px]`}
+          >
+            {heading}
+          </motion.h2>
+        </div>
 
-export default FeaturedProperties
+        {/* Cards */}
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
+          {properties.map((property, i) => (
+            <motion.div
+              key={property.id}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className="overflow-hidden rounded-2xl bg-[#faf9f6] shadow-[0_2px_18px_rgba(26,42,34,0.06)]"
+            >
+              {property.images?.[0] && (
+                <img
+                  src={property.images[0].url}
+                  alt={property.title}
+                  className="h-48 w-full object-cover"
+                />
+              )}
+
+              <div className="px-6 pb-7 pt-6">
+                <h3  className={`${marcellus.className} text-[34px] leading-tight text-[#1a2a22] sm:text-[32px] lg:text-[32px]`}>
+                  {property.title}
+                </h3>
+                <p className="mt-2 text-[15px] text-[#52685B]">
+                  {property.city}
+                </p>
+                <p className="mt-4 text-[17px] font-semibold text-[#D4A62A]">
+                  {/* PKR {property.price} */}
+                    {property.price}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
