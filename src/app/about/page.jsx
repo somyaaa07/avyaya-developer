@@ -191,10 +191,29 @@ const Eyebrow = ({ children, line = false }) => (
 const BtnDark = ({ href, children }) => (
   <Link
     href={href}
-    className="inline-flex items-center gap-2 rounded-full bg-[#1A2A22] px-6 py-3 text-sm font-normal text-[#FAF9F6] transition hover:bg-[#52685B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A2A22]"
+    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
   >
-    {children}
-    <ArrowRight size={16} />
+    {/* Golden fill slides in from left */}
+    <span
+      aria-hidden="true"
+      className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100"
+    />
+
+    {/* Glass shine sweep */}
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -translate-x-full -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:translate-x-[450%] group-hover:opacity-100"
+    />
+
+    <span className="relative z-10">{children}</span>
+
+    {/* Arrow circle */}
+    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+      <ArrowRight
+        size={14}
+        className="transition-transform duration-500 group-hover:-rotate-45"
+      />
+    </span>
   </Link>
 );
 
@@ -265,10 +284,10 @@ export default function AboutPage() {
 
           {/* Hero image */}
           <div className="relative">
-            <div className="absolute -right-10 -top-10 hidden h-[110%] w-[110%] rounded-full bg-[#F3F0E8] lg:block" />
+            
             <div className="relative aspect-[4/4.2] w-full overflow-hidden rounded-3xl lg:rounded-tl-[220px] lg:rounded-br-[80px]">
               <Image
-                src="/image/cta.jpeg"
+                src="/image/hero.png"
                 alt="Modern sustainable villa with glass balconies surrounded by greenery"
                 fill
                 priority
@@ -278,13 +297,13 @@ export default function AboutPage() {
             </div>
 
             <div className="absolute -bottom-8 left-4 right-4 flex items-center gap-4 rounded-2xl bg-[#FAF9F6] p-3 shadow-[0_20px_50px_rgba(26,42,34,0.15)] sm:left-0 sm:right-auto sm:w-[340px] lg:-left-10">
-              <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl">
+              <div className="relative h-25 w-24 shrink-0 overflow-hidden rounded-xl">
                 <Image
-                  src="/images/about/hero.jpg"
+                  src="/image/heroo.jpeg"
                   alt="Sustainable community project"
                   fill
                   sizes="96px"
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
               <div className="flex-1">
@@ -360,11 +379,11 @@ export default function AboutPage() {
                 <defs>
                   <path id="circlePath" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
                 </defs>
-                <text className="fill-[#52685B] text-[9px] uppercase tracking-[0.28em]">
+                <text className="fill-[#D4A62A] text-[9px] uppercase tracking-[0.28em]">
                   <textPath href="#circlePath">Sustainable • Modern Living •</textPath>
                 </text>
               </svg>
-              <Leaf className="text-[#1A2A22]" size={28} strokeWidth={1.5} />
+              <Leaf className="text-[#D4A62A]" size={28} strokeWidth={1.5} />
             </div>
           </div>
 
@@ -399,7 +418,7 @@ export default function AboutPage() {
                 i !== 0 ? "sm:border-l sm:border-[#52685B]/25" : ""
               }`}
             >
-              <Icon className="text-[#1A2A22]" size={34} strokeWidth={1.4} />
+              <Icon className="text-[#D4A62A]" size={34} strokeWidth={1.4} />
               <h3 className="mt-3 text-sm text-[#1A2A22]">{title}</h3>
               <p className="mt-1 text-xs text-[#52685B]">{text}</p>
             </li>
@@ -429,7 +448,7 @@ export default function AboutPage() {
                 key={title}
                 className="flex flex-col items-center rounded-2xl bg-[#FAF9F6] px-6 py-8 text-center shadow-[0_8px_30px_rgba(26,42,34,0.06)]"
               >
-                <Icon className="text-[#1A2A22]" size={32} strokeWidth={1.4} />
+                <Icon className="text-[#D4A62A]" size={32} strokeWidth={1.4} />
                 <h3 className="mt-4 text-sm text-[#1A2A22]">{title}</h3>
                 <p className="mt-2 max-w-[180px] text-xs leading-relaxed text-[#52685B]">{text}</p>
               </li>
@@ -518,7 +537,7 @@ export default function AboutPage() {
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl lg:aspect-[4/3.4]">
             <Image
-              src="/images/about/faq.jpg"
+              src="/image/faq.jpg"
               alt="Spacious living room with cream sofa and natural light"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
@@ -605,8 +624,8 @@ export default function AboutPage() {
            
               <span className="h-8 w-px bg-[#FAF9F6]/30" />
               <div>
-                <p className="text-lg leading-none">4.8/5</p>
-                <p className="text-[11px] text-[#FAF9F6]/80">Customer Rating</p>
+                <p className="text-lg  text-[#D4A62A] leading-none">4.8/5</p>
+                <p className="text-[11px] text-[#D4A62A]">Customer Rating</p>
               </div>
             </div>
           </div>
