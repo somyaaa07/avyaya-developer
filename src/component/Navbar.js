@@ -213,6 +213,7 @@ const jost = Jost({
 
 const links = [
   { label: "Home", href: "/" },
+  {label:"About",href:"/about"},
   { label: "All Properties", href: "/properties" },
   { label: "Buy", href: "/properties?type=buy" },
   { label: "Sell", href: "/properties?type=sell" },
@@ -282,13 +283,19 @@ function NavbarInner() {
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const onKey = (e) => e.key === "Escape" && setOpen(false);
+
     window.addEventListener("keydown", onKey);
+
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
+
+          {/* ── Nav Links ── */}
+
+         
   const focusRing =
     "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#52685B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf9f6]";
 
@@ -467,6 +474,7 @@ function NavbarInner() {
     </header>
   );
 }
+
 
 /* useSearchParams needs a Suspense boundary in the App Router */
 export default function Navbar() {

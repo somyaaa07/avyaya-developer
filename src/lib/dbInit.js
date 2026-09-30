@@ -45,7 +45,7 @@ const NEW_MODELS = [
   Property,
   PropertyImage,
   Inquiry,
-  SavedProperty,
+  SavedProperty
 ];
 // const NEW_MODELS = [PropertyImage, Inquiry, SavedProperty];
 
@@ -86,19 +86,21 @@ async function dbInit() {
     try {
       await sequelize.authenticate();
 
-      console.log("✅ MySQL connected!");
+      console.log('✅ MySQL connected!');
 
       for (const model of NEW_MODELS) {
         await model.sync({ force: false });
 
-        console.log("✅ Table ready: " + model.getTableName());
+        console.log(
+          '✅ Table ready: ' + model.getTableName()
+        );
       }
 
       initialized = true;
 
-      console.log("✅ DB init complete!");
+      console.log('✅ DB init complete!');
     } catch (error) {
-      console.error("❌ DB Error:", error);
+      console.error('❌ DB Error:', error);
       throw error;
     } finally {
       initPromise = null;
