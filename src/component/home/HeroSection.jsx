@@ -46,8 +46,12 @@ const fadeUp = {
   }),
 };
 
+// Gold gradient: #E2A10D on left & right edges, #FFCD39 in the center
+const goldBg = "bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]";
+const goldText = `${goldBg} bg-clip-text text-transparent`;
+
 const fieldClass =
-  "w-full appearance-none rounded-xl border border-[#1a2a22]/15 bg-[#faf9f6] py-3 pl-10 pr-4 text-sm text-[#1a2a22] transition focus:border-[#52685B] focus:outline-none focus:ring-2 focus:ring-[#52685B]/30";
+  "w-full appearance-none rounded-xl border border-[#1a2a22]/15 bg-[#faf9f6] py-3 pl-10 pr-4 text-sm text-[#1a2a22] transition focus:border-[#E2A10D] focus:outline-none focus:ring-2 focus:ring-[#FFCD39]/40";
 const labelClass =
   "mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#52685B]";
 const iconClass =
@@ -84,8 +88,10 @@ export default function HomeHero() {
               custom={0}
               className="flex items-center gap-3"
             >
-              <span className="h-px w-10 bg-[#f3f0E8]/70" aria-hidden="true" />
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-[#f3f0E8]">
+              <span className={`h-px w-10 ${goldBg}`} aria-hidden="true" />
+              <span
+                className={`text-xs font-semibold uppercase tracking-[0.28em] ${goldText}`}
+              >
                 Trusted Bringo Real Estate · Greater Noida
               </span>
             </motion.div>
@@ -98,7 +104,7 @@ export default function HomeHero() {
               className={`${marcellus.className} mt-6 text-[clamp(2.4rem,5.5vw,4.5rem)] font-normal leading-[1.06] tracking-tight text-[#faf9f6]`}
             >
               Find a Place You’ll Be{" "}
-              <span className="italic text-[#f3f0E8]/80">Proud</span> to Call
+              <span className={`italic pr-1 ${goldText}`}>Proud</span> to Call
               Home
             </motion.h1>
 
@@ -122,7 +128,7 @@ export default function HomeHero() {
             >
               <Link
                 href="/properties"
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#faf9f6] px-7 py-3.5 text-sm font-semibold text-[#1a2a22] shadow-lg transition hover:scale-[1.02] hover:bg-[#f3f0E8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#faf9f6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a2a22]"
+                className={`group inline-flex items-center justify-center gap-2 rounded-xl ${goldBg} px-7 py-3.5 text-sm font-semibold text-[#1a2a22] shadow-lg transition hover:scale-[1.02] hover:brightness-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD39] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a2a22]`}
               >
                 Explore Properties
                 <FiArrowRight
@@ -132,7 +138,7 @@ export default function HomeHero() {
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#faf9f6]/40 px-7 py-3.5 text-sm font-semibold text-[#faf9f6] backdrop-blur-sm transition hover:border-[#faf9f6] hover:bg-[#faf9f6]/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#faf9f6]"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#faf9f6]/40 px-7 py-3.5 text-sm font-semibold text-[#faf9f6] backdrop-blur-sm transition hover:border-[#FFCD39] hover:bg-[#faf9f6]/10 hover:text-[#FFCD39] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD39]"
               >
                 <FiPhone aria-hidden="true" />
                 Talk to an Expert
@@ -152,7 +158,7 @@ export default function HomeHero() {
                   className={i === 0 ? "pr-4 sm:pr-6" : "px-4 sm:px-6"}
                 >
                   <dd
-                    className={`${marcellus.className} text-2xl font-normal text-[#faf9f6] sm:text-3xl`}
+                    className={`${marcellus.className} inline-block text-2xl font-normal sm:text-3xl ${goldText}`}
                   >
                     {s.value}
                   </dd>
@@ -176,8 +182,14 @@ export default function HomeHero() {
         method="GET"
         role="search"
         aria-label="Search properties"
-        className="relative z-20 mx-4 -mt-24 grid max-w-6xl gap-4 rounded-2xl border border-[#1a2a22]/10 bg-[#f3f0E8] p-5 shadow-[0_25px_60px_-25px_rgba(26,42,34,0.5)] sm:mx-6 sm:grid-cols-2 sm:p-6 lg:mx-auto lg:-mt-20 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end"
+        className="relative z-20 mx-4 -mt-24 grid max-w-6xl gap-4 overflow-hidden rounded-2xl border border-[#1a2a22]/10 bg-[#f3f0E8] p-5 shadow-[0_25px_60px_-25px_rgba(26,42,34,0.5)] sm:mx-6 sm:grid-cols-2 sm:p-6 lg:mx-auto lg:-mt-20 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end"
       >
+        {/* Gold gradient top accent */}
+        <span
+          className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`}
+          aria-hidden="true"
+        />
+
         <div className="relative">
           <label htmlFor="hero-location" className={labelClass}>
             Location
@@ -240,7 +252,7 @@ export default function HomeHero() {
 
         <button
           type="submit"
-          className="inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#1a2a22] px-8 text-sm font-semibold text-[#faf9f6] transition hover:bg-[#52685B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#52685B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f3f0E8] sm:col-span-2 lg:col-span-1 lg:w-auto"
+          className="inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#1a2a22] px-8 text-sm font-semibold text-[#faf9f6] transition hover:bg-gradient-to-r hover:from-[#E2A10D] hover:via-[#FFCD39] hover:to-[#E2A10D] hover:text-[#1a2a22] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD39] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f3f0E8] sm:col-span-2 lg:col-span-1 lg:w-auto"
         >
           <FiSearch aria-hidden="true" />
           Search

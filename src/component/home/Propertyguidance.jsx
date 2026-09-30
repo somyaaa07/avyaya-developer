@@ -57,13 +57,13 @@ export default function PropertyGuidance() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.15 + i * 0.1 }}
                   className={`flex items-center gap-5 rounded-2xl px-6 py-7 ${
-                    s.highlight ? "bg-[#D4A62A]" : "bg-[#f3f0E8]"
+                    s.highlight ? "bg-[#f3f0E8]" : "bg-[#f3f0E8]"
                   }`}
                 >
                   <Icon
                     size={34}
                     strokeWidth={1.4}
-                    className="text-[#1a2a22]"
+                    className="text-[#D4A62A]"
                   />
                   <div>
                     <p className="text-[30px] font-semibold leading-none text-[#1a2a22]">
