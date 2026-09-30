@@ -42,6 +42,8 @@ const stats = [
 // Yellow gradient: darker gold on the sides, bright yellow in the centre
 const goldBg = "bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]";
 const goldText = `${goldBg} bg-clip-text text-transparent`;
+// Icons are stroke-based, so they use the SVG gradient defined in the component
+const goldStroke = { stroke: "url(#about-gold)" };
 
 const reveal = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -73,6 +75,29 @@ export default function AboutSection() {
       className="relative overflow-hidden bg-[#faf9f6] py-16 sm:py-20 lg:py-24"
       aria-labelledby="about-heading"
     >
+      {/* Gradient definition used by the stroke icons (keep width/height 0, not display:none) */}
+      <svg
+        width="0"
+        height="0"
+        aria-hidden="true"
+        className="pointer-events-none absolute"
+      >
+        <defs>
+          <linearGradient
+            id="about-gold"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="24"
+            y2="0"
+          >
+            <stop offset="0%" stopColor="#e2a10d" />
+            <stop offset="50%" stopColor="#ffcd39" />
+            <stop offset="100%" stopColor="#e2a10d" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <Leaves />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -126,10 +151,8 @@ export default function AboutSection() {
 
             {/* Experience badge */}
             <div className="absolute -bottom-6 left-4 flex items-center gap-3 rounded-2xl bg-[#faf9f6] px-5 py-4 shadow-xl ring-1 ring-[#1a2a22]/5 sm:left-8 lg:-left-4">
-              <span
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${goldBg} text-[#1a2a22]`}
-              >
-                <FiHome size={22} aria-hidden="true" />
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#1a2a22]">
+                <FiHome size={22} aria-hidden="true" style={goldStroke} />
               </span>
               <div>
                 <p className={`${serif} text-3xl leading-none text-[#1a2a22]`}>
@@ -165,12 +188,8 @@ export default function AboutSection() {
                 {...reveal(i * 0.08)}
                 className="flex items-center gap-3"
               >
-                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f3f0E8] text-[#52685B]">
-                  <Icon size={20} aria-hidden="true" />
-                  <span
-                    className={`absolute inset-x-2 bottom-0 h-0.5 rounded-full ${goldBg}`}
-                    aria-hidden="true"
-                  />
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1a2a22]">
+                  <Icon size={20} aria-hidden="true" style={goldStroke} />
                 </span>
                 <div className="min-w-0">
                   <dd

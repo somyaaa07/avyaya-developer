@@ -11,31 +11,38 @@ const marcellus = Marcellus({
 });
 
 const services = [
-  {
-    icon: BarChart3,
-    title: "Smart Price Advice",
-    desc: "Market-based guidance",
-  },
-  {
-    icon: Home,
-    title: "Verified Listings",
-    desc: "Carefully reviewed homes",
-  },
-  {
-    icon: FileText,
-    title: "Simple Buying Process",
-    desc: "Clear steps, less hassle",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Home Protection",
-    desc: "Support after closing",
-  },
+  { icon: BarChart3, title: "Smart Price Advice", desc: "Market-based guidance" },
+  { icon: Home, title: "Verified Listings", desc: "Carefully reviewed homes" },
+  { icon: FileText, title: "Simple Buying Process", desc: "Clear steps, less hassle" },
+  { icon: ShieldCheck, title: "Home Protection", desc: "Support after closing" },
 ];
 
 export default function HowWeHelp() {
   return (
     <section className="w-full bg-[#f3f0E8] py-14 sm:py-16 lg:py-20">
+      {/* Gradient definition (rendered once, used by all icons) */}
+      <svg
+        width="0"
+        height="0"
+        aria-hidden="true"
+        className="absolute pointer-events-none"
+      >
+        <defs>
+          <linearGradient
+            id="yellow-gradient"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="24"
+            y2="24"
+          >
+            <stop offset="0%" stopColor="#e2a10d" />
+            <stop offset="50%" stopColor="#ffcd39" />
+            <stop offset="100%" stopColor="#e2a10d" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <div className="mx-auto max-w-[1300px] px-5 sm:px-8 lg:px-10">
         {/* Heading */}
         <div className="text-center">
@@ -72,7 +79,11 @@ export default function HowWeHelp() {
                 transition={{ duration: 0.6, delay: i * 0.1 }}
                 className="rounded-2xl bg-[#faf9f6] px-7 pb-8 pt-9 shadow-[0_2px_18px_rgba(26,42,34,0.06)]"
               >
-                <Icon size={38} strokeWidth={1.4} className="text-[#D4A62A]" />
+                <Icon
+                  size={38}
+                  strokeWidth={1.4}
+                  style={{ stroke: "url(#yellow-gradient)" }}
+                />
                 <h3 className="mt-8 text-[18px] font-semibold text-[#1a2a22]">
                   {item.title}
                 </h3>
