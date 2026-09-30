@@ -73,7 +73,8 @@ export default function Navbar() {
 
           {/* ── Nav Links ── */}
           <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-            {navLink('/properties',          'All Properties')}
+          {navLink('/about','About')}
+            {navLink('/properties','All Properties')}
             {navLink('/properties?type=buy',  'Buy')}
             {navLink('/properties?type=sell', 'Sell')}
             {navLink('/properties?type=rent', 'Rent')}

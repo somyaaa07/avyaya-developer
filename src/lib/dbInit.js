@@ -41,25 +41,79 @@ export { User, Agent, Property, PropertyImage, Inquiry, SavedProperty };
 // users table pe ER_TOO_MANY_KEYS crash karta tha
 // Sirf naye tables individually sync karo
 let initialized = false;
-const NEW_MODELS = [PropertyImage, Inquiry, SavedProperty];
+let initPromise = null;
+
+
+const NEW_MODELS = [
+  User,
+  Agent,
+  Property,
+  PropertyImage,
+  Inquiry,
+  SavedProperty
+];
+// const NEW_MODELS = [PropertyImage, Inquiry, SavedProperty];
+
+// async function dbInit() {
+//   if (initialized) return;
+//   try {
+//     await sequelize.authenticate();
+//     console.log('✅ MySQL connected!');
+
+//     for (const model of NEW_MODELS) {
+//       await model.sync({ force: false }); // CREATE TABLE IF NOT EXISTS
+//       console.log('✅ Table ready: ' + model.getTableName());
+//     }
+
+//     initialized = true;
+//     console.log('✅ DB init complete!');
+//   } catch (error) {
+//     console.error('❌ DB Error:', error);
+//     throw error;
+//   }
+// }
+
+// export default dbInit;
+
 
 async function dbInit() {
-  if (initialized) return;
-  try {
-    await sequelize.authenticate();
-    console.log('✅ MySQL connected!');
-
-    for (const model of NEW_MODELS) {
-      await model.sync({ force: false }); // CREATE TABLE IF NOT EXISTS
-      console.log('✅ Table ready: ' + model.getTableName());
-    }
-
-    initialized = true;
-    console.log('✅ DB init complete!');
-  } catch (error) {
-    console.error('❌ DB Error:', error);
-    throw error;
+  // Already initialized
+  if (initialized) {
+    return;
   }
+
+  // If initialization is already running,
+  // wait for the same initialization
+  if (initPromise) {
+    return initPromise;
+  }
+
+  initPromise = (async () => {
+    try {
+      await sequelize.authenticate();
+
+      console.log('✅ MySQL connected!');
+
+      for (const model of NEW_MODELS) {
+        await model.sync({ force: false });
+
+        console.log(
+          '✅ Table ready: ' + model.getTableName()
+        );
+      }
+
+      initialized = true;
+
+      console.log('✅ DB init complete!');
+    } catch (error) {
+      console.error('❌ DB Error:', error);
+      throw error;
+    } finally {
+      initPromise = null;
+    }
+  })();
+
+  return initPromise;
 }
 
 export default dbInit;
