@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Marcellus } from "next/font/google";
+import { FaWhatsapp } from "react-icons/fa";
 import {
   FiPhone,
-  FiMessageCircle,
+  
   FiClock,
   FiArrowRight,
   FiCheckCircle,
@@ -35,7 +36,7 @@ const HOURS = "Mon – Sat, 10 AM – 7 PM";
 const contactLinks = [
   { icon: FiPhone, label: "Call us", value: PHONE, href: PHONE_HREF },
   {
-    icon: FiMessageCircle,
+    icon: FaWhatsapp,
     label: "WhatsApp",
     value: "Chat with our team",
     href: WHATSAPP_URL,

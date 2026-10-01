@@ -3,7 +3,6 @@ import ContactIntro from "@/component/contact/ContactIntro";
 import ContactInfo from "@/component/contact/ContactInfo";
 import ContactForm from "@/component/contact/ContactForm";
 import WhatsAppCTA from "@/component/contact/WhatsAppCTA";
-import OfficeLocations from "@/component/contact/OfficeLocations";
 import ContactMap from "@/component/contact/ContactMap";
 import FAQSection from "@/component/contact/FAQSection";
 
@@ -25,7 +24,7 @@ export default function ContactPage() {
         </div>
       </section>
       <WhatsAppCTA />
-      <OfficeLocations />
+   
       <ContactMap />
       <FAQSection />
 
