@@ -6,12 +6,11 @@ import WhatsAppCTA from "@/component/contact/WhatsAppCTA";
 import OfficeLocations from "@/component/contact/OfficeLocations";
 import ContactMap from "@/component/contact/ContactMap";
 import FAQSection from "@/component/contact/FAQSection";
-import ContactCTA from "@/component/contact/ContactCTA";
 
 export const metadata = {
-  title: "Contact Us | Avyaya Developers",
+  title: "Contact Us | Bringo Real Estates ",
   description:
-    "Get in touch with Avyaya Developers for residential, commercial, land and investment enquiries.",
+    "Get in touch with Bringo Real Estates for residential, commercial, land and investment enquiries.",
 };
 
 export default function ContactPage() {
@@ -29,7 +28,7 @@ export default function ContactPage() {
       <OfficeLocations />
       <ContactMap />
       <FAQSection />
-      <ContactCTA />
+
     </main>
   );
 }

@@ -151,7 +151,7 @@ export default function AboutSection() {
 
             {/* Experience badge */}
             <div className="absolute -bottom-6 left-4 flex items-center gap-3 rounded-2xl bg-[#faf9f6] px-5 py-4 shadow-xl ring-1 ring-[#1a2a22]/5 sm:left-8 lg:-left-4">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#1a2a22]">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ">
                 <FiHome size={22} aria-hidden="true" style={goldStroke} />
               </span>
               <div>
@@ -188,7 +188,7 @@ export default function AboutSection() {
                 {...reveal(i * 0.08)}
                 className="flex items-center gap-3"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1a2a22]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ">
                   <Icon size={20} aria-hidden="true" style={goldStroke} />
                 </span>
                 <div className="min-w-0">

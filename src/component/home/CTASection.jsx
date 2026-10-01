@@ -27,9 +27,9 @@ const goldText = `${goldBg} bg-clip-text text-transparent`;
 const goldStroke = { stroke: "url(#cta-gold)" };
 
 // TODO: replace with your real details
-const PHONE = "+91 7004397655";
-const PHONE_HREF = "tel:+917004397655";
-const WHATSAPP_URL = "https://wa.me/917004397655";
+const PHONE = "+91 9999300301";
+const PHONE_HREF = "tel:+9999300301";
+const WHATSAPP_URL = "https://wa.me/919999300301";
 const HOURS = "Mon – Sat, 10 AM – 7 PM";
 
 const contactLinks = [
@@ -50,7 +50,7 @@ const labelClass = "mb-1.5 block text-sm font-medium text-[#1a2a22]";
 
 export default function CTACallback({ image = null }) {
   const [form, setForm] = useState({ name: "", phone: "" });
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [status, setStatus] = useState("idle"); 
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) =>
