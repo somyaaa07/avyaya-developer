@@ -1,227 +1,244 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Marcellus } from 'next/font/google';
+import {
+  AlertCircle,
+  ArrowRight,
+  ArrowUpRight,
+  Building2,
+  Inbox,
+  Plus,
+  UserCog,
+  Users,
+} from 'lucide-react';
 
+const marcellus = Marcellus({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+});
+
+const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
+
+/* ---------------------------------------------------------------
+   ANIMATED NUMBER
+---------------------------------------------------------------- */
 function AnimatedNumber({ value }) {
+  const reduce = useReducedMotion();
   const [display, setDisplay] = useState(0);
+
   useEffect(() => {
-    if (!value) return;
-    let start = 0;
-    const step = Math.ceil(value / 30);
+    const target = Number(value) || 0;
+    if (reduce || target === 0) {
+      setDisplay(target);
+      return;
+    }
+    let current = 0;
+    const step = Math.max(1, Math.ceil(target / 30));
     const interval = setInterval(() => {
-      start += step;
-      if (start >= value) { setDisplay(value); clearInterval(interval); }
-      else setDisplay(start);
+      current += step;
+      if (current >= target) {
+        setDisplay(target);
+        clearInterval(interval);
+      } else {
+        setDisplay(current);
+      }
     }, 30);
     return () => clearInterval(interval);
-  }, [value]);
-  return <>{display}</>;
+  }, [value, reduce]);
+
+  return <>{display.toLocaleString('en-IN')}</>;
 }
 
+/* ---------------------------------------------------------------
+   DASHBOARD
+---------------------------------------------------------------- */
 export default function AdminDashboard() {
+  const reduce = useReducedMotion();
   const [stats, setStats] = useState({
-    properties:   0,
-    agents:       0,
-    inquiries:    0,
-    users:        0,
+    properties: 0,
+    agents: 0,
+    inquiries: 0,
+    users: 0,
     newInquiries: 0,
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch('/api/admin/stats').then(r => r.json()).then(setStats);
+    fetch('/api/admin/stats')
+      .then((r) => {
+        if (!r.ok) throw new Error('Failed');
+        return r.json();
+      })
+      .then((data) => setStats((p) => ({ ...p, ...data })))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
   }, []);
 
-  // ← stats define hone ke BAAD cards banao
+  // NOTE: hrefs apne admin routes ke hisaab se badal lena
   const cards = [
-    { label: 'Properties', key: 'properties', icon: '⌂', accent: '#2e5d42', lightBg: '#e8f0eb' },
-    { label: 'Agents',     key: 'agents',     icon: '✦', accent: '#c9a84c', lightBg: '#f5edd8' },
-    { label: 'Inquiries',  key: 'inquiries',  icon: '◎', accent: '#7a5c3e', lightBg: '#ede3d8', badge: stats.newInquiries },
-    { label: 'Users',      key: 'users',      icon: '◈', accent: '#4a7a6a', lightBg: '#dceae6' },
+    { label: 'Properties', key: 'properties', icon: Building2, href: '/admin/properties' },
+    { label: 'Agents', key: 'agents', icon: UserCog, href: '/admin/agents' },
+    { label: 'Inquiries', key: 'inquiries', icon: Inbox, href: '/admin/inquiries', badge: stats.newInquiries },
+    { label: 'Users', key: 'users', icon: Users, href: '/admin/users' },
   ];
 
+  const actions = [
+    { label: 'Add a property', href: '/admin/properties', icon: Plus },
+    { label: 'Review inquiries', href: '/admin/inquiries', icon: Inbox },
+    { label: 'Manage agents', href: '/admin/agents', icon: UserCog },
+    // { label: 'Manage users', href: '/admin/users', icon: Users },
+  ];
+
+  const enter = (delay = 0) => ({
+    initial: reduce ? false : { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5, delay, ease: 'easeOut' },
+  });
+
   return (
-    <div style={{ fontFamily: "'Jost', sans-serif" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
-      `}</style>
-
+    <div className={`${marcellus.className} font-normal text-[#1A2A22]`}>
       {/* ── Header ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        style={{ marginBottom: '40px' }}
-      >
-        <p style={{ fontFamily: "'Jost', sans-serif", color: '#2e5d42', fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '6px', fontWeight: '500' }}>
-          Overview
+      <motion.header {...enter()} className="mb-8 sm:mb-10">
+        <h1 className="text-3xl leading-tight sm:text-4xl">Dashboard</h1>
+        <span aria-hidden="true" className={`mt-4 block h-[3px] w-14 rounded-full ${goldBg}`} />
+        <p className="mt-4 font-sans text-sm text-[#52685B]">
+          A quick look at your listings, team and enquiries.
         </p>
-        <h1 style={{ fontFamily: "'Marcellus', serif", fontSize: '38px', color: '#1a3628', lineHeight: 1.1 }}>
-          Dashboard
-        </h1>
-      </motion.div>
+      </motion.header>
 
-      {/* ── Stat Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '48px' }}>
-        {cards.map((card, i) => (
-          <motion.div
-            key={card.key}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 + 0.2, type: 'spring', stiffness: 120 }}
-            whileHover={{ y: -4, boxShadow: '0 16px 40px rgba(46,93,66,0.12)' }}
-            style={{
-              background:    '#fff',
-              borderRadius:  '16px',
-              padding:       '28px 24px',
-              boxShadow:     '0 2px 12px rgba(26,54,40,0.06)',
-              cursor:        'default',
-              position:      'relative',
-              overflow:      'hidden',
-            }}
-          >
-            {/* Accent top bar */}
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: card.accent }} />
+      {error && (
+        <p
+          role="alert"
+          className="mb-6 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm text-red-700"
+        >
+          <AlertCircle size={17} className="mt-0.5 shrink-0" aria-hidden="true" />
+          Could not load the latest numbers. Please refresh the page.
+        </p>
+      )}
 
-            {/* New badge */}
-            {card.badge > 0 && (
-              <span style={{
-                position:     'absolute',
-                top:          '14px',
-                left:         '14px',
-                background:   '#dc2626',
-                color:        '#fff',
-                borderRadius: '20px',
-                fontSize:     '10px',
-                fontWeight:   '700',
-                padding:      '2px 8px',
-              }}>
-                {card.badge} new
-              </span>
-            )}
-
-            {/* Icon blob */}
-            <div style={{
-              position:       'absolute',
-              top:            '16px',
-              right:          '16px',
-              width:          '44px',
-              height:         '44px',
-              borderRadius:   '12px',
-              background:     card.lightBg,
-              display:        'flex',
-              alignItems:     'center',
-              justifyContent: 'center',
-              fontSize:       '20px',
-              color:          card.accent,
-            }}>
-              {card.icon}
-            </div>
-
-            <p style={{ fontSize: '12px', fontWeight: '500', color: '#8a9e95', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px', marginTop: '24px' }}>
-              {card.label}
-            </p>
-
-            <p style={{ fontFamily: "'Marcellus', serif", fontSize: '44px', color: '#1a3628', lineHeight: 1, marginBottom: '8px' }}>
-              <AnimatedNumber value={stats[card.key]} />
-            </p>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '11px', color: card.accent, fontWeight: '500', background: card.lightBg, padding: '2px 8px', borderRadius: '20px' }}>
-                Active
-              </span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* ── Bottom Section ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}
-      >
-        {/* Quick Stats */}
-        <div style={{ background: '#fff', borderRadius: '16px', padding: '28px', boxShadow: '0 2px 12px rgba(26,54,40,0.06)' }}>
-          <div style={{ marginBottom: '20px' }}>
-            <p style={{ fontSize: '11px', color: '#2e5d42', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: '500', marginBottom: '4px' }}>
-              System
-            </p>
-            <h3 style={{ fontFamily: "'Marcellus', serif", fontSize: '20px', color: '#1a3628' }}>
-              Quick Stats
-            </h3>
-          </div>
-
-          {[
-            { label: 'Active Listings',  val: stats.properties, max: stats.properties + 5  },
-            { label: 'Available Agents', val: stats.agents,     max: stats.agents + 2      },
-            { label: 'Open Inquiries',   val: stats.inquiries,  max: stats.inquiries + 10  },
-          ].map((item, i) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 + i * 0.1 }}
-              style={{ marginBottom: '16px' }}
+      {/* ── Stat cards ── */}
+      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
+        {cards.map(({ label, key, icon: Icon, href, badge }, i) => (
+          <motion.li key={key} {...enter(0.1 + i * 0.08)} className="list-none">
+            <Link
+              href={href}
+              className="group relative block overflow-hidden rounded-3xl border border-[#1A2A22]/10 bg-white p-6 transition duration-300 hover:border-[#D4AF37]/60 hover:shadow-[0_18px_40px_-18px_rgba(26,42,34,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ fontSize: '13px', color: '#4a6358' }}>{item.label}</span>
-                <span style={{ fontSize: '13px', color: '#1a3628', fontWeight: '600' }}>{item.val}</span>
+              <span
+                aria-hidden="true"
+                className={`absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${goldBg}`}
+              />
+
+              <div className="flex items-start justify-between">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1A2A22] text-[#F5D77A] transition duration-300 group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1A2A22]">
+                  <Icon size={22} strokeWidth={1.6} aria-hidden="true" />
+                </span>
+                {badge > 0 && (
+                  <span className="rounded-full bg-red-600 px-2.5 py-1 font-sans text-[11px] font-semibold text-white">
+                    {badge} new
+                  </span>
+                )}
               </div>
-              <div style={{ height: '4px', background: '#e8f0eb', borderRadius: '10px', overflow: 'hidden' }}>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.min((item.val / (item.max || 1)) * 100, 100)}%` }}
-                  transition={{ delay: 1 + i * 0.1, duration: 0.8, ease: 'easeOut' }}
-                  style={{ height: '100%', background: '#2e5d42', borderRadius: '10px' }}
+
+              <p className="mt-6 font-sans text-sm text-[#52685B]">{label}</p>
+              <div className="mt-1 flex items-end justify-between">
+                {loading ? (
+                  <span className="h-11 w-20 animate-pulse rounded-lg bg-[#52685B]/15" />
+                ) : (
+                  <p className="text-[44px] leading-none">
+                    <AnimatedNumber value={stats[key]} />
+                  </p>
+                )}
+                <ArrowUpRight
+                  size={18}
+                  aria-hidden="true"
+                  className="mb-1 text-[#52685B]/50 transition group-hover:text-[#B8902F]"
                 />
               </div>
-            </motion.div>
-          ))}
-        </div>
+            </Link>
+          </motion.li>
+        ))}
+      </ul>
 
-        {/* Portfolio Card */}
-        <div style={{
-          background:    'linear-gradient(135deg, #1a3628 0%, #2e5d42 100%)',
-          borderRadius:  '16px',
-          padding:       '28px',
-          position:      'relative',
-          overflow:      'hidden',
-        }}>
-          {/* Decorative circles */}
-          <div style={{ position: 'absolute', bottom: -30, right: -30, width: '180px', height: '180px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)' }} />
-          <div style={{ position: 'absolute', top: -20, right: 60, width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(250,250,239,0.04)' }} />
-
-          <p style={{ fontSize: '11px', color: '#c9a84c', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: '500', marginBottom: '8px' }}>
-            Portfolio
-          </p>
-          <h3 style={{ fontFamily: "'Marcellus', serif", fontSize: '24px', color: '#fafaef', marginBottom: '20px', lineHeight: 1.3 }}>
-            Your Estate<br />at a Glance
-          </h3>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            {[
-              { label: 'Properties', val: stats.properties },
-              { label: 'Agents',     val: stats.agents     },
-              { label: 'Inquiries',  val: stats.inquiries  },
-              { label: 'Users',      val: stats.users      },
-            ].map((item, i) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.9 + i * 0.08 }}
-                style={{ background: 'rgba(250,250,239,0.07)', borderRadius: '10px', padding: '14px' }}
-              >
-                <p style={{ fontSize: '22px', fontFamily: "'Marcellus', serif", color: '#fafaef', marginBottom: '2px' }}>
-                  {item.val}
-                </p>
-                <p style={{ fontSize: '11px', color: 'rgba(250,250,239,0.5)' }}>{item.label}</p>
-              </motion.div>
+      {/* ── Bottom section ── */}
+      <div className="mt-8 grid gap-5 lg:grid-cols-[1.3fr_1fr] lg:gap-6">
+        {/* Quick actions */}
+        <motion.section
+          {...enter(0.5)}
+          aria-labelledby="quick-actions"
+          className="rounded-3xl border border-[#1A2A22]/10 bg-white p-6 sm:p-8"
+        >
+          <h2 id="quick-actions" className="text-xl sm:text-2xl">
+            Quick actions
+          </h2>
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+            {actions.map(({ label, href, icon: Icon }) => (
+              <li key={label} className="list-none">
+                <Link
+                  href={href}
+                  className="group flex items-center gap-3 rounded-2xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-3.5 transition hover:border-[#D4AF37]/60 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1A2A22]/[0.06] text-[#1A2A22] transition group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+                    <Icon size={18} aria-hidden="true" />
+                  </span>
+                  <span className="flex-1 font-sans text-[15px]">{label}</span>
+                  <ArrowRight
+                    size={16}
+                    aria-hidden="true"
+                    className="text-[#52685B]/50 transition group-hover:translate-x-1 group-hover:text-[#B8902F]"
+                  />
+                </Link>
+              </li>
             ))}
-          </div>
-        </div>
-      </motion.div>
+          </ul>
+        </motion.section>
+
+        {/* Needs attention */}
+        <motion.section
+          {...enter(0.6)}
+          aria-labelledby="attention"
+          className="relative overflow-hidden rounded-3xl bg-[#1A2A22] p-6 text-[#FAF9F6] sm:p-8"
+        >
+          <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
+          <h2 id="attention" className="text-xl sm:text-2xl">
+            Needs attention
+          </h2>
+
+          {loading ? (
+            <div className="mt-6 space-y-3">
+              <span className="block h-12 w-24 animate-pulse rounded-lg bg-[#FAF9F6]/10" />
+              <span className="block h-4 w-3/4 animate-pulse rounded-full bg-[#FAF9F6]/10" />
+            </div>
+          ) : stats.newInquiries > 0 ? (
+            <>
+              <p className="mt-6 text-5xl leading-none text-[#F5D77A]">
+                {stats.newInquiries.toLocaleString('en-IN')}
+              </p>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-[#FAF9F6]/75">
+                New {stats.newInquiries === 1 ? 'inquiry is' : 'inquiries are'} waiting for a
+                reply. Quick responses help you win more clients.
+              </p>
+              <Link
+                href="/admin/inquiries"
+                className="group mt-7 inline-flex items-center gap-3 rounded-full bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] py-2.5 pl-6 pr-2.5 font-sans text-sm text-[#1A2A22] transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5D77A]"
+              >
+                View inquiries
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1A2A22] text-[#F5D77A]">
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:-rotate-45" aria-hidden="true" />
+                </span>
+              </Link>
+            </>
+          ) : (
+            <p className="mt-6 font-sans text-sm leading-relaxed text-[#FAF9F6]/75">
+              You are all caught up. New inquiries will show up here as soon as they arrive.
+            </p>
+          )}
+        </motion.section>
+      </div>
     </div>
   );
 }
