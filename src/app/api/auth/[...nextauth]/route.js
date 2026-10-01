@@ -17,9 +17,9 @@ export const authOptions = {
         const user = await User.findOne({
           where: { email: credentials.email }
         });
-        if (!user) throw new Error('Email registered nahi hai');
+        if (!user) throw new Error('Email not registered ');
         const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) throw new Error('Password galat hai');
+        if (!isValid) throw new Error('Password Wrong');
         return {
           id:    user.id,
           name:  user.name,

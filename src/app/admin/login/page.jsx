@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut, getSession } from 'next-auth/react'; // import line update karo
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,15 +25,24 @@ export default function LoginPage() {
       redirect: false,
     });
 
-    setLoading(false);
-
     if (res?.error) {
+      setLoading(false);
       setError('Email or password might be wrong. Please try again.');
-    } else {
-      router.push('/admin');
+      return;
     }
-  };
 
+    const session = await getSession();
+
+    if (session?.user?.role?.toLowerCase() !== 'admin') {
+      await signOut({ redirect: false });
+      setLoading(false);
+      setError('Only admin can sign in here.');
+      return;
+    }
+
+    setLoading(false);
+    router.push('/admin');
+  };
   if (!mounted) return null;
 
   return (
@@ -362,8 +372,7 @@ export default function LoginPage() {
             {/* Sign Up */}
             <p style={{ textAlign: 'center', fontSize: 13.5, color: '#6b7280', margin: 0 }}>
               Don&apos;t have an account?{' '}
-              <a href="/signup" className="signup-link">Create one</a>
-            </p>
+              <a href="/admin/signup" className="signup-link">Create one</a>            </p>
 
             {/* Decorative dots */}
             <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: '1.4rem' }}>
