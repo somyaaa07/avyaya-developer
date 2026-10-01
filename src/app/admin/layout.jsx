@@ -1,229 +1,256 @@
 'use client';
-import { useSession } from 'next-auth/react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { signOut } from 'next-auth/react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { Marcellus } from 'next/font/google';
+import {
+  ExternalLink,
+  Inbox,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  UserCog,
+  Building2,
+  X,
+} from 'lucide-react';
+
+const marcellus = Marcellus({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+});
+
+const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
 
 const navLinks = [
-  { href: '/admin',            label: 'Dashboard',   icon: '◈' },
-  { href: '/admin/properties', label: 'Properties',  icon: '⌂' },
-  { href: '/admin/agents',     label: 'Agents',      icon: '✦' },
-  { href: '/admin/inquiries',  label: 'Inquiries',   icon: '◎' },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/properties', label: 'Properties', icon: Building2 },
+  { href: '/admin/agents', label: 'Agents', icon: UserCog },
+  { href: '/admin/inquiries', label: 'Inquiries', icon: Inbox },
 ];
 
+const isActive = (pathname, href) =>
+  href === '/admin' ? pathname === '/admin' : pathname === href || pathname.startsWith(href + '/');
+
+/* ---------------------------------------------------------------
+   SIDEBAR CONTENT (desktop + mobile drawer me same)
+---------------------------------------------------------------- */
+function SidebarContent({ pathname, user, onNavigate }) {
+  const initial = user?.name?.charAt(0)?.toUpperCase() || 'A';
+
+  return (
+    <div className="relative flex h-full flex-col overflow-hidden bg-[#1A2A22] text-[#FAF9F6]">
+      <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-[#D4AF37]/10 blur-3xl"
+      />
+
+      {/* Brand */}
+      <div className="relative px-6 pb-6 pt-8">
+        <Link href="/admin" onClick={onNavigate} className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4AF37]">
+          <h2 className={`${marcellus.className} text-2xl leading-tight`}>Bringo Real Estates</h2>
+          <p className="mt-1 text-sm text-[#F5D77A]">Admin panel</p>
+        </Link>
+      </div>
+
+      <div aria-hidden="true" className="mx-6 h-px bg-[#FAF9F6]/10" />
+
+      {/* Links */}
+      <nav aria-label="Admin navigation" className="relative flex-1 overflow-y-auto px-4 py-6">
+        <ul className="space-y-1.5">
+          {navLinks.map(({ href, label, icon: Icon }) => {
+            const active = isActive(pathname, href);
+            return (
+              <li key={href}>
+                <Link
+                  href={href}
+                  onClick={onNavigate}
+                  aria-current={active ? 'page' : undefined}
+                  className={`group relative flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37] ${
+                    active
+                      ? 'bg-[#FAF9F6]/10 text-[#FAF9F6]'
+                      : 'text-[#FAF9F6]/60 hover:bg-[#FAF9F6]/5 hover:text-[#FAF9F6]'
+                  }`}
+                >
+                  {active && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-[#F5D77A]"
+                    />
+                  )}
+                  <Icon
+                    size={19}
+                    strokeWidth={1.6}
+                    aria-hidden="true"
+                    className={active ? 'text-[#F5D77A]' : 'transition group-hover:text-[#F5D77A]'}
+                  />
+                  <span className={marcellus.className}>{label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <Link
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-6 flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-[#FAF9F6]/50 transition hover:text-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+        >
+          <ExternalLink size={17} strokeWidth={1.6} aria-hidden="true" />
+          View website
+        </Link>
+      </nav>
+
+      {/* User + logout */}
+      <div className="relative border-t border-[#FAF9F6]/10 p-4">
+        <div className="mb-3 flex items-center gap-3 px-1">
+          <span
+            aria-hidden="true"
+            className={`${marcellus.className} flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base text-[#1A2A22] ${goldBg}`}
+          >
+            {initial}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm text-[#FAF9F6]">{user?.name || 'Admin'}</p>
+            {user?.email && <p className="truncate font-sans text-xs text-[#FAF9F6]/50">{user.email}</p>}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#D4AF37]/25 bg-[#D4AF37]/10 px-4 py-2.5 text-sm text-[#FAF9F6] transition hover:border-red-300/50 hover:bg-red-500/15 hover:text-red-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+        >
+          <LogOut size={16} aria-hidden="true" />
+          Logout
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------
+   LAYOUT
+---------------------------------------------------------------- */
 export default function AdminLayout({ children }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const reduce = useReducedMotion();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const isAdmin = status === 'authenticated' && session?.user?.role === 'admin';
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
     if (status === 'authenticated' && session?.user?.role !== 'admin') router.push('/');
-  }, [status, session]);
+  }, [status, session, router]);
 
-  if (status === 'loading') {
+  // Close drawer on route change
+  useEffect(() => setDrawerOpen(false), [pathname]);
+
+  // Lock body scroll + Esc to close
+  useEffect(() => {
+    document.body.style.overflow = drawerOpen ? 'hidden' : '';
+    const onKey = (e) => e.key === 'Escape' && setDrawerOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [drawerOpen]);
+
+  // Loading / redirecting: admin UI tab tak mat dikhao jab tak admin confirm na ho
+  if (!isAdmin) {
     return (
-      <div style={{
-        minHeight: '100vh', display: 'flex', alignItems: 'center',
-        justifyContent: 'center', background: '#fafaef',
-        fontFamily: "'Jost', sans-serif",
-      }}>
-        <motion.div
-          animate={{ opacity: [0.4, 1, 0.4] }}
+      <div className="flex min-h-screen items-center justify-center bg-[#FAF9F6]">
+        <motion.p
+          animate={reduce ? undefined : { opacity: [0.4, 1, 0.4] }}
           transition={{ repeat: Infinity, duration: 1.6 }}
-          style={{ color: '#2e5d42', fontSize: '15px', letterSpacing: '0.12em' }}
+          className={`${marcellus.className} text-sm tracking-[0.2em] text-[#52685B]`}
         >
           LOADING
-        </motion.div>
+        </motion.p>
       </div>
     );
   }
 
+  const user = session.user;
+
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #fafaef; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #f0f0e0; }
-        ::-webkit-scrollbar-thumb { background: #2e5d42; border-radius: 10px; }
-      `}</style>
+    <div className="min-h-screen bg-[#FAF9F6] text-[#1A2A22] lg:flex">
+      {/* ===== Desktop sidebar ===== */}
+      <aside className="hidden w-64 shrink-0 lg:block">
+        <div className="sticky top-0 h-screen">
+          <SidebarContent pathname={pathname} user={user} />
+        </div>
+      </aside>
 
-      <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Jost', sans-serif" }}>
-
-        {/* Sidebar */}
-        <motion.aside
-          initial={{ x: -260 }}
-          animate={{ x: 0 }}
-          transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-          style={{
-            width: '240px',
-            background: '#1a3628',
-            flexShrink: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
+      {/* ===== Mobile top bar ===== */}
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-[#1A2A22]/10 bg-[#FAF9F6]/95 px-4 py-3 backdrop-blur lg:hidden">
+        <Link href="/admin" className={`${marcellus.className} text-lg`}>
+          Bringo <span className="text-[#B8902F]">Admin</span>
+        </Link>
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          aria-label="Open menu"
+          aria-expanded={drawerOpen}
+          className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#1A2A22]/15 transition hover:bg-[#F3F0E8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
         >
-          {/* Decorative pattern */}
-          <div style={{
-            position: 'absolute', top: 0, right: 0, width: '120px', height: '120px',
-            background: 'radial-gradient(circle at top right, rgba(46,93,66,0.6), transparent 70%)',
-            pointerEvents: 'none',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, width: '100px', height: '100px',
-            background: 'radial-gradient(circle at bottom left, rgba(201,168,76,0.08), transparent 70%)',
-            pointerEvents: 'none',
-          }} />
+          <Menu size={22} aria-hidden="true" />
+        </button>
+      </header>
 
-          {/* Brand */}
-          <div style={{ padding: '32px 24px 24px' }}>
+      {/* ===== Mobile drawer ===== */}
+      <AnimatePresence>
+        {drawerOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Admin menu">
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setDrawerOpen(false)}
+              className="absolute inset-0 bg-[#1A2A22]/50"
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={reduce ? { opacity: 0 } : { x: '-100%' }}
+              animate={reduce ? { opacity: 1 } : { x: 0 }}
+              exit={reduce ? { opacity: 0 } : { x: '-100%' }}
+              transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
+              className="absolute inset-y-0 left-0 w-72 max-w-[85vw] shadow-2xl"
             >
-              <p style={{
-                fontFamily: "'Marcellus', serif",
-                color: '#c9a84c',
-                fontSize: '11px',
-                letterSpacing: '0.25em',
-                textTransform: 'uppercase',
-                marginBottom: '4px',
-              }}>Admin</p>
-              <h2 style={{
-                fontFamily: "'Marcellus', serif",
-                color: '#fafaef',
-                fontSize: '22px',
-                lineHeight: 1.2,
-              }}>volora Estate Panel</h2>
+              <SidebarContent pathname={pathname} user={user} onNavigate={() => setDrawerOpen(false)} />
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(false)}
+                aria-label="Close menu"
+                className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-[#FAF9F6]/70 transition hover:bg-[#FAF9F6]/10 hover:text-[#FAF9F6]"
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
 
-          {/* Divider */}
-          <div style={{ margin: '0 24px 24px', height: '1px', background: 'rgba(250,250,239,0.1)' }} />
-
-          {/* Nav Links */}
-          <nav style={{ flex: 1, padding: '0 12px' }}>
-            {navLinks.map((link, i) => {
-              const isActive = pathname === link.href;
-              return (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 * i + 0.4 }}
-                >
-                  <Link
-                    href={link.href}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '11px 14px',
-                      borderRadius: '10px',
-                      color: isActive ? '#fafaef' : 'rgba(250,250,239,0.5)',
-                      background: isActive ? 'rgba(46,93,66,0.7)' : 'transparent',
-                      textDecoration: 'none',
-                      fontSize: '14px',
-                      fontWeight: isActive ? '500' : '400',
-                      letterSpacing: '0.02em',
-                      marginBottom: '4px',
-                      transition: 'all 0.2s ease',
-                      borderLeft: isActive ? '2px solid #c9a84c' : '2px solid transparent',
-                    }}
-                  >
-                    <span style={{ fontSize: '16px', opacity: 0.8 }}>{link.icon}</span>
-                    {link.label}
-                    {isActive && (
-                      <motion.div
-                        layoutId="sidebar-active"
-                        style={{
-                          marginLeft: 'auto',
-                          width: '6px', height: '6px',
-                          borderRadius: '50%',
-                          background: '#c9a84c',
-                        }}
-                      />
-                    )}
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </nav>
-
-      
-         <motion.div
-  initial={{ opacity: 0, y: 10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.6 }}
->
- {/* Logout */}
-<div style={{ padding: '20px', borderTop: '1px solid rgba(250,250,239,0.07)' }}>
-  <button
-    onClick={() => signOut({ callbackUrl: '/login' })}
-    style={{
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      padding: '11px 14px',
-      borderRadius: '10px',
-      background: 'rgba(201,168,76,0.08)',
-      color: '#fafaef',
-      border: '1px solid rgba(201,168,76,0.2)',
-      cursor: 'pointer',
-      fontSize: '14px',
-      letterSpacing: '0.04em',
-      transition: 'all 0.2s ease',
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.background = 'rgba(201,168,76,0.15)';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.background = 'rgba(201,168,76,0.08)';
-    }}
-  >
-    ⎋ Logout
-  </button>
-</div>
-</motion.div>
-        </motion.aside>
-
-        {/* Main Content */}
-        <div style={{
-          flex: 1,
-          background: '#fafaef',
-          minHeight: '100vh',
-          position: 'relative',
-          overflow: 'hidden',
-        }}>
-          {/* Subtle background texture */}
-          <div style={{
-            position: 'fixed',
-            top: 0, right: 0,
-            width: '500px', height: '500px',
-            background: 'radial-gradient(ellipse at top right, rgba(46,93,66,0.04), transparent 70%)',
-            pointerEvents: 'none',
-            zIndex: 0,
-          }} />
-
-          <motion.main
-            key={pathname}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-            style={{ position: 'relative', zIndex: 1, padding: '40px 36px' }}
-          >
-            {children}
-          </motion.main>
-        </div>
+      {/* ===== Main ===== */}
+      <div className="min-w-0 flex-1">
+        <motion.main
+          key={pathname}
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="px-4 py-8 sm:px-8 lg:px-10 lg:py-10"
+        >
+          {children}
+        </motion.main>
       </div>
-    </>
+    </div>
   );
 }

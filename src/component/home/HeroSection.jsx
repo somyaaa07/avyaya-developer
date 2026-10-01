@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Marcellus } from "next/font/google";
 import {
   FiArrowRight,
-  FiPhone,
   FiMapPin,
   FiHome,
   FiSearch,
@@ -46,6 +45,15 @@ const fadeUp = {
   }),
 };
 
+const fadeIn = {
+  hidden: { opacity: 0, y: 50 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.2, duration: 0.7, ease: "easeOut" },
+  }),
+};
+
 // Gold gradient: #E2A10D on left & right edges, #FFCD39 in the center
 const goldBg = "bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]";
 const goldText = `${goldBg} bg-clip-text text-transparent`;
@@ -56,6 +64,39 @@ const labelClass =
   "mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#52685B]";
 const iconClass =
   "pointer-events-none absolute bottom-3.5 left-3.5 text-[#52685B]";
+
+/* ---------------------------------------------------------------
+   BUTTON — About page wala BtnDark (same look + hover animation)
+---------------------------------------------------------------- */
+const BtnDark = ({ href, children }) => (
+  <Link
+    href={href}
+    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+  >
+    {/* Golden fill slides in from left */}
+    <span
+      aria-hidden="true"
+      className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100"
+    />
+
+    {/* Glass shine sweep */}
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -translate-x-full -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:translate-x-[450%] group-hover:opacity-100"
+    />
+
+    <span className="relative z-10">{children}</span>
+
+    {/* Arrow circle */}
+    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+      <FiArrowRight
+        size={14}
+        className="transition-transform duration-500 group-hover:-rotate-45"
+        aria-hidden="true"
+      />
+    </span>
+  </Link>
+);
 
 export default function HomeHero() {
   return (
@@ -104,7 +145,7 @@ export default function HomeHero() {
               className={`${marcellus.className} mt-6 text-[clamp(2.4rem,5.5vw,4.5rem)] font-normal leading-[1.06] tracking-tight text-[#faf9f6]`}
             >
               Find a Place You’ll Be{" "}
-              <span className={`italic pr-1 ${goldText}`}>Proud</span> to Call
+              <span className={` pr-1 ${goldText}`}>Proud</span> to Call
               Home
             </motion.h1>
 
@@ -119,31 +160,28 @@ export default function HomeHero() {
               by transparent guidance and long-term value.
             </motion.p>
 
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
-              custom={3}
-              className="mt-9 flex flex-col gap-3 sm:flex-row"
-            >
-              <Link
-                href="/properties"
-                className={`group inline-flex items-center justify-center gap-2 rounded-xl ${goldBg} px-7 py-3.5 text-sm font-semibold text-[#1a2a22] shadow-lg transition hover:scale-[1.02] hover:brightness-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD39] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a2a22]`}
+            {/* Buttons — About page jaisa BtnDark */}
+            <div className="mt-9 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+              <motion.div
+                variants={fadeIn}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={2}
               >
-                Explore Properties
-                <FiArrowRight
-                  className="transition-transform group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#faf9f6]/40 px-7 py-3.5 text-sm font-semibold text-[#faf9f6] backdrop-blur-sm transition hover:border-[#FFCD39] hover:bg-[#faf9f6]/10 hover:text-[#FFCD39] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD39]"
+                <BtnDark href="/properties">Explore Properties</BtnDark>
+              </motion.div>
+
+              <motion.div
+                variants={fadeIn}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={3}
               >
-                <FiPhone aria-hidden="true" />
-                Talk to an Expert
-              </Link>
-            </motion.div>
+                <BtnDark href="/contact">Talk to an Expert</BtnDark>
+              </motion.div>
+            </div>
 
             <motion.dl
               variants={fadeUp}

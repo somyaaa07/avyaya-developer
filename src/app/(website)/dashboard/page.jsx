@@ -266,7 +266,7 @@ export default function Dashboard() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+      
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
