@@ -21,16 +21,16 @@ const goldStroke = { stroke: "url(#footer-gold)" };
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Services", href: "/services" },
+  { label: "Properties", href: "/properties" },
+  // { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },
 ];
 
 const services = [
-  { label: "Residential Projects", href: "/services" },
-  { label: "Commercial Projects", href: "/services" },
-  { label: "Land / Plotting", href: "/services" },
-  { label: "Investment Advisory", href: "/services" },
+  { label: "Residential Properties", href: "/properties" },
+  { label: "Commercial Properties", href: "/properties" },
+  { label: "Land / Plotting", href: "/properties" },
+  // { label: "Investment Advisory", href: "/properties" },
 ];
 
 const socials = [

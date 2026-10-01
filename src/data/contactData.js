@@ -27,7 +27,7 @@ export const contactMethods = [
   },
   {
     id: "whatsapp",
-    icon: "MessageCircle",
+    icon: "FaWhatsapp",
     label: "WhatsApp",
     value: "Chat with our team",
     note: "Quick answers, anytime",
@@ -55,33 +55,33 @@ export const enquiryTypes = [
 export const workingHours = "Mon – Sat, 10 AM – 7 PM";
 
 // TODO: replace with your real office details
-export const offices = [
-  {
-    city: "Noida",
-    tag: "Head Office",
-    address:
-      "FF01,FF02 Kaveri City Center,Delta 1.Greater Noida,Gautam Buddha Nagar,UP 201306",
-    phone: PHONE,
-    email: EMAIL,
-    hours: workingHours,
-  },
-  {
-    city: "Greater Noida",
-    tag: "Branch Office",
-    address: "FF01,FF02 Kaveri City Center,Delta 1.Greater Noida,Gautam Buddha Nagar,UP 201306",
-    phone: PHONE,
-    email: EMAIL,
-    hours: workingHours,
-  },
-  {
-    city: "Delhi",
-    tag: "Branch Office",
-    address: "Add full Delhi office address here, New Delhi",
-    phone: PHONE,
-    email: "",
-    hours: workingHours,
-  },
-];
+// export const offices = [
+//   {
+//     city: "Noida",
+//     tag: "Head Office",
+//     address:
+//       "FF01,FF02 Kaveri City Center,Delta 1.Greater Noida,Gautam Buddha Nagar,UP 201306",
+//     phone: PHONE,
+//     email: EMAIL,
+//     hours: workingHours,
+//   },
+//   {
+//     city: "Greater Noida",
+//     tag: "Branch Office",
+//     address: "FF01,FF02 Kaveri City Center,Delta 1.Greater Noida,Gautam Buddha Nagar,UP 201306",
+//     phone: PHONE,
+//     email: EMAIL,
+//     hours: workingHours,
+//   },
+//   {
+//     city: "Delhi",
+//     tag: "Branch Office",
+//     address: "Add full Delhi office address here, New Delhi",
+//     phone: PHONE,
+//     email: "",
+//     hours: workingHours,
+//   },
+// ];
 
 // data/contactData.js — replace only the mapData export
 export const mapData = {

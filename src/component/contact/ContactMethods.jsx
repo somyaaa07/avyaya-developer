@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
-import { Phone, Mail, MessageCircle, MapPin, ArrowUpRight } from "lucide-react";
+import { Phone, Mail, MapPin, ArrowUpRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Marcellus } from "next/font/google";
 import { contactMethods } from "@/data/contactData";
 
@@ -10,7 +11,7 @@ const marcellus = Marcellus({
   display: "swap",
 });
 
-const icons = { Phone, Mail, MessageCircle, MapPin };
+const icons = { Phone, Mail, FaWhatsapp, MapPin };
 
 export default function ContactMethods() {
   return (

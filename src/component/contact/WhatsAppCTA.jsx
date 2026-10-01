@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
-import { MessageCircle, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
+
 import { Marcellus } from "next/font/google";
 import { WHATSAPP_URL } from "@/data/contactData";
 
@@ -56,7 +58,7 @@ export default function WhatsAppCTA() {
               background: "rgba(255,205,57,0.06)",
             }}
           >
-            <MessageCircle size={24} strokeWidth={1.6} aria-hidden="true" />
+            <FaWhatsapp size={24} strokeWidth={1.6} aria-hidden="true" />
           </span>
 
           <div>
