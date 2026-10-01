@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 
 export default function FaqAccordion({ items, faqs }) {
   const list = items || faqs || [];
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState();
 
   return (
     <ul className="mt-6 space-y-3">

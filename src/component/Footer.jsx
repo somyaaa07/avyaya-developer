@@ -7,7 +7,7 @@ import {
   FiClock,
   FiFacebook,
   FiInstagram,
-  FiLinkedin,
+
   FiYoutube,
   FiArrowUp,
 } from "react-icons/fi";
@@ -36,19 +36,18 @@ const services = [
 const socials = [
   { label: "Facebook", icon: FiFacebook, href: "#" },
   { label: "Instagram", icon: FiInstagram, href: "#" },
-  { label: "LinkedIn", icon: FiLinkedin, href: "#" },
   { label: "YouTube", icon: FiYoutube, href: "#" },
 ];
 
 const contact = [
-  { icon: FiPhone, text: "+91 7004397655", href: "tel:+917004397655" },
+  { icon: FiPhone, text: "+91 9999300301", href: "tel:+919999300301" },
   {
     icon: FiMail,
-    text: "info@avyayadevelopers.com",
-    href: "mailto:info@avyayadevelopers.com",
+    text: "bringo.realstates@gmail.com",
+    href: "mailto:bringo.realstates@gmail.com",
   },
-  { icon: FiClock, text: "Mon – Sat, 10 AM – 7 PM" },
-  { icon: FiMapPin, text: "Noida, Uttar Pradesh" },
+  
+  { icon: FiMapPin, text: "FF01,FF02 Kaveri City Center,Delta 1.Greater Noida,Gautam Buddha Nagar,UP 201306" },
 ];
 
 const linkClass =
@@ -204,15 +203,10 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#52685B]/50 py-6 text-center sm:flex-row sm:text-left">
           <p className="text-xs text-[#f3f0E8]/60 sm:text-sm">
-            © {new Date().getFullYear()} Avyaya Developers. All rights reserved.
+            © {new Date().getFullYear()} Bringo Real Estates. All rights reserved.
           </p>
           <div className="flex items-center gap-5 text-xs sm:text-sm">
-            <Link href="/privacy-policy" className={linkClass}>
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className={linkClass}>
-              Terms
-            </Link>
+            
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

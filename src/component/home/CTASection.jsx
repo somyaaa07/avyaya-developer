@@ -24,9 +24,9 @@ const serif = `${marcellus.className} font-normal`;
 const goldBg = "bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]";
 
 // TODO: replace with your real details
-const PHONE = "+91 7004397655";
-const PHONE_HREF = "tel:+917004397655";
-const WHATSAPP_URL = "https://wa.me/917004397655";
+const PHONE = "+91 9999300301";
+const PHONE_HREF = "tel:+9999300301";
+const WHATSAPP_URL = "https://wa.me/919999300301";
 const HOURS = "Mon – Sat, 10 AM – 7 PM";
 
 const contactLinks = [
@@ -50,7 +50,7 @@ const fieldIcon =
 export default function CTACallback({ image = null }) {
   const reduce = useReducedMotion();
   const [form, setForm] = useState({ name: "", phone: "" });
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [status, setStatus] = useState("idle"); 
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) =>

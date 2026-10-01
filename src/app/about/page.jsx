@@ -41,7 +41,7 @@ const SITE_URL = "https://www.bringorealestates.com";
 
 const BUSINESS = {
   name: "Bringo Real Estates",
-  phoneDisplay: "99993 00301",
+  phoneDisplay: "9999300301",
   phoneTel: "+919999300301",
   email: "bringo.realstates@gmail.com",
   addressLines: [
