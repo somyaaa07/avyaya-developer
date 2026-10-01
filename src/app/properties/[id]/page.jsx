@@ -1,75 +1,115 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { Marcellus } from 'next/font/google';
+import {
+  AlertCircle,
+  ArrowRight,
+  Bath,
+  BedDouble,
+  Building2,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  ImageOff,
+  Loader2,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Ruler,
+  Tag,
+  SearchX,
+} from 'lucide-react';
 
-const C = {
-  primary:     '#2e5d42',
-  primaryLight:'#3d7a58',
-  primaryPale: '#e8f0eb',
-  bg:          '#fafaef',
-  white:       '#ffffff',
-  border:      '#d6ddd8',
-  text:        '#1a2e22',
-  muted:       '#6b7c72',
-  accent:      '#c8a96e',
-  error:       '#c0392b',
-  success:     '#16a34a',
-};
+const marcellus = Marcellus({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-marcellus',
+  display: 'swap',
+});
 
-// ─────────────────────────────────────────────
-// Image Gallery
-// ─────────────────────────────────────────────
-function ImageGallery({ images = [] }) {
+const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
+
+const fieldBase =
+  'w-full rounded-xl border border-[#1A2A22]/15 bg-[#F3F0E8]/60 px-4 py-3 text-sm text-[#1A2A22] outline-none transition placeholder:text-[#52685B]/60 focus:border-[#D4AF37] focus:bg-[#FAF9F6] focus:ring-4 focus:ring-[#FFCD39]/30 disabled:opacity-60';
+const labelBase = 'mb-1.5 block text-sm text-[#1A2A22]';
+
+/* ---------------------------------------------------------------
+   IMAGE GALLERY
+---------------------------------------------------------------- */
+function ImageGallery({ images = [], title }) {
   const [current, setCurrent] = useState(0);
+  const total = images.length;
 
-  if (!images.length) {
+  const go = useCallback(
+    (dir) => setCurrent((p) => (p + dir + total) % total),
+    [total]
+  );
+
+  if (!total) {
     return (
-      <div style={{ height: '360px', background: C.primaryPale, borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ color: C.muted, fontSize: '14px' }}>No images available</span>
+      <div className="flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-3xl bg-[#F3F0E8] text-[#52685B]">
+        <ImageOff size={32} strokeWidth={1.4} />
+        <span className="text-sm">No images available</span>
       </div>
     );
   }
 
-  return (
-    <div>
-      {/* Main image */}
-      <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', height: '380px', marginBottom: '10px', background: '#000' }}>
-        <img
-          src={images[current].url}
-          alt={`Property image ${current + 1}`}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-        />
+  const arrow =
+    'absolute top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#FAF9F6]/90 text-[#1A2A22] shadow-md backdrop-blur transition hover:bg-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
 
-        {/* Arrows */}
-        {images.length > 1 && (
+  return (
+    <div
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowLeft') go(-1);
+        if (e.key === 'ArrowRight') go(1);
+      }}
+    >
+      <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-[#1A2A22] shadow-[0_20px_50px_-25px_rgba(26,42,34,0.5)]">
+        <img
+          key={current}
+          src={images[current].url}
+          alt={`${title || 'Property'} – image ${current + 1}`}
+          className="h-full w-full object-cover"
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#1A2A22]/40 to-transparent" />
+
+        {total > 1 && (
           <>
-            <button onClick={() => setCurrent(p => (p - 1 + images.length) % images.length)} style={arrowBtn('left')}>‹</button>
-            <button onClick={() => setCurrent(p => (p + 1) % images.length)}               style={arrowBtn('right')}>›</button>
+            <button type="button" onClick={() => go(-1)} aria-label="Previous image" className={`${arrow} left-4`}>
+              <ChevronLeft size={20} />
+            </button>
+            <button type="button" onClick={() => go(1)} aria-label="Next image" className={`${arrow} right-4`}>
+              <ChevronRight size={20} />
+            </button>
+            <span className="absolute bottom-4 right-4 rounded-full bg-[#1A2A22]/65 px-3 py-1 text-xs text-[#FAF9F6] backdrop-blur">
+              {current + 1} / {total}
+            </span>
           </>
         )}
-
-        {/* Counter */}
-        <div style={{ position: 'absolute', bottom: '12px', right: '14px', background: 'rgba(0,0,0,0.55)', color: '#fff', fontSize: '12px', padding: '3px 9px', borderRadius: '20px' }}>
-          {current + 1} / {images.length}
-        </div>
       </div>
 
-      {/* Thumbnails */}
-      {images.length > 1 && (
-        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
+      {total > 1 && (
+        <div className="mt-3 flex gap-2.5 overflow-x-auto pb-1">
           {images.map((img, i) => (
-            <div
+            <button
               key={i}
+              type="button"
               onClick={() => setCurrent(i)}
-              style={{
-                flexShrink: 0, width: '72px', height: '54px', borderRadius: '8px', overflow: 'hidden',
-                border: `2px solid ${i === current ? C.primary : 'transparent'}`,
-                cursor: 'pointer', opacity: i === current ? 1 : 0.65, transition: 'all 0.2s',
-              }}
+              aria-label={`Show image ${i + 1}`}
+              aria-current={i === current}
+              className={`h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] ${
+                i === current
+                  ? 'border-[#D4AF37] opacity-100'
+                  : 'border-transparent opacity-60 hover:opacity-100'
+              }`}
             >
-              <img src={img.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
+              <img src={img.url} alt="" className="h-full w-full object-cover" />
+            </button>
           ))}
         </div>
       )}
@@ -77,20 +117,9 @@ function ImageGallery({ images = [] }) {
   );
 }
 
-function arrowBtn(side) {
-  return {
-    position: 'absolute', top: '50%', transform: 'translateY(-50%)',
-    [side]: '12px',
-    background: 'rgba(0,0,0,0.45)', color: '#fff', border: 'none',
-    borderRadius: '50%', width: '38px', height: '38px', fontSize: '22px',
-    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-    lineHeight: 1,
-  };
-}
-
-// ─────────────────────────────────────────────
-// Save Button
-// ─────────────────────────────────────────────
+/* ---------------------------------------------------------------
+   SAVE BUTTON
+---------------------------------------------------------------- */
 function SaveButton({ propertyId }) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -100,98 +129,105 @@ function SaveButton({ propertyId }) {
   useEffect(() => {
     if (!session) return;
     fetch(`/api/saved?property_id=${propertyId}`)
-      .then(r => r.json())
-      .then(d => setSaved(d.saved));
+      .then((r) => r.json())
+      .then((d) => setSaved(!!d.saved))
+      .catch(() => {});
   }, [session, propertyId]);
 
   const toggle = async () => {
-    if (!session) { router.push('/login'); return; }
+    if (!session) {
+      router.push('/login');
+      return;
+    }
     setLoading(true);
-    const res = await fetch('/api/saved', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ property_id: propertyId }),
-    });
-    const data = await res.json();
-    setSaved(data.saved);
+    try {
+      const res = await fetch('/api/saved', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ property_id: propertyId }),
+      });
+      const data = await res.json();
+      setSaved(!!data.saved);
+    } catch {
+      /* ignore */
+    }
     setLoading(false);
   };
 
   return (
     <button
+      type="button"
       onClick={toggle}
       disabled={loading}
-      title={saved ? 'Remove from saved' : 'Save property'}
-      style={{
-        display: 'flex', alignItems: 'center', gap: '6px',
-        padding: '10px 18px',
-        background: saved ? '#fff0f3' : C.white,
-        border: `1.5px solid ${saved ? '#f87171' : C.border}`,
-        borderRadius: '10px',
-        color: saved ? '#ef4444' : C.muted,
-        fontSize: '14px', fontFamily: "'Jost', sans-serif", fontWeight: '500',
-        cursor: loading ? 'not-allowed' : 'pointer',
-        transition: 'all 0.2s',
-      }}
+      aria-pressed={saved}
+      className={`inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-60 ${
+        saved
+          ? 'border-red-300 bg-red-50 text-red-500'
+          : 'border-[#1A2A22]/20 bg-[#FAF9F6] text-[#52685B] hover:border-[#D4AF37] hover:text-[#1A2A22]'
+      }`}
     >
-      <span style={{ fontSize: '16px' }}>{saved ? '♥' : '♡'}</span>
+      <Heart size={16} className={saved ? 'fill-red-500' : ''} aria-hidden="true" />
       {saved ? 'Saved' : 'Save'}
     </button>
   );
 }
 
-// ─────────────────────────────────────────────
-// Agent Card
-// ─────────────────────────────────────────────
+/* ---------------------------------------------------------------
+   AGENT CARD
+---------------------------------------------------------------- */
 function AgentCard({ agent }) {
   if (!agent) return null;
+  const digits = agent.phone ? agent.phone.replace(/\D/g, '') : '';
+  const wa = digits
+    ? `https://wa.me/${digits}?text=${encodeURIComponent("Hi, I'm interested in your property listing.")}`
+    : null;
+
+  const btn =
+    'inline-flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
 
   return (
-    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '24px' }}>
-      <h3 style={{ fontFamily: "'Marcellus', serif", fontSize: '17px', color: C.primary, marginBottom: '16px', fontWeight: '400' }}>
-        Listed By
-      </h3>
+    <div className="rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-6">
+      <h3 className={`${marcellus.className} text-xl text-[#1A2A22]`}>Listed by</h3>
 
-      <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '16px' }}>
-        {/* Photo */}
-        <div style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: C.primaryPale, border: `2px solid ${C.primaryPale}` }}>
-          {agent.photo
-            ? <img src={agent.photo} alt={agent.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', color: C.primary }}>
-                {agent.name?.[0] || '?'}
-              </div>
-          }
+      <div className="mt-5 flex items-start gap-4">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1A2A22] text-xl text-[#F5D77A] ring-2 ring-[#D4AF37]/40">
+          {agent.photo ? (
+            <img src={agent.photo} alt={agent.name} className="h-full w-full object-cover" />
+          ) : (
+            <span className={marcellus.className}>{agent.name?.[0]?.toUpperCase() || '?'}</span>
+          )}
         </div>
-
-        {/* Info */}
-        <div>
-          <p style={{ fontFamily: "'Jost', sans-serif", fontWeight: '600', fontSize: '16px', color: C.text, marginBottom: '2px' }}>{agent.name}</p>
-          <p style={{ fontSize: '13px', color: C.muted }}>{agent.email}</p>
+        <div className="min-w-0">
+          <p className="text-base font-medium text-[#1A2A22]">{agent.name}</p>
+          {agent.email && <p className="break-all text-[13px] text-[#52685B]">{agent.email}</p>}
           {agent.description && (
-            <p style={{ fontSize: '13px', color: C.muted, marginTop: '6px', lineHeight: 1.5 }}>{agent.description}</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-[#52685B]">{agent.description}</p>
           )}
         </div>
       </div>
 
-      {/* Contact Buttons */}
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+      <div className="mt-5 flex flex-wrap gap-2">
         {agent.phone && (
-          <a href={`tel:${agent.phone}`} style={{ ...contactBtn, background: C.primary, color: '#fff', textDecoration: 'none' }}>
-            📞 Call Agent
+          <a href={`tel:${agent.phone}`} className={`${btn} bg-[#1A2A22] text-[#FAF9F6] hover:bg-[#52685B]`}>
+            <Phone size={15} aria-hidden="true" /> Call
           </a>
         )}
-        {agent.phone && (
+        {wa && (
           <a
-            href={`https://wa.me/${agent.phone.replace(/\D/g, '')}?text=Hi, I'm interested in your property listing.`}
-            target="_blank" rel="noopener noreferrer"
-            style={{ ...contactBtn, background: '#25d366', color: '#fff', textDecoration: 'none' }}
+            href={wa}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${btn} bg-[#25D366] text-white hover:brightness-95`}
           >
-            💬 WhatsApp
+            <MessageCircle size={15} aria-hidden="true" /> WhatsApp
           </a>
         )}
         {agent.email && (
-          <a href={`mailto:${agent.email}`} style={{ ...contactBtn, background: C.white, color: C.text, border: `1.5px solid ${C.border}`, textDecoration: 'none' }}>
-            ✉ Email
+          <a
+            href={`mailto:${agent.email}`}
+            className={`${btn} border border-[#1A2A22]/20 bg-[#FAF9F6] text-[#1A2A22] hover:border-[#D4AF37]`}
+          >
+            <Mail size={15} aria-hidden="true" /> Email
           </a>
         )}
       </div>
@@ -199,41 +235,34 @@ function AgentCard({ agent }) {
   );
 }
 
-const contactBtn = {
-  display: 'inline-flex', alignItems: 'center', gap: '6px',
-  padding: '9px 16px', borderRadius: '8px',
-  fontSize: '13px', fontFamily: "'Jost', sans-serif", fontWeight: '600',
-  cursor: 'pointer', border: 'none', transition: 'opacity 0.2s',
-};
-
-// ─────────────────────────────────────────────
-// Inquiry Form
-// ─────────────────────────────────────────────
+/* ---------------------------------------------------------------
+   INQUIRY FORM
+---------------------------------------------------------------- */
 function InquiryForm({ propertyId }) {
   const { data: session } = useSession();
   const [form, setForm] = useState({
-    name:    session?.user?.name  || '',
-    email:   session?.user?.email || '',
-    phone:   '',
+    name: session?.user?.name || '',
+    email: session?.user?.email || '',
+    phone: '',
     message: '',
   });
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Pre-fill when session loads
   useEffect(() => {
     if (session?.user) {
-      setForm(p => ({
+      setForm((p) => ({
         ...p,
-        name:  session.user.name  || p.name,
+        name: session.user.name || p.name,
         email: session.user.email || p.email,
       }));
     }
   }, [session]);
 
-  const set = (key) => (e) => setForm(p => ({ ...p, [key]: e.target.value }));
+  const set = (key) => (e) => setForm((p) => ({ ...p, [key]: e.target.value }));
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!form.name || !form.email || !form.message) {
       setErrorMsg('Name, email and message are required.');
       setStatus('error');
@@ -253,7 +282,7 @@ function InquiryForm({ propertyId }) {
 
       if (res.ok) {
         setStatus('success');
-        setForm(p => ({ ...p, phone: '', message: '' }));
+        setForm((p) => ({ ...p, phone: '', message: '' }));
       } else {
         setErrorMsg(data.error || 'Something went wrong.');
         setStatus('error');
@@ -266,114 +295,158 @@ function InquiryForm({ propertyId }) {
 
   if (status === 'success') {
     return (
-      <div style={{ background: '#f0fdf4', border: `1px solid #bbf7d0`, borderRadius: '12px', padding: '20px 24px', textAlign: 'center' }}>
-        <div style={{ fontSize: '28px', marginBottom: '8px' }}>✅</div>
-        <p style={{ fontFamily: "'Jost', sans-serif", fontWeight: '600', color: C.success, fontSize: '15px' }}>Inquiry Sent Successfully!</p>
-        <p style={{ fontSize: '13px', color: C.muted, marginTop: '4px' }}>The agent will contact you shortly.</p>
-        <button onClick={() => setStatus('idle')} style={{ marginTop: '14px', background: 'none', border: 'none', color: C.primary, fontFamily: "'Jost', sans-serif", fontSize: '13px', cursor: 'pointer', textDecoration: 'underline' }}>
+      <div aria-live="polite" className="rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-8 text-center">
+        <span className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full text-[#1A2A22] ${goldBg}`}>
+          <CheckCircle2 size={26} aria-hidden="true" />
+        </span>
+        <p className={`${marcellus.className} mt-5 text-2xl text-[#1A2A22]`}>Inquiry sent</p>
+        <p className="mt-2 text-sm text-[#52685B]">The agent will contact you shortly.</p>
+        <button
+          type="button"
+          onClick={() => setStatus('idle')}
+          className="mt-5 text-sm text-[#52685B] underline underline-offset-4 transition hover:text-[#1A2A22]"
+        >
           Send another inquiry
         </button>
       </div>
     );
   }
 
+  const loading = status === 'loading';
+
   return (
-    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '24px' }}>
-      <h3 style={{ fontFamily: "'Marcellus', serif", fontSize: '17px', color: C.primary, marginBottom: '6px', fontWeight: '400' }}>
-        Send Inquiry
-      </h3>
+    <div className="rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-6">
+      <h3 className={`${marcellus.className} text-xl text-[#1A2A22]`}>Send an inquiry</h3>
       {!session && (
-        <p style={{ fontSize: '12px', color: C.muted, marginBottom: '16px' }}>
-          You can send an inquiry as a guest, or{' '}
-          <a href="/login" style={{ color: C.primary }}>login</a> to your account.
+        <p className="mt-1.5 text-[13px] text-[#52685B]">
+          Send as a guest, or{' '}
+          <Link href="/login" className="text-[#1A2A22] underline underline-offset-4">
+            log in
+          </Link>{' '}
+          to use your account.
         </p>
       )}
 
-      {status === 'error' && (
-        <div style={{ background: '#fdf0ef', borderLeft: `3px solid ${C.error}`, borderRadius: '6px', padding: '10px 14px', color: C.error, fontSize: '13px', marginBottom: '14px' }}>
-          {errorMsg}
+      <form onSubmit={handleSubmit} noValidate className="mt-5 space-y-4">
+        <div>
+          <label htmlFor="inq-name" className={labelBase}>Your name *</label>
+          <input id="inq-name" type="text" autoComplete="name" placeholder="e.g. John Smith" value={form.name} onChange={set('name')} disabled={loading} className={fieldBase} />
         </div>
-      )}
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <FormField label="Your Name *">
-          <FormInput placeholder="e.g. John Smith" value={form.name} onChange={set('name')} />
-        </FormField>
-        <FormField label="Email *">
-          <FormInput type="email" placeholder="john@example.com" value={form.email} onChange={set('email')} />
-        </FormField>
-        <FormField label="Phone (optional)">
-          <FormInput type="tel" placeholder="+91 98765 43210" value={form.phone} onChange={set('phone')} />
-        </FormField>
-        <FormField label="Message *">
-          <FormInput
-            as="textarea"
+        <div>
+          <label htmlFor="inq-email" className={labelBase}>Email *</label>
+          <input id="inq-email" type="email" autoComplete="email" placeholder="john@example.com" value={form.email} onChange={set('email')} disabled={loading} className={fieldBase} />
+        </div>
+        <div>
+          <label htmlFor="inq-phone" className={labelBase}>Phone (optional)</label>
+          <input id="inq-phone" type="tel" autoComplete="tel" placeholder="+91 98765 43210" value={form.phone} onChange={set('phone')} disabled={loading} className={fieldBase} />
+        </div>
+        <div>
+          <label htmlFor="inq-msg" className={labelBase}>Message *</label>
+          <textarea
+            id="inq-msg"
+            rows={4}
             placeholder="I'm interested in this property, please contact me."
             value={form.message}
             onChange={set('message')}
-            style={{ minHeight: '90px', resize: 'vertical' }}
+            disabled={loading}
+            className={`${fieldBase} resize-y`}
           />
-        </FormField>
+        </div>
+
+        {status === 'error' && (
+          <p role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <AlertCircle size={17} className="mt-0.5 shrink-0" aria-hidden="true" />
+            {errorMsg}
+          </p>
+        )}
 
         <button
-          onClick={handleSubmit}
-          disabled={status === 'loading'}
-          style={{
-            padding: '12px',
-            background: status === 'loading' ? C.muted : C.primary,
-            color: '#fff', border: 'none', borderRadius: '10px',
-            fontFamily: "'Jost', sans-serif", fontSize: '15px', fontWeight: '600',
-            cursor: status === 'loading' ? 'not-allowed' : 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-            transition: 'background 0.2s',
-          }}
+          type="submit"
+          disabled={loading}
+          className="group relative inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {status === 'loading' ? (
-            <>
-              <span style={{ width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite', display: 'inline-block' }} />
-              Sending…
-            </>
-          ) : 'Send Inquiry'}
+          <span aria-hidden="true" className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100" />
+          <span className="relative z-10">{loading ? 'Sending…' : 'Send inquiry'}</span>
+          <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+            {loading ? (
+              <Loader2 size={17} className="animate-spin" aria-hidden="true" />
+            ) : (
+              <ArrowRight size={16} className="transition-transform duration-500 group-hover:-rotate-45" aria-hidden="true" />
+            )}
+          </span>
         </button>
+      </form>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------
+   SMALL PIECES
+---------------------------------------------------------------- */
+const TYPE_BADGE = {
+  buy: 'bg-[#1A2A22] text-[#F5D77A]',
+  sell: `${goldBg} text-[#1A2A22]`,
+  rent: 'bg-[#F3F0E8] text-[#1A2A22] ring-1 ring-[#1A2A22]/15',
+};
+
+function Fact({ icon: Icon, label, value }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-4">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1A2A22] text-[#F5D77A]">
+        <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
+      </span>
+      <div className="min-w-0">
+        <p className="text-xs text-[#52685B]">{label}</p>
+        <p className="truncate text-[15px] capitalize text-[#1A2A22]">{value}</p>
       </div>
     </div>
   );
 }
 
-function FormField({ label, children }) {
+function LoadingSkeleton() {
   return (
-    <div>
-      <label style={{ display: 'block', fontSize: '11px', fontWeight: '600', letterSpacing: '0.08em', textTransform: 'uppercase', color: C.primary, marginBottom: '6px', fontFamily: "'Jost', sans-serif" }}>
-        {label}
-      </label>
-      {children}
+    <div className="mx-auto grid max-w-7xl animate-pulse gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[1fr_380px]">
+      <div>
+        <div className="aspect-[16/10] rounded-3xl bg-[#52685B]/15" />
+        <div className="mt-6 h-8 w-2/3 rounded-full bg-[#52685B]/15" />
+        <div className="mt-3 h-4 w-1/3 rounded-full bg-[#52685B]/10" />
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="h-20 rounded-2xl bg-[#52685B]/10" />
+          ))}
+        </div>
+      </div>
+      <div className="space-y-4">
+        <div className="h-40 rounded-3xl bg-[#52685B]/10" />
+        <div className="h-96 rounded-3xl bg-[#52685B]/10" />
+      </div>
     </div>
   );
 }
 
-function FormInput({ as: Tag = 'input', style: extra, ...props }) {
-  const [focused, setFocused] = useState(false);
+function NotFound() {
   return (
-    <Tag
-      {...props}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      style={{
-        width: '100%', padding: '11px 14px',
-        fontFamily: "'Jost', sans-serif", fontSize: '14px', color: C.text,
-        background: C.white, border: `1.5px solid ${focused ? C.primary : C.border}`,
-        borderRadius: '8px', outline: 'none', boxSizing: 'border-box',
-        boxShadow: focused ? `0 0 0 3px ${C.primaryPale}` : 'none',
-        transition: 'border-color 0.2s, box-shadow 0.2s',
-        ...extra,
-      }}
-    />
+    <div className="flex flex-col items-center px-6 py-28 text-center">
+      <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#F3F0E8] text-[#B8902F]">
+        <SearchX size={34} strokeWidth={1.3} aria-hidden="true" />
+      </span>
+      <h1 className={`${marcellus.className} mt-6 text-3xl text-[#1A2A22]`}>Property not found</h1>
+      <p className="mt-2 max-w-sm text-sm text-[#52685B]">
+        This property does not exist or has been removed.
+      </p>
+      <Link
+        href="/properties"
+        className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#1A2A22] px-6 py-3 text-sm text-[#FAF9F6] transition hover:bg-[#52685B]"
+      >
+        <ChevronLeft size={16} aria-hidden="true" /> Back to properties
+      </Link>
+    </div>
   );
 }
 
-// ─────────────────────────────────────────────
-// Main Property Detail Page
-// ─────────────────────────────────────────────
+/* ---------------------------------------------------------------
+   PAGE
+---------------------------------------------------------------- */
 export default function PropertyDetailPage() {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
@@ -382,171 +455,133 @@ export default function PropertyDetailPage() {
 
   useEffect(() => {
     fetch(`/api/admin/properties/${id}`)
-      .then(r => {
-        if (r.status === 404) { setNotFound(true); return null; }
+      .then((r) => {
+        if (r.status === 404) {
+          setNotFound(true);
+          return null;
+        }
         return r.json();
       })
-      .then(data => {
+      .then((data) => {
         if (data) setProperty(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setNotFound(true);
+        setLoading(false);
+      });
   }, [id]);
 
-  if (loading) return <PageShell><Spinner /></PageShell>;
-  if (notFound) return <PageShell><NotFound /></PageShell>;
-  if (!property) return null;
+  const shell = `${marcellus.variable} min-h-screen bg-[#F3F0E8] font-[family-name:var(--font-marcellus)] font-normal text-[#1A2A22]`;
 
-  const price = Number(property.price).toLocaleString('en-IN');
+  if (loading) return <div className={shell}><LoadingSkeleton /></div>;
+  if (notFound || !property) return <div className={shell}><NotFound /></div>;
+
+  const priceNum = Number(property.price);
+  const price = Number.isFinite(priceNum) ? priceNum.toLocaleString('en-IN') : property.price;
+  const perSqft =
+    property.area && Number.isFinite(priceNum)
+      ? Math.round(priceNum / Number(property.area)).toLocaleString('en-IN')
+      : null;
   const images = property.images || [];
+  const isActive = property.status === 'active';
+
+  const facts = [
+    property.bedrooms && { icon: BedDouble, label: 'Bedrooms', value: property.bedrooms },
+    property.bathrooms && { icon: Bath, label: 'Bathrooms', value: property.bathrooms },
+    property.area && { icon: Ruler, label: 'Area', value: `${property.area} sq ft` },
+    property.property_type && { icon: Building2, label: 'Property type', value: property.property_type },
+    property.type && { icon: Tag, label: 'Listing', value: `For ${property.type}` },
+  ].filter(Boolean);
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: ${C.bg}; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        input::placeholder, textarea::placeholder { color: #a0b0a8; }
-        ::-webkit-scrollbar { height: 4px; } ::-webkit-scrollbar-thumb { background: ${C.border}; border-radius: 2px; }
-      `}</style>
+    <div className={shell}>
+      <div className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8">
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] text-[#52685B]">
+          <Link href="/" className="transition hover:text-[#1A2A22]">Home</Link>
+          <ChevronRight size={13} aria-hidden="true" />
+          <Link href="/properties" className="transition hover:text-[#1A2A22]">Properties</Link>
+          <ChevronRight size={13} aria-hidden="true" />
+          <span className="line-clamp-1 text-[#1A2A22]">{property.title}</span>
+        </nav>
 
-      <div style={{ minHeight: '100vh', background: C.bg, fontFamily: "'Jost', sans-serif", paddingBottom: '80px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 20px' }}>
+        <div className="grid items-start gap-8 lg:grid-cols-[1fr_380px]">
+          {/* ===== LEFT ===== */}
+          <div className="min-w-0">
+            <ImageGallery images={images} title={property.title} />
 
-          {/* ── Breadcrumb ── */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: C.muted, marginBottom: '24px' }}>
-            <a href="/" style={{ color: C.muted, textDecoration: 'none' }}>Home</a>
-            <span>›</span>
-            <a href="/properties" style={{ color: C.muted, textDecoration: 'none' }}>Properties</a>
-            <span>›</span>
-            <span style={{ color: C.text }}>{property.title}</span>
-          </div>
-
-          {/* ── Two-column layout ── */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '28px', alignItems: 'start' }}>
-
-            {/* ── LEFT COLUMN ── */}
-            <div>
-              {/* Gallery */}
-              <ImageGallery images={images} />
-
-              {/* Title + Price row */}
-              <div style={{ marginTop: '24px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
-                    <span style={{ ...badge, background: C.primaryPale, color: C.primary }}>
-                      {property.type?.toUpperCase()}
+            {/* Title + price */}
+            <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  {property.type && (
+                    <span className={`rounded-full px-3.5 py-1 text-xs capitalize ${TYPE_BADGE[property.type] || TYPE_BADGE.rent}`}>
+                      For {property.type}
                     </span>
-                    <span style={{ ...badge, background: '#fdf6ec', color: '#92600a' }}>
-                      {property.property_type}
-                    </span>
-                    <span style={{ ...badge, background: property.status === 'active' ? '#f0fdf4' : '#fef2f2', color: property.status === 'active' ? C.success : C.error }}>
+                  )}
+                  {property.status && (
+                    <span
+                      className={`rounded-full px-3.5 py-1 text-xs capitalize ${
+                        isActive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'
+                      }`}
+                    >
                       {property.status}
                     </span>
-                  </div>
-                  <h1 style={{ fontFamily: "'Marcellus', serif", fontSize: '26px', color: C.text, lineHeight: 1.2, marginBottom: '6px' }}>
-                    {property.title}
-                  </h1>
-                  <p style={{ fontSize: '14px', color: C.muted }}>
-                    📍 {property.location}{property.city ? `, ${property.city}` : ''}
-                  </p>
-                </div>
-
-                <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontFamily: "'Marcellus', serif", fontSize: '28px', color: C.primary }}>₹{price}</p>
-                  {property.area && (
-                    <p style={{ fontSize: '13px', color: C.muted }}>
-                      ₹{Math.round(property.price / property.area).toLocaleString('en-IN')}/sq ft
-                    </p>
                   )}
                 </div>
+                <h1 className="mt-3 text-3xl leading-tight sm:text-4xl">{property.title}</h1>
+                <p className="mt-2 flex items-start gap-1.5 text-[15px] text-[#52685B]">
+                  <MapPin size={16} className="mt-0.5 shrink-0 text-[#B8902F]" aria-hidden="true" />
+                  {property.location}
+                  {property.city ? `, ${property.city}` : ''}
+                </p>
               </div>
 
-              {/* Quick stats */}
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '28px' }}>
-                {property.bedrooms  && <StatPill icon="🛏" label={`${property.bedrooms} Beds`} />}
-                {property.bathrooms && <StatPill icon="🚿" label={`${property.bathrooms} Baths`} />}
-                {property.area      && <StatPill icon="📐" label={`${property.area} sq ft`} />}
-              </div>
-
-              {/* Description */}
-              {property.description && (
-                <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
-                  <h2 style={{ fontFamily: "'Marcellus', serif", fontSize: '18px', color: C.primary, marginBottom: '14px', fontWeight: '400' }}>
-                    About this Property
-                  </h2>
-                  <p style={{ fontSize: '15px', color: C.text, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
-                    {property.description}
-                  </p>
+              <div className="shrink-0 sm:text-right">
+                <p className="text-3xl text-[#1A2A22] sm:text-4xl">
+                  ₹{price}
+                  {property.type === 'rent' && <span className="font-sans text-base text-[#52685B]"> /mo</span>}
+                </p>
+                {perSqft && <p className="mt-1 text-[13px] text-[#52685B]">₹{perSqft} / sq ft</p>}
+                <div className="mt-3 sm:flex sm:justify-end">
+                  <SaveButton propertyId={id} />
                 </div>
-              )}
-
-              {/* Save button (mobile) */}
-              <div style={{ display: 'none' }}>
-                <SaveButton propertyId={id} />
               </div>
             </div>
 
-            {/* ── RIGHT COLUMN ── */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {/* Save button */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <SaveButton propertyId={id} />
+            {/* Key facts */}
+            {facts.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-2xl">Overview</h2>
+                <span aria-hidden="true" className={`mt-3 block h-[3px] w-14 rounded-full ${goldBg}`} />
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {facts.map((f) => (
+                    <Fact key={f.label} {...f} />
+                  ))}
+                </div>
               </div>
+            )}
 
-              {/* Agent Card */}
-              <AgentCard agent={property.agent} />
-
-              {/* Inquiry Form */}
-              <InquiryForm propertyId={id} />
-            </div>
+            {/* Description */}
+            {property.description && (
+              <div className="mt-8 rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-6 sm:p-8">
+                <h2 className="text-2xl">About this property</h2>
+                <span aria-hidden="true" className={`mt-3 block h-[3px] w-14 rounded-full ${goldBg}`} />
+                <p className="mt-5 whitespace-pre-line font-sans text-[15px] leading-[1.8] text-[#1A2A22]/85">
+                  {property.description}
+                </p>
+              </div>
+            )}
           </div>
+
+          {/* ===== RIGHT ===== */}
+          <aside className="flex flex-col gap-5 lg:sticky lg:top-24">
+            <AgentCard agent={property.agent} />
+            <InquiryForm propertyId={id} />
+          </aside>
         </div>
       </div>
-    </>
-  );
-}
-
-// ── Small helpers ──────────────────────────
-
-function StatPill({ icon, label }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: C.white, border: `1px solid ${C.border}`, borderRadius: '8px', padding: '8px 14px', fontSize: '14px', color: C.text }}>
-      <span>{icon}</span> {label}
-    </div>
-  );
-}
-
-const badge = {
-  display: 'inline-block', padding: '3px 10px', borderRadius: '20px',
-  fontSize: '11px', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase',
-};
-
-function PageShell({ children }) {
-  return (
-    <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Jost', sans-serif" }}>
-      {children}
-    </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-      <div style={{ width: '36px', height: '36px', border: `3px solid ${C.primaryPale}`, borderTopColor: C.primary, borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-      <p style={{ color: C.muted, fontSize: '14px' }}>Loading property…</p>
-    </div>
-  );
-}
-
-function NotFound() {
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <p style={{ fontSize: '48px', marginBottom: '12px' }}>🏚</p>
-      <h2 style={{ fontFamily: "'Marcellus', serif", fontSize: '22px', color: C.text, marginBottom: '8px' }}>Property Not Found</h2>
-      <p style={{ color: C.muted, fontSize: '14px', marginBottom: '20px' }}>This property does not exist or has been deleted.</p>
-      <a href="/properties" style={{ color: C.primary, fontSize: '14px' }}>← Back to Properties</a>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function AdminLayout({ children }) {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        // * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #fafaef; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #f0f0e0; }
