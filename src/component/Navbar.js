@@ -18,6 +18,13 @@ const jost = Jost({
   display: "swap",
 });
 
+/*
+  Palette
+  cream : #F3F0E8  (header + mobile menu surface)
+  navy  : #0F1F3D  (text, borders, primary buttons)
+  navy+ : #1A3260  (primary button hover)
+*/
+
 const links = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -34,7 +41,7 @@ function Logo() {
     <Link
       href="/"
       aria-label="Estate – Home"
-      className="flex items-center gap-2.5 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f2645]"
+      className="flex items-center gap-2.5 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0F1F3D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F3F0E8]"
     >
       <img
         src="/logo.png"
@@ -54,9 +61,7 @@ function NavbarInner() {
   const [scrolled, setScrolled] = useState(false);
 
   const isAdmin = session?.user?.role?.toLowerCase() === "admin";
-  const allLinks = isAdmin
-    ? [...links, ]
-    : links;
+  const allLinks = isAdmin ? [...links] : links;
   const firstName = session?.user?.name?.split(" ")[0];
   const initial = session?.user?.name?.charAt(0).toUpperCase();
 
@@ -98,13 +103,13 @@ function NavbarInner() {
   }, [open]);
 
   const focusRing =
-    "focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f2645]";
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0F1F3D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F3F0E8]";
 
   const logoutBtn = (extra = "") => (
     <button
       type="button"
       onClick={() => signOut({ callbackUrl: "/" })}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-4 py-2 text-sm font-medium text-white transition hover:border-red-400/60 hover:bg-red-500/15 hover:text-red-200 ${focusRing} ${extra}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-lg border border-[#0F1F3D]/25 px-4 py-2 text-sm font-medium text-[#0F1F3D] transition hover:border-red-600/40 hover:bg-red-600/10 hover:text-red-700 ${focusRing} ${extra}`}
     >
       <FiLogOut size={15} aria-hidden="true" />
       Logout
@@ -114,19 +119,39 @@ function NavbarInner() {
   const dashboardChip = (extra = "") => (
     <Link
       href={isAdmin ? "/admin" : "/dashboard"}
-      className={`inline-flex items-center gap-2 rounded-lg bg-white/10 px-3.5 py-2 text-sm font-medium text-white transition hover:bg-white/20 ${focusRing} ${extra}`}
+      className={`inline-flex items-center gap-2 rounded-lg bg-[#0F1F3D]/5 px-3.5 py-2 text-sm font-medium text-[#0F1F3D] transition hover:bg-[#0F1F3D]/10 ${focusRing} ${extra}`}
     >
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-[#0f2645]">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0F1F3D] text-xs font-bold text-white">
         {initial}
       </span>
       <span className="truncate">{firstName}</span>
     </Link>
   );
 
+  const loginBtn = (extra = "", onClick) => (
+    <Link
+      href="/login"
+      onClick={onClick}
+      className={`inline-flex items-center justify-center rounded-lg border border-[#0F1F3D]/25 px-4 py-2 text-sm font-medium text-[#0F1F3D] transition hover:border-[#0F1F3D] hover:bg-[#0F1F3D] hover:text-white ${focusRing} ${extra}`}
+    >
+      Login
+    </Link>
+  );
+
+  const signupBtn = (extra = "", onClick) => (
+    <Link
+      href="/signup"
+      onClick={onClick}
+      className={`inline-flex items-center justify-center rounded-lg border border-[#0F1F3D] bg-[#0F1F3D] px-4 py-2 text-sm font-medium text-white transition hover:border-[#1A3260] hover:bg-[#1A3260] ${focusRing} ${extra}`}
+    >
+      Sign Up
+    </Link>
+  );
+
   return (
     <header
-      className={`${jost.className} sticky top-0 z-50 border-b border-white/10 bg-[#f3f0E8]/95 text-white backdrop-blur transition-shadow ${
-        scrolled ? "shadow-[0_4px_20px_-10px_rgba(0,0,0,0.5)]" : ""
+      className={`${jost.className} sticky top-0 z-50 border-b border-[#0F1F3D]/10 bg-[#F3F0E8]/95 text-[#0F1F3D] backdrop-blur transition-shadow ${
+        scrolled ? "shadow-[0_4px_20px_-10px_rgba(15,31,61,0.35)]" : ""
       }`}
     >
       <nav
@@ -147,7 +172,7 @@ function NavbarInner() {
                   className={`border-b-2 py-1 text-sm transition-colors ${focusRing} ${
                     active
                       ? "border-[#0F1F3D] font-semibold text-[#0F1F3D]"
-                      : "border-transparent font-normal text-[#0F1F3D] hover:text-[#0F1F3D]"
+                      : "border-transparent font-normal text-[#0F1F3D]/70 hover:border-[#0F1F3D]/30 hover:text-[#0F1F3D]"
                   }`}
                 >
                   {label}
@@ -157,7 +182,7 @@ function NavbarInner() {
           })}
         </ul>
 
-      
+        {/* Desktop auth */}
         <div className="hidden items-center gap-2.5 lg:flex">
           {session ? (
             <>
@@ -166,19 +191,8 @@ function NavbarInner() {
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className={`inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm font-medium text-[#0F1F3D] transition hover:border-[#0F1F3D]/20 hover:bg-[#0F1F3D] hover:text-white ${focusRing}`}
-              >
-                Login
-              </Link>
-
-              <Link
-                href="/signup"
-                className={`inline-flex items-center justify-center rounded-lg bg-[#0F1F3D] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0F1F3D] ${focusRing}`}
-              >
-                Sign Up
-              </Link>
+              {loginBtn()}
+              {signupBtn()}
             </>
           )}
         </div>
@@ -190,7 +204,7 @@ function NavbarInner() {
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
-          className={`flex h-11 w-11 items-center justify-center rounded-lg border border-white/20 text-white transition hover:bg-white/10 lg:hidden ${focusRing}`}
+          className={`flex h-11 w-11 items-center justify-center rounded-lg border border-[#0F1F3D]/25 text-[#0F1F3D] transition hover:bg-[#0F1F3D]/5 lg:hidden ${focusRing}`}
         >
           {open ? (
             <FiX size={22} aria-hidden="true" />
@@ -210,7 +224,7 @@ function NavbarInner() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-x-0 bottom-0 top-16 bg-black/50 lg:hidden"
+              className="fixed inset-x-0 bottom-0 top-16 bg-[#0F1F3D]/50 lg:hidden"
               aria-hidden="true"
             />
             <motion.div
@@ -219,7 +233,7 @@ function NavbarInner() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.22 }}
-              className="absolute inset-x-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-white/10 bg-[#0f2645] text-white shadow-xl lg:hidden"
+              className="absolute inset-x-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-[#0F1F3D]/10 bg-[#F3F0E8] text-[#0F1F3D] shadow-xl lg:hidden"
             >
               <ul className="mx-auto max-w-7xl space-y-1 px-4 pb-2 pt-4 sm:px-6">
                 {allLinks.map(({ label, href }) => {
@@ -231,14 +245,14 @@ function NavbarInner() {
                         aria-current={active ? "page" : undefined}
                         className={`flex items-center justify-between rounded-xl px-4 py-3 text-base transition ${focusRing} ${
                           active
-                            ? "bg-white/10 font-semibold text-white"
-                            : "font-normal text-white/80 hover:bg-white/10 hover:text-white"
+                            ? "bg-[#0F1F3D]/10 font-semibold text-[#0F1F3D]"
+                            : "font-normal text-[#0F1F3D]/75 hover:bg-[#0F1F3D]/5 hover:text-[#0F1F3D]"
                         }`}
                       >
                         {label}
                         {active && (
                           <span
-                            className="h-1.5 w-1.5 rounded-full bg-white"
+                            className="h-1.5 w-1.5 rounded-full bg-[#0F1F3D]"
                             aria-hidden="true"
                           />
                         )}
@@ -248,36 +262,21 @@ function NavbarInner() {
                 })}
               </ul>
 
-              {session ? (
-                <div className="mx-auto max-w-7xl border-t border-white/10 px-4 pb-6 pt-4 sm:px-6">
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    {dashboardChip("flex-1 justify-center py-3")}
-                    {logoutBtn("flex-1 py-3")}
-                  </div>
+              <div className="mx-auto max-w-7xl border-t border-[#0F1F3D]/10 px-4 pb-6 pt-4 sm:px-6">
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  {session ? (
+                    <>
+                      {dashboardChip("flex-1 justify-center py-3")}
+                      {logoutBtn("flex-1 py-3")}
+                    </>
+                  ) : (
+                    <>
+                      {loginBtn("flex-1 py-3", () => setOpen(false))}
+                      {signupBtn("flex-1 py-3", () => setOpen(false))}
+                    </>
+                  )}
                 </div>
-              ) : (
-                <div className="mx-auto max-w-7xl border-t border-white/10 px-4 pb-6 pt-4 sm:px-6">
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <Link
-                      href="/login"
-                      onClick={() => setOpen(false)}
-                      className={`flex flex-1 items-center justify-center rounded-lg border border-white/20 px-4 py-3 text-sm font-medium text-[#0f2645] transition hover:bg-[#0f2645] ${focusRing}`}
-                    >
-                      Login
-                    </Link>
-
-                    <Link
-                      href="/signup"
-                      onClick={() => setOpen(false)}
-                      className={`flex flex-1 items-center justify-center rounded-lg bg-white px-4 py-3 text-sm font-medium text-[#0f2645] transition hover:bg-[#0f2645] ${focusRing}`}
-                    >
-                      Sign Up
-                    </Link>
-                  </div>
-                </div>
-              )}
-
-              {!session && <div className="pb-4" />}
+              </div>
             </motion.div>
           </>
         )}
@@ -291,7 +290,7 @@ export default function Navbar() {
   return (
     <Suspense
       fallback={
-        <div className="sticky top-0 z-50 h-16 border-b border-white/10 bg-[#0f2645] lg:h-[72px]" />
+        <div className="sticky top-0 z-50 h-16 border-b border-[#0F1F3D]/10 bg-[#F3F0E8] lg:h-[72px]" />
       }
     >
       <NavbarInner />

@@ -18,8 +18,26 @@ const EDITABLE_FIELDS = [
   'area',
   'bedrooms',
   'bathrooms',
+  // naye fields
+  'nearby_landmarks',
+  'amenities',
+  'property_highlights',
+  'age_of_property',
+  'furnishing',
+  'transaction_type',
+  'balcony',
+  'total_floors',
+  'parking',
+  'facing',
+  'construction_type',
 ];
 
+// Empty string ko null banana hai (INT columns me '' error deta hai)
+const NULLABLE_FIELDS = [
+  'area', 'bedrooms', 'bathrooms', 'balcony', 'total_floors',
+  'age_of_property', 'furnishing', 'transaction_type',
+  'parking', 'facing', 'construction_type',
+];
 function isAdminUser(user) {
   return user?.role?.toLowerCase() === 'admin';
 }
@@ -66,44 +84,61 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ error: 'Login required' }, { status: 401 });
   }
 
-  const { id } = await params;
-  await dbInit();
+  try {
+    const { id } = await params;
+    await dbInit();
 
-  const existing = await Property.findByPk(id);
-  if (!existing) {
-    return NextResponse.json({ error: 'Property nahi mili' }, { status: 404 });
-  }
+    const existing = await Property.findByPk(id);
+    if (!existing) {
+      return NextResponse.json({ error: 'Property nahi mili' }, { status: 404 });
+    }
 
-  if (!canManage(session.user, existing)) {
+    if (!canManage(session.user, existing)) {
+      return NextResponse.json(
+        { error: 'You can only edit your own properties.' },
+        { status: 403 }
+      );
+    }
+
+    const body = await req.json();
+
+    // Sirf allowed fields lo
+    const updates = {};
+    for (const key of EDITABLE_FIELDS) {
+      if (body[key] !== undefined) updates[key] = body[key];
+    }
+
+    // Empty string -> null
+    for (const key of NULLABLE_FIELDS) {
+      if (updates[key] === '') updates[key] = null;
+    }
+
+    // Status sirf admin badal sakta hai
+    if (body.status !== undefined && isAdminUser(session.user)) {
+      updates.status = body.status;
+    }
+
+    if (updates.type) updates.type = String(updates.type).toLowerCase();
+    if (updates.property_type) {
+      updates.property_type = String(updates.property_type).toLowerCase();
+    }
+
+    await existing.update(updates);
+
+    const property = await Property.findByPk(id, {
+      include: imagesInclude,
+      order: imagesOrder,
+    });
+
+    return NextResponse.json(property);
+  } catch (err) {
+    console.error('Update error:', err);
+    const isValidation = err.name === 'SequelizeValidationError';
     return NextResponse.json(
-      { error: 'You can only edit your own properties.' },
-      { status: 403 }
+      { error: isValidation ? 'Invalid data' : 'Error in updating property' },
+      { status: isValidation ? 400 : 500 }
     );
   }
-
-  const body = await req.json();
-
-  // Sirf allowed fields lo
-  const updates = {};
-  for (const key of EDITABLE_FIELDS) {
-    if (body[key] !== undefined) updates[key] = body[key];
-  }
-
-  // Status sirf admin badal sakta hai
-  if (body.status !== undefined && isAdminUser(session.user)) {
-    updates.status = body.status;
-  }
-
-  if (updates.type) updates.type = String(updates.type).toLowerCase();
-
-  await existing.update(updates);
-
-  const property = await Property.findByPk(id, {
-    include: imagesInclude,
-    order: imagesOrder,
-  });
-
-  return NextResponse.json(property);
 }
 
 // DELETE — ADMIN ya property ka OWNER

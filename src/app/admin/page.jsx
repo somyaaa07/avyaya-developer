@@ -100,7 +100,7 @@ export default function AdminDashboard() {
   });
 
   return (
-    <div className={`${marcellus.className} font-normal text-[#1A2A22]`}>
+    <div className={`${marcellus.className} font-normal text-[#0f2645]`}>
       {/* ── Header ── */}
       <motion.header {...enter()} className="mb-8 sm:mb-10">
         <h1 className="text-3xl leading-tight sm:text-4xl">Dashboard</h1>
@@ -113,7 +113,7 @@ export default function AdminDashboard() {
       {error && (
         <p
           role="alert"
-          className="mb-6 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-sans text-sm text-red-700"
+          className="mb-6 flex items-start gap-2 rounded-xl border border-[#9C3B2B]/25 bg-[#F6E3DF] px-4 py-3 font-sans text-sm text-[#9C3B2B]"
         >
           <AlertCircle size={17} className="mt-0.5 shrink-0" aria-hidden="true" />
           Could not load the latest numbers. Please refresh the page.
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
           <motion.li key={key} {...enter(0.1 + i * 0.08)} className="list-none">
             <Link
               href={href}
-              className="group relative block overflow-hidden rounded-3xl border border-[#1A2A22]/10 bg-white p-6 transition duration-300 hover:border-[#D4AF37]/60 hover:shadow-[0_18px_40px_-18px_rgba(26,42,34,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+              className="group relative block overflow-hidden rounded-3xl border border-[#0f2645]/10 bg-white p-6 transition duration-300 hover:border-[#D4AF37]/60 hover:shadow-[0_18px_40px_-18px_rgba(15,38,69,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
             >
               <span
                 aria-hidden="true"
@@ -134,11 +134,11 @@ export default function AdminDashboard() {
               />
 
               <div className="flex items-start justify-between">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1A2A22] text-[#F5D77A] transition duration-300 group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1A2A22]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0f2645] text-[#F5D77A] transition duration-300 group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#0f2645]">
                   <Icon size={22} strokeWidth={1.6} aria-hidden="true" />
                 </span>
                 {badge > 0 && (
-                  <span className="rounded-full bg-red-600 px-2.5 py-1 font-sans text-[11px] font-semibold text-white">
+                  <span className="rounded-full bg-[#9C3B2B] px-2.5 py-1 font-sans text-[11px] font-semibold text-white">
                     {badge} new
                   </span>
                 )}
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
               <p className="mt-6 font-sans text-sm text-[#52685B]">{label}</p>
               <div className="mt-1 flex items-end justify-between">
                 {loading ? (
-                  <span className="h-11 w-20 animate-pulse rounded-lg bg-[#52685B]/15" />
+                  <span className="h-11 w-20 animate-pulse rounded-lg bg-[#0f2645]/10" />
                 ) : (
                   <p className="text-[44px] leading-none">
                     <AnimatedNumber value={stats[key]} />
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
         <motion.section
           {...enter(0.5)}
           aria-labelledby="quick-actions"
-          className="rounded-3xl border border-[#1A2A22]/10 bg-white p-6 sm:p-8"
+          className="rounded-3xl border border-[#0f2645]/10 bg-white p-6 sm:p-8"
         >
           <h2 id="quick-actions" className="text-xl sm:text-2xl">
             Quick actions
@@ -180,9 +180,9 @@ export default function AdminDashboard() {
               <li key={label} className="list-none">
                 <Link
                   href={href}
-                  className="group flex items-center gap-3 rounded-2xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-3.5 transition hover:border-[#D4AF37]/60 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+                  className="group flex items-center gap-3 rounded-2xl border border-[#0f2645]/10 bg-[#FAF9F6] p-3.5 transition hover:border-[#D4AF37]/60 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1A2A22]/[0.06] text-[#1A2A22] transition group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#0f2645]/[0.06] text-[#0f2645] transition group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
                     <Icon size={18} aria-hidden="true" />
                   </span>
                   <span className="flex-1 font-sans text-[15px]">{label}</span>
@@ -201,20 +201,21 @@ export default function AdminDashboard() {
         <motion.section
           {...enter(0.6)}
           aria-labelledby="attention"
-          className="relative overflow-hidden rounded-3xl bg-[#1A2A22] p-6 text-[#FAF9F6] sm:p-8"
+          className="relative overflow-hidden rounded-3xl bg-[#0f2645] p-6 text-[#FAF9F6] sm:p-8"
         >
           <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
-          <h2 id="attention" className="text-xl sm:text-2xl">
+          <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+          <h2 id="attention" className="relative text-xl sm:text-2xl">
             Needs attention
           </h2>
 
           {loading ? (
-            <div className="mt-6 space-y-3">
+            <div className="relative mt-6 space-y-3">
               <span className="block h-12 w-24 animate-pulse rounded-lg bg-[#FAF9F6]/10" />
               <span className="block h-4 w-3/4 animate-pulse rounded-full bg-[#FAF9F6]/10" />
             </div>
           ) : stats.newInquiries > 0 ? (
-            <>
+            <div className="relative">
               <p className="mt-6 text-5xl leading-none text-[#F5D77A]">
                 {stats.newInquiries.toLocaleString('en-IN')}
               </p>
@@ -224,16 +225,16 @@ export default function AdminDashboard() {
               </p>
               <Link
                 href="/admin/inquiries"
-                className="group mt-7 inline-flex items-center gap-3 rounded-full bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] py-2.5 pl-6 pr-2.5 font-sans text-sm text-[#1A2A22] transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5D77A]"
+                className="group mt-7 inline-flex items-center gap-3 rounded-full bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] py-2.5 pl-6 pr-2.5 font-sans text-sm text-[#0f2645] transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5D77A]"
               >
                 View inquiries
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1A2A22] text-[#F5D77A]">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A]">
                   <ArrowRight size={14} className="transition-transform duration-300 group-hover:-rotate-45" aria-hidden="true" />
                 </span>
               </Link>
-            </>
+            </div>
           ) : (
-            <p className="mt-6 font-sans text-sm leading-relaxed text-[#FAF9F6]/75">
+            <p className="relative mt-6 font-sans text-sm leading-relaxed text-[#FAF9F6]/75">
               You are all caught up. New inquiries will show up here as soon as they arrive.
             </p>
           )}

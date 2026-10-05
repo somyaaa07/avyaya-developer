@@ -1,274 +1,467 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, Suspense } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Marcellus } from 'next/font/google';
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  Building2,
+  Check,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Heart,
+  Loader2,
+  Lock,
+  Mail,
+  MessageSquare,
+  User,
+} from 'lucide-react';
 
-export default function SignupPage() {
+const marcellus = Marcellus({ subsets: ['latin'], weight: '400', display: 'swap' });
+
+const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* Sirf apni site ke andar ka callback allow karo (open redirect se bachne ke liye) */
+const safeCallback = (raw) =>
+  raw && raw.startsWith('/') && !raw.startsWith('//') && !raw.startsWith('/login') && !raw.startsWith('/signup')
+    ? raw
+    : null;
+
+const inputClass = (invalid) =>
+  `w-full rounded-xl border bg-[#F3F0E8]/60 py-3.5 pl-11 pr-4 font-sans text-[15px] text-[#0f2645] outline-none transition placeholder:text-[#52685B]/60 hover:border-[#0f2645]/30 focus:bg-white focus:ring-4 disabled:opacity-60 ${
+    invalid
+      ? 'border-[#9C3B2B] focus:border-[#9C3B2B] focus:ring-[#9C3B2B]/15'
+      : 'border-[#0f2645]/15 focus:border-[#D4AF37] focus:ring-[#FFCD39]/30'
+  }`;
+
+/* ---------- Architectural line drawing (brand panel) ---------- */
+const windows = (x, y, cols, rows, w, h, gx, gy) => {
+  let d = '';
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++) d += `M${x + c * (w + gx)} ${y + r * (h + gy)}h${w}v${h}h-${w}z`;
+  return d;
+};
+
+const drawing = [
+  ['M0 340H420', 1.5, 0.9],
+  ['M40 340V110H140V340M40 110L90 76L140 110', 1.5, 0.9],
+  ['M140 340V180H240V340', 1.5, 0.7],
+  ['M240 340V130H350V340M240 130L295 96L350 130', 1.5, 0.9],
+  ['M350 340V220H400V340', 1.5, 0.5],
+  [windows(56, 130, 4, 6, 12, 16, 8, 14), 1, 0.55],
+  [windows(156, 198, 3, 4, 14, 18, 12, 14), 1, 0.4],
+  [windows(258, 152, 4, 5, 14, 18, 8, 16), 1, 0.55],
+  ['M80 340V312a10 10 0 0 1 20 0V340', 1.2, 0.9],
+  ['M290 340V310a12 12 0 0 1 24 0V340', 1.2, 0.9],
+  ['M295 96V60M295 60h14', 1, 0.7],
+];
+
+function Elevation({ reduce }) {
+  return (
+    <svg viewBox="0 0 420 360" fill="none" stroke="#D4AF37" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-auto w-full">
+      {drawing.map(([d, sw, op], i) => (
+        <motion.path
+          key={i}
+          d={d}
+          strokeWidth={sw}
+          initial={reduce ? false : { pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: op }}
+          transition={{ duration: 1.4, delay: 0.2 + i * 0.12, ease: 'easeInOut' }}
+        />
+      ))}
+    </svg>
+  );
+}
+
+const FieldError = ({ id, children }) =>
+  children ? (
+    <p id={id} className="mt-1.5 flex items-center gap-1.5 font-sans text-xs text-[#9C3B2B]">
+      <AlertCircle size={13} aria-hidden="true" /> {children}
+    </p>
+  ) : null;
+
+const perks = [
+  { icon: Heart, text: 'Save properties you like and find them later' },
+  { icon: MessageSquare, text: 'Track every inquiry you send in one place' },
+  { icon: Building2, text: 'Get updates on new projects from Avyaya Developers' },
+];
+
+/* ---------- Password strength ---------- */
+const getStrength = (val) => {
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  return score;
+};
+
+const strengthMeta = (score) => {
+  if (score <= 1) return { label: 'Weak password', color: '#9C3B2B' };
+  if (score === 2) return { label: 'Fair password', color: '#E2A10D' };
+  if (score === 3) return { label: 'Good password', color: '#B8902F' };
+  return { label: 'Strong password', color: '#52685B' };
+};
+
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const reduce = useReducedMotion();
+  const callbackUrl = safeCallback(searchParams.get('callbackUrl'));
+
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passRef = useRef(null);
+
   const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [showPass, setShowPass] = useState(false);
   const [terms, setTerms] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [capsOn, setCapsOn] = useState(false);
+  const [touched, setTouched] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1);
 
-  const getStrength = (val) => {
-    let score = 0;
-    if (val.length >= 8) score++;
-    if (/[A-Z]/.test(val)) score++;
-    if (/[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
-    return score;
+  useEffect(() => {
+    nameRef.current?.focus();
+  }, []);
+
+  /* Field-level validation */
+  const fieldErrors = {
+    name: !form.name.trim() ? 'Enter your full name.' : '',
+    email: !form.email.trim()
+      ? 'Enter your email address.'
+      : !EMAIL_RE.test(form.email.trim())
+      ? 'That doesn’t look like a valid email.'
+      : '',
+    password: !form.password
+      ? 'Create a password.'
+      : form.password.length < 8
+      ? 'Use at least 8 characters.'
+      : '',
+    terms: !terms ? 'Accept the Terms of Service and Privacy Policy to continue.' : '',
   };
+  const show = (k) => touched[k] && fieldErrors[k];
 
-  const strengthMeta = (score) => {
-    if (!score) return { label: '', color: 'transparent', fill: 0 };
-    if (score <= 1) return { label: 'Weak password', color: '#ef4444', fill: 1 };
-    if (score <= 2) return { label: 'Fair password', color: '#f59e0b', fill: 2 };
-    if (score === 3) return { label: 'Good password', color: '#22c55e', fill: 3 };
-    return { label: 'Strong password', color: '#22c55e', fill: 4 };
-  };
+  const strengthScore = getStrength(form.password);
+  const { label: strengthLabel, color: strengthColor } = strengthMeta(strengthScore);
 
-  const strength = getStrength(form.password);
-  const { label: strengthLabel, color: strengthColor, fill: strengthFill } = strengthMeta(strength);
+  const loginHref = callbackUrl ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}` : '/login';
 
   const handleSubmit = async (e) => {
     e?.preventDefault();
+    if (loading || success) return;
+    setTouched({ name: true, email: true, password: true, terms: true });
     setError('');
-    setSuccess('');
 
-    if (!form.name || !form.email || !form.password) {
-      setError('Please fill in all fields to continue.'); return;
-    }
-    if (!terms) {
-      setError('Please agree to the Terms of Service to proceed.'); return;
-    }
-    if (form.password.length < 8) {
-      setError('Password must be at least 8 characters.'); return;
-    }
+    if (fieldErrors.name) return nameRef.current?.focus();
+    if (fieldErrors.email) return emailRef.current?.focus();
+    if (fieldErrors.password) return passRef.current?.focus();
+    if (fieldErrors.terms) return;
 
     setLoading(true);
-    setStep(2);
 
-    const res = await fetch('/api/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          password: form.password,
+        }),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      let data = {};
+      try { data = await res.json(); } catch {}
 
-    if (!res.ok) {
-      setStep(1);
-      setError(data.error);
-    } else {
-      setStep(3);
-      setSuccess('Account created! Redirecting you to login…');
-      setTimeout(() => router.push('/login'), 2000);
+      if (!res.ok) {
+        setLoading(false);
+        setError(data?.error || 'Couldn’t create your account. Please try again.');
+        return;
+      }
+
+      setSuccess('Account created. Taking you to sign in…');
+      setTimeout(() => router.push(loginHref), 1800);
+      // loading true hi rehne do, page change hone tak button disabled rahe
+    } catch {
+      setLoading(false);
+      setError('Couldn’t reach the server. Check your connection and try again.');
     }
   };
 
-  const StepDot = ({ n, label }) => {
-    const isDone = step > n;
-    const isActive = step === n;
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{
-          width: 22, height: 22, borderRadius: '50%',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 10, fontWeight: 600, fontFamily: "'Jost', sans-serif",
-          background: isActive ? '#fff' : isDone ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.18)',
-          color: isActive ? '#2e5d42' : isDone ? '#fff' : 'rgba(255,255,255,0.5)',
-          transition: 'all 0.3s',
-        }}>
-          {isDone ? '✓' : n}
-        </div>
-        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 3, fontFamily: "'Jost', sans-serif" }}>
-          {label}
-        </div>
-      </div>
-    );
-  };
+  const busy = loading || !!success;
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; }
-        .signup-input {
-          width: 100%; padding: 11px 36px 11px 36px;
-          border: 1.5px solid rgba(46,93,66,0.18); border-radius: 12px;
-          font-family: 'Jost', sans-serif; font-size: 14px; color: #1a1a1a;
-          background: #fafaef; outline: none;
-          transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
-        }
-        .signup-input:focus { border-color: #2e5d42; background: #fff; box-shadow: 0 0 0 3px rgba(46,93,66,0.1); }
-        .signup-input::placeholder { color: #b0b0a0; }
-        .signup-btn {
-          width: 100%; padding: 13px;
-          background: #2e5d42; color: #fff; border: none; border-radius: 13px;
-          font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 500;
-          letter-spacing: 0.5px; cursor: pointer; margin-top: 1.2rem;
-          transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
-        }
-        .signup-btn:hover:not(:disabled) { background: #244c36; box-shadow: 0 6px 20px rgba(46,93,66,0.28); transform: translateY(-1px); }
-        .signup-btn:active:not(:disabled) { transform: scale(0.985); box-shadow: none; }
-        .signup-btn:disabled { background: #8fac9a; cursor: not-allowed; }
-        .login-link { color: #2e5d42; font-weight: 600; text-decoration: none; border-bottom: 1.5px solid transparent; transition: border-color 0.2s; }
-        .login-link:hover { border-color: #2e5d42; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .spinner { width:18px;height:18px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto; }
-        @keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
-        @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(14px)} }
-        .bg-c1{position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(46,93,66,0.06);top:-110px;right:-110px;animation:floatA 8s ease-in-out infinite;}
-        .bg-c2{position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(46,93,66,0.04);bottom:-60px;left:-60px;animation:floatB 10s ease-in-out infinite;}
-        .bg-c3{position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(46,93,66,0.05);top:35%;left:6%;animation:floatA 12s ease-in-out infinite 2s;}
-      `}</style>
+    <div className={`${marcellus.className} grid min-h-screen bg-[#FAF9F6] font-normal text-[#0f2645] lg:grid-cols-[1.05fr_1fr]`}>
+      {/* ===== Brand panel (desktop) ===== */}
+      <aside className="relative hidden overflow-hidden bg-[#0f2645] p-12 text-[#FAF9F6] lg:flex lg:flex-col lg:justify-between">
+        <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
+        <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-1/3 h-96 w-96 rounded-full bg-[#D4AF37]/10 blur-3xl" />
 
-      <div style={{ minHeight: '100vh', background: '#fafaef', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', fontFamily: "'Jost', sans-serif", position: 'relative', overflow: 'hidden' }}>
-        <div className="bg-c1" /><div className="bg-c2" /><div className="bg-c3" />
+        <Link href="/" className="relative inline-flex w-fit items-center gap-2 font-sans text-sm text-[#FAF9F6]/70 transition hover:text-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4AF37]">
+          <ArrowLeft size={16} aria-hidden="true" /> Back to website
+        </Link>
+
+        <div className="relative">
+          <h2 className="text-5xl leading-[1.1] xl:text-6xl">Avyaya Developers</h2>
+          <span aria-hidden="true" className={`mt-6 block h-[3px] w-16 rounded-full ${goldBg}`} />
+          <p className="mt-6 max-w-sm font-sans text-base leading-relaxed text-[#FAF9F6]/70">
+            Create your free account and keep your property search in one place.
+          </p>
+
+          <ul className="mt-8 space-y-4 font-sans text-[15px] text-[#FAF9F6]/80">
+            {perks.map(({ icon: Icon, text }) => (
+              <li key={text} className="flex items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#D4AF37]/10 text-[#F5D77A] ring-1 ring-[#D4AF37]/40">
+                  <Icon size={16} aria-hidden="true" />
+                </span>
+                {text}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="relative">
+          <div className="mx-auto w-full max-w-md"><Elevation reduce={reduce} /></div>
+        </div>
+      </aside>
+
+      {/* ===== Form side ===== */}
+      <main className="relative flex items-center justify-center overflow-hidden px-5 py-12 sm:px-8">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#F3F0E8] blur-2xl" />
 
         <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          style={{ background: '#fff', borderRadius: 24, border: '1px solid rgba(46,93,66,0.12)', width: '100%', maxWidth: 440, overflow: 'hidden', position: 'relative' }}
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="relative w-full max-w-md"
         >
-          {/* Header */}
-          <div style={{ background: '#2e5d42', padding: '1.8rem 2.2rem 1.7rem', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', top: -80, right: -60 }} />
-            <div style={{ position: 'absolute', width: 110, height: 110, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', bottom: -30, left: 40 }} />
+          <Link href="/" className="mb-6 inline-flex items-center gap-2 font-sans text-sm text-[#52685B] transition hover:text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4AF37] lg:hidden">
+            <ArrowLeft size={16} aria-hidden="true" /> Back to website
+          </Link>
 
-            <motion.div initial={{ opacity: 0, scale: 0.5, rotate: -15 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
-              style={{ width: 46, height: 46, background: 'rgba(255,255,255,0.15)', borderRadius: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.9rem' }}>
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff">
-                <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-              </svg>
-            </motion.div>
+          <div className="relative overflow-hidden rounded-3xl border border-[#0f2645]/10 bg-white p-7 shadow-[0_24px_60px_-20px_rgba(26,42,34,0.25)] sm:p-10">
+            <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
 
-            <motion.h1 initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
-              style={{ fontFamily: "'Marcellus', serif", color: '#fff', fontSize: 27, fontWeight: 400, margin: 0 }}>
-              Create Account
-            </motion.h1>
-            <motion.p initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}
-              style={{ color: 'rgba(255,255,255,0.62)', fontSize: 13, fontWeight: 300, marginTop: 3, marginBottom: 0 }}>
-              Join us and start your journey today
-            </motion.p>
-
-            {/* Step indicator */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
-              style={{ display: 'flex', alignItems: 'center', marginTop: '1.1rem', position: 'relative', zIndex: 1 }}>
-              <StepDot n={1} label="Details" />
-              <div style={{ flex: 1, height: 1.5, background: 'rgba(255,255,255,0.2)', maxWidth: 28 }} />
-              <StepDot n={2} label="Verify" />
-              <div style={{ flex: 1, height: 1.5, background: 'rgba(255,255,255,0.2)', maxWidth: 28 }} />
-              <StepDot n={3} label="Done" />
-            </motion.div>
-          </div>
-
-          {/* Body */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-            style={{ padding: '1.8rem 2.2rem 2rem' }}>
-
-            <AnimatePresence>
-              {error && (
-                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                  style={{ background: '#fff5f5', border: '1px solid #fca5a5', borderLeft: '3px solid #ef4444', borderRadius: 10, padding: '10px 14px', marginBottom: '1.1rem', fontSize: 13.5, color: '#b91c1c' }}>
-                  {error}
-                </motion.div>
-              )}
-              {success && (
-                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                  style={{ background: '#f0fdf4', border: '1px solid #86efac', borderLeft: '3px solid #22c55e', borderRadius: 10, padding: '10px 14px', marginBottom: '1.1rem', fontSize: 13.5, color: '#166534' }}>
-                  {success}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Name */}
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#2e5d42', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: 6 }}>Full Name</label>
-              <div style={{ position: 'relative' }}>
-                <input type="text" className="signup-input" placeholder="Your full name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
-                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#9ca3af" strokeWidth="1.8" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                  <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/>
-                </svg>
-              </div>
-            </div>
-
-            {/* Email */}
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#2e5d42', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: 6 }}>Email Address</label>
-              <div style={{ position: 'relative' }}>
-                <input type="email" className="signup-input" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#9ca3af" strokeWidth="1.8" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                  <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/>
-                </svg>
-              </div>
-            </div>
-
-            {/* Password */}
-            <div style={{ marginBottom: '0.6rem' }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#2e5d42', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: 6 }}>Password</label>
-              <div style={{ position: 'relative' }}>
-                <input type={showPass ? 'text' : 'password'} className="signup-input" placeholder="Min. 8 characters" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
-                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#9ca3af" strokeWidth="1.8" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                <button onClick={() => setShowPass(p => !p)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
-                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#9ca3af" strokeWidth="1.8">
-                    {showPass
-                      ? <><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></>
-                      : <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>
-                    }
-                  </svg>
-                </button>
-              </div>
-              {/* Strength bar */}
-              {form.password && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <div style={{ display: 'flex', gap: 4, marginTop: 6, height: 3 }}>
-                    {[1, 2, 3, 4].map(i => (
-                      <div key={i} style={{ flex: 1, borderRadius: 2, background: i <= strengthFill ? strengthColor : 'rgba(46,93,66,0.1)', transition: 'background 0.3s' }} />
-                    ))}
-                  </div>
-                  <div style={{ fontSize: 11, color: strengthColor, marginTop: 3 }}>{strengthLabel}</div>
-                </motion.div>
-              )}
-            </div>
-
-            {/* Terms */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginTop: '0.6rem' }}>
-              <input type="checkbox" id="terms" checked={terms} onChange={e => setTerms(e.target.checked)} style={{ accentColor: '#2e5d42', marginTop: 2, cursor: 'pointer', flexShrink: 0 }} />
-              <label htmlFor="terms" style={{ fontSize: 12.5, color: '#6b7280', cursor: 'pointer', lineHeight: 1.5 }}>
-                I agree to the <a href="#" style={{ color: '#2e5d42', fontWeight: 500 }}>Terms of Service</a> and <a href="/privacy" style={{ color: '#2e5d42', fontWeight: 500 }}>Privacy Policy</a>
-              </label>
-            </div>
-
-            <motion.button className="signup-btn" onClick={handleSubmit} disabled={loading} whileTap={{ scale: loading ? 1 : 0.985 }}>
-              {loading ? <div className="spinner" /> : 'Create Account'}
-            </motion.button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '1.3rem 0 1.1rem' }}>
-              <div style={{ flex: 1, height: 1, background: 'rgba(46,93,66,0.12)' }} />
-              <span style={{ fontSize: 12, color: '#9ca3af' }}>or</span>
-              <div style={{ flex: 1, height: 1, background: 'rgba(46,93,66,0.12)' }} />
-            </div>
-
-            <p style={{ textAlign: 'center', fontSize: 13, color: '#6b7280', margin: 0 }}>
-              Already have an account? <a href="/login" className="login-link">Sign in</a>
+            <h1 className="text-4xl leading-tight">Create your account</h1>
+            <span aria-hidden="true" className={`mt-4 block h-[3px] w-14 rounded-full ${goldBg}`} />
+            <p className="mt-4 font-sans text-[15px] text-[#52685B]">
+              Sign up to save properties and track your inquiries.
             </p>
 
-            <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: '1.2rem' }}>
-              {[0.18, 0.35, 0.18].map((op, i) => (
-                <span key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: `rgba(46,93,66,${op})`, display: 'block' }} />
-              ))}
+            <form onSubmit={handleSubmit} noValidate aria-busy={busy} className="mt-8 space-y-5">
+              {/* Form-level error */}
+              {error && (
+                <motion.div
+                  role="alert"
+                  initial={reduce ? false : { opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl border border-[#9C3B2B]/25 bg-[#F6E3DF] px-4 py-3 font-sans text-sm text-[#9C3B2B]"
+                >
+                  <p className="flex items-start gap-2.5">
+                    <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" /> {error}
+                  </p>
+                </motion.div>
+              )}
+
+              {/* Success */}
+              {success && (
+                <motion.div
+                  role="status"
+                  initial={reduce ? false : { opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl border border-[#D4AF37]/50 bg-[#F3F0E8] px-4 py-3 font-sans text-sm text-[#0f2645]"
+                >
+                  <p className="flex items-start gap-2.5">
+                    <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-[#B8902F]" aria-hidden="true" /> {success}
+                  </p>
+                </motion.div>
+              )}
+
+              {/* Name */}
+              <div>
+                <label htmlFor="signup-name" className="mb-1.5 block text-sm">Full name</label>
+                <div className="relative">
+                  <User size={17} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#52685B]" />
+                  <input
+                    ref={nameRef}
+                    id="signup-name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    placeholder="Your full name"
+                    value={form.name}
+                    onChange={(e) => { setForm({ ...form, name: e.target.value }); if (error) setError(''); }}
+                    onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+                    disabled={busy}
+                    aria-invalid={!!show('name')}
+                    aria-describedby={show('name') ? 'name-err' : undefined}
+                    className={inputClass(!!show('name'))}
+                  />
+                  {touched.name && !fieldErrors.name && (
+                    <Check size={17} aria-hidden="true" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#D4A62A]" />
+                  )}
+                </div>
+                <FieldError id="name-err">{show('name')}</FieldError>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label htmlFor="signup-email" className="mb-1.5 block text-sm">Email address</label>
+                <div className="relative">
+                  <Mail size={17} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#52685B]" />
+                  <input
+                    ref={emailRef}
+                    id="signup-email"
+                    name="email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    required
+                    placeholder="you@example.com"
+                    value={form.email}
+                    onChange={(e) => { setForm({ ...form, email: e.target.value }); if (error) setError(''); }}
+                    onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                    disabled={busy}
+                    aria-invalid={!!show('email')}
+                    aria-describedby={show('email') ? 'email-err' : undefined}
+                    className={inputClass(!!show('email'))}
+                  />
+                  {touched.email && !fieldErrors.email && (
+                    <Check size={17} aria-hidden="true" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#D4A62A]" />
+                  )}
+                </div>
+                <FieldError id="email-err">{show('email')}</FieldError>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label htmlFor="signup-password" className="mb-1.5 block text-sm">Password</label>
+                <div className="relative">
+                  <Lock size={17} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#52685B]" />
+                  <input
+                    ref={passRef}
+                    id="signup-password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    required
+                    placeholder="At least 8 characters"
+                    value={form.password}
+                    onChange={(e) => { setForm({ ...form, password: e.target.value }); if (error) setError(''); }}
+                    onBlur={() => { setTouched((t) => ({ ...t, password: true })); setCapsOn(false); }}
+                    onKeyUp={(e) => setCapsOn(e.getModifierState?.('CapsLock') ?? false)}
+                    onKeyDown={(e) => setCapsOn(e.getModifierState?.('CapsLock') ?? false)}
+                    disabled={busy}
+                    aria-invalid={!!show('password')}
+                    aria-describedby={[show('password') && 'pass-err', capsOn && 'caps-hint'].filter(Boolean).join(' ') || undefined}
+                    className={`${inputClass(!!show('password'))} pr-12`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((s) => !s)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-[#52685B] transition hover:bg-[#0f2645]/5 hover:text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+                  >
+                    {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                  </button>
+                </div>
+
+                {/* Strength meter */}
+                {form.password && (
+                  <div className="mt-2.5" aria-live="polite">
+                    <div className="flex gap-1.5" aria-hidden="true">
+                      {[1, 2, 3, 4].map((i) => (
+                        <span
+                          key={i}
+                          className="h-[3px] flex-1 rounded-full transition-colors duration-300"
+                          style={{ background: i <= strengthScore ? strengthColor : 'rgba(15,38,69,0.1)' }}
+                        />
+                      ))}
+                    </div>
+                    <p className="mt-1.5 font-sans text-xs" style={{ color: strengthColor }}>{strengthLabel}</p>
+                  </div>
+                )}
+
+                {capsOn && (
+                  <p id="caps-hint" role="status" className="mt-1.5 flex items-center gap-1.5 font-sans text-xs text-[#8A6A14]">
+                    <AlertCircle size={13} aria-hidden="true" /> Caps Lock is on.
+                  </p>
+                )}
+                <FieldError id="pass-err">{show('password')}</FieldError>
+              </div>
+
+              {/* Terms */}
+              <div>
+                <label className="flex cursor-pointer items-start gap-2.5 font-sans text-sm leading-relaxed text-[#52685B]">
+                  <input
+                    type="checkbox"
+                    checked={terms}
+                    onChange={(e) => { setTerms(e.target.checked); setTouched((t) => ({ ...t, terms: true })); }}
+                    disabled={busy}
+                    aria-invalid={!!show('terms')}
+                    aria-describedby={show('terms') ? 'terms-err' : undefined}
+                    className="mt-1 h-4 w-4 shrink-0 cursor-pointer rounded border-[#0f2645]/30 accent-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+                  />
+                  <span>
+                    I agree to the{' '}
+                    <Link href="/terms" className="text-[#0f2645] underline underline-offset-4 hover:text-[#B8902F]">Terms of Service</Link>{' '}
+                    and{' '}
+                    <Link href="/privacy" className="text-[#0f2645] underline underline-offset-4 hover:text-[#B8902F]">Privacy Policy</Link>
+                  </span>
+                </label>
+                <FieldError id="terms-err">{show('terms')}</FieldError>
+              </div>
+
+              <button
+                type="submit"
+                disabled={busy}
+                aria-busy={busy}
+                className="group relative mt-2 inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-7 pr-2.5 text-base text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#0f2645] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                <span aria-hidden="true" className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                <span className="relative z-10">
+                  {success ? 'Taking you to sign in…' : loading ? 'Creating account…' : 'Create account'}
+                </span>
+                <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
+                  {busy ? (
+                    <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+                  ) : (
+                    <ArrowRight size={16} className="transition-transform duration-500 group-hover:-rotate-45" aria-hidden="true" />
+                  )}
+                </span>
+              </button>
+            </form>
+
+            {/* Sign in */}
+            <div className="mt-8 rounded-2xl border border-[#D4AF37]/40 bg-[#F3F0E8] p-5 text-center font-sans text-sm text-[#52685B]">
+              Already have an account?{' '}
+              <Link href={loginHref} className="text-[#0f2645] underline underline-offset-4 transition hover:text-[#B8902F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]">
+                Sign in
+              </Link>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
-      </div>
-    </>
+      </main>
+    </div>
+  );
+}
+
+/* useSearchParams ke liye Suspense zaroori hai */
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAF9F6]" />}>
+      <SignupForm />
+    </Suspense>
   );
 }

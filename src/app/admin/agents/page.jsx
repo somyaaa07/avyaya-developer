@@ -36,7 +36,7 @@ export default function AgentsPage() {
       >
         <div>
           <p style={{
-            fontSize: '11px', color: '#2e5d42', letterSpacing: '0.25em',
+            fontSize: '11px', color: '#0f2645', letterSpacing: '0.25em',
             textTransform: 'uppercase', fontWeight: '500', marginBottom: '6px',
           }}>Management</p>
           <h1 style={{ fontFamily: "'Marcellus', serif", fontSize: '38px', color: '#1a3628', lineHeight: 1 }}>
@@ -48,7 +48,7 @@ export default function AgentsPage() {
           <Link href="/admin/agents/add" style={{
             display: 'flex', alignItems: 'center', gap: '8px',
             padding: '12px 22px',
-            background: '#2e5d42',
+            background: '#0f2645',
             color: '#fafaef',
             borderRadius: '10px',
             textDecoration: 'none',
@@ -85,7 +85,7 @@ export default function AgentsPage() {
         }}>
           {['Name', 'Email', 'Phone', 'Actions'].map(h => (
             <span key={h} style={{
-              fontSize: '11px', color: '#2e5d42', fontWeight: '600',
+              fontSize: '11px', color: '#0f2645', fontWeight: '600',
               letterSpacing: '0.15em', textTransform: 'uppercase',
             }}>{h}</span>
           ))}
@@ -131,7 +131,7 @@ export default function AgentsPage() {
                   <div style={{
                     width: '36px', height: '36px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #2e5d42, #4a7a6a)',
+                    background: 'linear-gradient(135deg, #0f2645, #4a787a)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     color: '#fafaef', fontSize: '13px', fontWeight: '600',
                     flexShrink: 0,

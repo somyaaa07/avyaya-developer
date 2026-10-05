@@ -1,12 +1,18 @@
+'use-client'
+
 import Image from "next/image";
 import Link from "next/link";
 import { Marcellus } from "next/font/google";
 import {
   ArrowRight,
+  ArrowUpRight,
   Building2,
+  CalendarCheck,
+  ClipboardList,
   Eye,
   Handshake,
   Home,
+  KeyRound,
   Leaf,
   Mail,
   MapPin,
@@ -18,8 +24,7 @@ import {
   Users,
 } from "lucide-react";
 import FaqAccordion from "@/component/about/FaqAccordion";
-
-
+import ProcessSection from "@/component/about/ProcessSection";
 const marcellus = Marcellus({
   subsets: ["latin"],
   weight: "400",
@@ -28,16 +33,16 @@ const marcellus = Marcellus({
 });
 
 /* ---------------------------------------------------------------
-   COLORS
-   Primary  : #1A2A22
-   Secondary: #52685B
-   BG       : #FAF9F6  &  #F3F0E8
+   COLORS (unchanged)
+   Ink #1A2A22 | Moss #52685B | Navy #0f2645
+   Paper #FAF9F6 | Sand #F3F0E8
+   Gold #D4AF37 / #F5D77A / #D4A62A / #B8902F
 ---------------------------------------------------------------- */
 
-/* ---------------------------------------------------------------
-   BUSINESS DETAILS  
----------------------------------------------------------------- */
-const SITE_URL = "https://www.bringorealestates.com"; 
+const SITE_URL = "https://www.bringorealestates.com";
+
+/* Change this if your site navbar height is different (sticky section menu sits below it) */
+const STICKY_TOP = "top-16 lg:top-20";
 
 const BUSINESS = {
   name: "Bringo Real Estates",
@@ -59,9 +64,10 @@ const BUSINESS = {
   },
 };
 
-/* ---------------------------------------------------------------
-   SEO
----------------------------------------------------------------- */
+const MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  "Bringo Real Estates, Kaveri City Center, Delta 1, Greater Noida"
+)}`;
+
 export const metadata = {
   title: "About Bringo Real Estates | Property Dealers in Greater Noida",
   description:
@@ -95,31 +101,50 @@ export const metadata = {
 };
 
 /* ---------------------------------------------------------------
-   CONTENT
-   NOTE: stats 
+   CONTENT  (verify stats are real before going live)
 ---------------------------------------------------------------- */
 const stats = [
-  { icon: Home, value: "500+", label: "Properties Sold" },
-  { icon: Users, value: "10,000+", label: "Happy Customers" },
-  { icon: Building2, value: "50+", label: "Ongoing Projects" },
-  { icon: Star, value: "4.8/5", label: "Customer Rating" },
+  { icon: Home, value: "500+", label: "Properties sold" },
+  { icon: Users, value: "10,000+", label: "Happy customers" },
+  { icon: Building2, value: "50+", label: "Ongoing projects" },
+  { icon: Star, value: "4.8/5", label: "Customer rating" },
 ];
 
 const values = [
-  { icon: Handshake, title: "Trusted & Transparent", text: "Fair deals and clear processes" },
-  { icon: Settings, title: "Quality Construction", text: "Built with excellence" },
-  { icon: Users, title: "Customer-Centric", text: "Your goals, our priority" },
+  { icon: Handshake, title: "Trusted & transparent", text: "Fair deals and clear processes" },
+  { icon: Settings, title: "Quality construction", text: "Built with excellence" },
+  { icon: Users, title: "Customer-centric", text: "Your goals, our priority" },
+];
+
+const steps = [
+  {
+    icon: ClipboardList,
+    title: "Tell us what you need",
+    text: "Share your budget, preferred area and whether it is a home or an investment. A short call is enough.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Get verified options",
+    text: "We shortlist only RERA registered projects that match your brief and share the registration details up front.",
+  },
+  {
+    icon: CalendarCheck,
+    title: "Visit with us",
+    text: "We arrange a guided site visit at a time that suits you, so you can compare in person.",
+  },
+  {
+    icon: KeyRound,
+    title: "Book and move in",
+    text: "We help with home loan options, paperwork and handover support until you receive the keys.",
+  },
 ];
 
 const reasons = [
-  { icon: MapPin, title: "Prime Locations", text: "Well-connected projects across Greater Noida" },
-  { icon: Building2, title: "Modern Design", text: "Thoughtfully designed for modern living" },
-  { icon: Leaf, title: "Sustainable Living", text: "Eco-friendly and future-ready spaces" },
-  { icon: ShieldCheck, title: "End-to-End Support", text: "From search to ownership, we're with you" },
+  { icon: MapPin, title: "Prime locations", text: "Well-connected projects across Greater Noida" },
+  { icon: Building2, title: "Modern design", text: "Thoughtfully designed for modern living" },
+  { icon: Leaf, title: "Sustainable living", text: "Eco-friendly and future-ready spaces" },
+  { icon: ShieldCheck, title: "End-to-end support", text: "From search to ownership, we're with you" },
 ];
-
-// FAke partners
-const partners = ["TATA", "Godrej", "HDFC", "DLF", "PRESTIGE", "SOBHA"];
 
 const faqs = [
   {
@@ -142,6 +167,15 @@ const faqs = [
     q: "What makes your company different?",
     a: "Transparent pricing, verified projects and a dedicated team that supports you from your first enquiry to handover and beyond.",
   },
+];
+
+const navLinks = [
+  { href: "#story", label: "Our story" },
+  { href: "#process", label: "How we work" },
+  { href: "#why", label: "Why Bringo" },
+  { href: "#vision", label: "Vision" },
+  { href: "#faq", label: "FAQ" },
+  { href: "#contact", label: "Contact" },
 ];
 
 const jsonLd = {
@@ -179,57 +213,49 @@ const jsonLd = {
 };
 
 /* ---------------------------------------------------------------
-   SMALL REUSABLE PIECES
+   SMALL PIECES
 ---------------------------------------------------------------- */
-const Eyebrow = ({ children, line = false }) => (
-  <p className="flex items-center gap-3 text-[11px] font-normal uppercase tracking-[0.25em] text-[#52685B]">
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]";
+
+const Label = ({ children, light = false }) => (
+  <p className={`flex items-center gap-3 text-sm ${light ? "text-[#F5D77A]" : "text-[#52685B]"}`}>
+    <span className={`h-px w-8 ${light ? "bg-[#F5D77A]/60" : "bg-[#D4A62A]"}`} aria-hidden="true" />
     {children}
-    {line && <span className="h-px w-12 bg-[#52685B]/40" />}
   </p>
 );
 
-const BtnDark = ({ href, children }) => (
+const BtnGold = ({ href, children, icon: Icon = ArrowRight, external = false }) => {
+  const cls = `group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] py-2.5 pl-6 pr-2.5 text-sm text-[#1A2A22] transition-all duration-500 hover:shadow-[0_10px_30px_rgba(212,175,55,0.45)] ${focusRing}`;
+  const inner = (
+    <>
+      {children}
+      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A] transition-transform duration-500 group-hover:-rotate-45">
+        <Icon size={14} />
+      </span>
+    </>
+  );
+  return external || href.startsWith("tel:") || href.startsWith("mailto:") ? (
+    <a href={href} className={cls} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      {inner}
+    </a>
+  ) : (
+    <Link href={href} className={cls}>
+      {inner}
+    </Link>
+  );
+};
+
+const BtnNavy = ({ href, children }) => (
   <Link
     href={href}
-    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+    className={`group inline-flex items-center gap-3 rounded-full bg-[#0f2645] py-2.5 pl-6 pr-2.5 text-sm text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:ring-[#F5D77A] hover:shadow-[0_10px_30px_rgba(15,38,69,0.35)] ${focusRing}`}
   >
-    {/* Golden fill slides in from left */}
-    <span
-      aria-hidden="true"
-      className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100"
-    />
-
-    {/* Glass shine sweep */}
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -translate-x-full -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:translate-x-[450%] group-hover:opacity-100"
-    />
-
-    <span className="relative z-10">{children}</span>
-
-    {/* Arrow circle */}
-    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
-      <ArrowRight
-        size={14}
-        className="transition-transform duration-500 group-hover:-rotate-45"
-      />
+    {children}
+    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-transform duration-500 group-hover:-rotate-45">
+      <ArrowRight size={14} />
     </span>
   </Link>
-);
-
-const Avatars = () => (
-  <div className="flex -space-x-3">
-    {[1, 2, 3, 4].map((n) => (
-      <Image
-        key={n}
-        src={`/images/about/avatar-${n}.jpg`}
-        alt=""
-        width={40}
-        height={40}
-        className="h-10 w-10 rounded-full border-2 border-[#FAF9F6] object-cover"
-      />
-    ))}
-  </div>
 );
 
 /* ---------------------------------------------------------------
@@ -238,398 +264,406 @@ const Avatars = () => (
 export default function AboutPage() {
   return (
     <main
-      className={`${marcellus.variable} overflow-x-hidden bg-[#FAF9F6] font-[family-name:var(--font-marcellus)] font-normal text-[#1A2A22]`}
+      className={`${marcellus.variable} scroll-smooth overflow-x-clip bg-[#FAF9F6] pb-20 font-[family-name:var(--font-marcellus)] font-normal text-[#1A2A22] lg:pb-0`}
     >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ============ HERO ============ */}
-      <section aria-labelledby="about-hero" className="relative">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-2 lg:pb-32 lg:pt-16">
-          <div className="relative z-10">
-            <Eyebrow line>About Us</Eyebrow>
-            <h1
-              id="about-hero"
-              className="mt-5 text-5xl font-normal leading-[1.05] sm:text-6xl lg:text-[64px] text-[#0f2645]"
-            >
-              More Than Properties, We Build Futures
-            </h1>
-            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#52685B]">
-              At Bringo Real Estates, we believe real estate is not just about buildings,
-              it&apos;s about people, dreams and a better tomorrow. From our office in Greater
-              Noida, we help families, businesses and investors find modern, sustainable and
-              high-value spaces.
-            </p>
+      {/* ============ 1. FULL-BLEED HERO ============ */}
+      <section aria-labelledby="about-hero" className="relative isolate min-h-[88vh] text-[#FAF9F6]">
+        <Image
+          src="/image/hero.png"
+          alt="Modern sustainable villa with glass balconies surrounded by greenery"
+          fill
+          priority
+          sizes="100vw"
+          className="-z-20 object-cover"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0f2645] via-[#0f2645]/55 to-[#0f2645]/20"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0f2645]/70 via-transparent to-transparent"
+        />
 
-            <div className="mt-7">
-              <BtnDark href="#our-story">Our Story</BtnDark>
-            </div>
-
-
-            <div className="mt-6 flex items-center gap-8">
-              <div>
-                <p className="text-5xl font-normal text-[#0f2645]">10+</p>
-                <p className="text-xs text-[#52685B]">Years of Experience</p>
-              </div>
-              <span className="hidden h-14 w-px bg-[#52685B]/25 sm:block" />
-              <p className="text-2xl leading-tight text-[#52685B]">
-                Spaces
-                <br />
-                That Inspire Life
-              </p>
-            </div>
-          </div>
-
-          {/* Hero image */}
-          <div className="relative">
-            
-            <div className="relative aspect-[4/4.2] w-full overflow-hidden rounded-3xl lg:rounded-tl-[220px] lg:rounded-br-[80px]">
-              <Image
-                src="/image/hero.png"
-                alt="Modern sustainable villa with glass balconies surrounded by greenery"
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-
-            <div className="absolute -bottom-8 left-4 right-4 flex items-center gap-4 rounded-2xl bg-[#FAF9F6] p-3 shadow-[0_20px_50px_rgba(26,42,34,0.15)] sm:left-0 sm:right-auto sm:w-[340px] lg:-left-10">
-              <div className="relative h-25 w-24 shrink-0 overflow-hidden rounded-xl">
-                <Image
-                  src="/image/heroo.jpeg"
-                  alt="Sustainable community project"
-                  fill
-                  sizes="96px"
-                  className="object-contain"
-                />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm">Creating</p>
-                <p className="text-sm text-[#52685B]">Sustainable Communities</p>
-              </div>
-              <Link
-                href="/projects"
-                aria-label="View our projects"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0f2645] text-[#FAF9F6] transition "
+        <div className="mx-auto flex min-h-[88vh] max-w-7xl flex-col justify-end px-5 pb-10 pt-28 sm:px-8">
+          <div className="grid items-end gap-10 lg:grid-cols-[1.4fr_1fr]">
+            <div>
+              <Label light>About Bringo Real Estates</Label>
+              <h1
+                id="about-hero"
+                className="mt-5 max-w-3xl text-[2.9rem] leading-[1.03] sm:text-6xl lg:text-7xl"
               >
-                <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ STATS BAR ============ */}
-      <section aria-label="Bringo Real Estates in numbers" className="relative z-10 mx-auto -mt-10 max-w-7xl px-5 sm:px-8 lg:-mt-16">
-        <dl className="grid grid-cols-2 gap-y-8 rounded-3xl bg-[#F3F0E8] px-4 py-8 shadow-[0_10px_40px_rgba(26,42,34,0.08)] lg:grid-cols-4 lg:py-7">
-          {stats.map(({ icon: Icon, value, label }, i) => (
-            <div
-              key={label}
-              className={`flex flex-col items-center text-center ${
-                i !== 0 ? "lg:border-l lg:border-[#52685B]/25" : ""
-              } ${i % 2 === 1 ? "border-l border-[#52685B]/25" : ""}`}
-            >
-              <Icon className="text-[#D4A62A]" size={28} strokeWidth={1.5} />
-              <dd className="mt-2 text-2xl text-[#0f2645]">{value}</dd>
-              <dt className="text-xs text-[#52685B]">{label}</dt>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      {/* ============ OUR STORY ============ */}
-      <section id="our-story" aria-labelledby="story-title" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          {/* Image collage */}
-          <div className="relative mx-auto h-[420px] w-full max-w-[560px] sm:h-[480px]">
-            <div className="absolute left-0 top-0 h-[80%] w-[68%] overflow-hidden rounded-t-[200px] rounded-b-2xl">
-              <Image
-                src="/image/about.png"
-                alt="Contemporary home exterior with large windows"
-                fill
-                sizes="(min-width: 1024px) 380px, 60vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="absolute bottom-0 right-0 h-[46%] w-[58%] overflow-hidden rounded-2xl border-4 border-[#FAF9F6] shadow-xl">
-              <Image
-                src="/image/about1.jpeg"
-                alt="Bright living room with sofa and indoor plants"
-                fill
-                sizes="(min-width: 1024px) 320px, 50vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="absolute bottom-6 left-0 w-[46%] rounded-xl bg-[#1A2A22] p-4 text-sm text-[#0f2645] shadow-lg sm:bottom-2">
-              <p className="flex items-center justify-between gap-2">
-                Modern Spaces <ArrowRight size={14} />
-              </p>
-              <p>Stronger</p>
-              <p className="flex items-center gap-3">
-                Communities <span className="h-px flex-1 bg-[#FAF9F6]/50" />
+                More than properties, we build futures
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-[#FAF9F6]/85">
+                Real estate is about people, dreams and a better tomorrow. From our office in Greater
+                Noida, we help families, businesses and investors find modern, sustainable and
+                high-value spaces.
               </p>
             </div>
 
-            {/* Circular text badge */}
-            <div className="absolute right-0 top-2 flex h-28 w-28 items-center justify-center rounded-full bg-[#F3F0E8] sm:right-4">
-              <svg viewBox="0 0 120 120" className="absolute inset-0 h-full w-full" aria-hidden="true">
-                <defs>
-                  <path id="circlePath" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
-                </defs>
-                <text className="fill-[#0f2645] text-[9px] uppercase tracking-[0.28em]">
-                  <textPath href="#circlePath">Sustainable • Modern Living •</textPath>
-                </text>
-              </svg>
-              <Leaf className="text-[#D4A62A]" size={28} strokeWidth={1.5} />
+            {/* Glass quick-action panel */}
+            <div className="rounded-3xl border border-[#FAF9F6]/20 bg-[#FAF9F6]/10 p-6 backdrop-blur-md">
+              <p className="text-xl">Looking for a property?</p>
+              <p className="mt-1 text-sm text-[#FAF9F6]/80">
+                Talk to an advisor or browse verified projects.
+              </p>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+                <BtnGold href={`tel:${BUSINESS.phoneTel}`} icon={Phone}>
+                  Call {BUSINESS.phoneDisplay}
+                </BtnGold>
+                <Link
+                  href="/projects"
+                  className={`inline-flex items-center justify-center gap-2 rounded-full border border-[#FAF9F6]/40 px-6 py-3 text-sm transition hover:bg-[#FAF9F6] hover:text-[#1A2A22] ${focusRing}`}
+                >
+                  View projects
+                </Link>
+              </div>
             </div>
           </div>
 
-          {/* Text */}
-          <div>
-            <Eyebrow>Our Story</Eyebrow>
-            <h2 id="story-title" className="mt-4 text-4xl text-[#0f2645] font-normal sm:text-5xl">
-              About Our Company
-            </h2>
-            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-[#52685B]">
-              Bringo Real Estates was founded with a simple vision — to transform the way people
-              experience real estate in Greater Noida. From residential homes to commercial
-              spaces, we help you choose value-driven properties that blend modern design,
-              strategic locations and long-term growth potential.
-            </p>
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[#52685B]">
-              Our focus is on verified projects, transparent processes and a customer-first
-              approach, ensuring every client finds a space that truly feels like home.
-            </p>
-            <div className="mt-7">
-              <BtnDark href="/contact">Know More</BtnDark>
-            </div>
-          </div>
+          {/* Stats strip inside hero */}
+          <dl className="mt-12 grid grid-cols-2 gap-y-6 border-t border-[#FAF9F6]/25 pt-6 lg:grid-cols-4">
+            {stats.map(({ icon: Icon, value, label }, i) => (
+              <div
+                key={label}
+                className={`flex items-center gap-3 ${i % 2 === 1 ? "pl-4" : ""} ${
+                  i !== 0 ? "lg:border-l lg:border-[#FAF9F6]/20 lg:pl-8" : ""
+                }`}
+              >
+                <Icon size={22} strokeWidth={1.4} className="shrink-0 text-[#F5D77A]" />
+                <div>
+                  <dd className="text-2xl leading-none">{value}</dd>
+                  <dt className="mt-1 text-xs text-[#FAF9F6]/75">{label}</dt>
+                </div>
+              </div>
+            ))}
+          </dl>
         </div>
+      </section>
 
-        {/* Values */}
-        <ul className="mt-16 grid gap-8 sm:grid-cols-3">
-          {values.map(({ icon: Icon, title, text }, i) => (
-            <li
-              key={title}
-              className={`flex flex-col items-center text-center ${
-                i !== 0 ? "sm:border-l sm:border-[#52685B]/25" : ""
-              }`}
-            >
-              <Icon className="text-[#D4A62A]" size={34} strokeWidth={1.4} />
-              <h3 className="mt-3 text-sm text-[#1A2A22]">{title}</h3>
-              <p className="mt-1 text-xs text-[#52685B]">{text}</p>
+      {/* ============ 2. STICKY SECTION MENU ============ */}
+      <nav
+        aria-label="On this page"
+        className={`  z-30 border-b border-[#52685B]/15 bg-[#FAF9F6]/90 backdrop-blur`}
+      >
+        <ul className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-5 py-3 sm:px-8 [scrollbar-width:none]">
+          {navLinks.map((l) => (
+            <li key={l.href} className="shrink-0">
+              <a
+                href={l.href}
+                className={`block rounded-full px-4 py-1.5 text-sm text-[#52685B] transition hover:bg-[#0f2645] hover:text-[#FAF9F6] ${focusRing}`}
+              >
+                {l.label}
+              </a>
             </li>
           ))}
         </ul>
-      </section>
+      </nav>
 
-      {/* ============ WHY CHOOSE ============ */}
-      <section aria-labelledby="why-title" className="bg-[#F3F0E8]">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-20">
-          <div className="text-center">
-            <div className="flex justify-center">
-              <Eyebrow>Why Choose Bringo</Eyebrow>
-            </div>
-            <h2 id="why-title" className="mt-4 text-3xl font-normal sm:text-4xl text-[#0f2645]">
-              A Better Way to Find Your Perfect Space
-            </h2>
-            <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-[#52685B]">
-              We combine experience, local market knowledge and customer focus to deliver real
-              estate solutions that truly make a difference.
-            </p>
+      {/* ============ 3. STORY: statement + mosaic ============ */}
+      <section id="story" aria-labelledby="story-title" className="mx-auto max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 lg:py-28">
+        <Label>Our story</Label>
+        <h2
+          id="story-title"
+          className="mt-5 max-w-5xl text-3xl leading-[1.25] text-[#0f2645] sm:text-4xl lg:text-5xl"
+        >
+          We started with a simple vision: to transform the way people experience real estate in
+          Greater Noida.
+        </h2>
+
+        <div className="mt-14 grid gap-5 lg:grid-cols-12 lg:grid-rows-[auto_auto]">
+          {/* Tall arch image */}
+          <div className="relative min-h-[360px] overflow-hidden rounded-t-[160px] rounded-b-3xl lg:col-span-4 lg:row-span-2 lg:min-h-[560px]">
+            <Image
+              src="/image/about.png"
+              alt="Contemporary home exterior with large windows"
+              fill
+              sizes="(min-width: 1024px) 33vw, 100vw"
+              className="object-cover"
+            />
           </div>
 
-          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {reasons.map(({ icon: Icon, title, text }) => (
-              <li
-                key={title}
-                className="flex flex-col items-center rounded-2xl bg-[#FAF9F6] px-6 py-8 text-center shadow-[0_8px_30px_rgba(26,42,34,0.06)]"
-              >
-                <Icon className="text-[#D4A62A]" size={32} strokeWidth={1.4} />
-                <h3 className="mt-4 text-sm text-[#1A2A22]">{title}</h3>
-                <p className="mt-2 max-w-[180px] text-xs leading-relaxed text-[#52685B]">{text}</p>
+          {/* Story text */}
+          <div className="rounded-3xl bg-[#F3F0E8] p-8 lg:col-span-5 lg:p-10">
+            <p className="text-base leading-[1.8] text-[#52685B]">
+              From residential homes to commercial spaces, we help you choose value-driven
+              properties that blend modern design, strategic locations and long-term growth
+              potential.
+            </p>
+            <p className="mt-4 text-base leading-[1.8] text-[#52685B]">
+              Our focus is on verified projects, transparent processes and a customer-first
+              approach, so every client finds a space that truly feels like home.
+            </p>
+            <div className="mt-7">
+              <BtnNavy href="/contact">Talk to our team</BtnNavy>
+            </div>
+          </div>
+
+          {/* Small image */}
+          <div className="relative min-h-[240px] overflow-hidden rounded-3xl lg:col-span-3">
+            <Image
+              src="/image/about1.jpeg"
+              alt="Bright living room with sofa and indoor plants"
+              fill
+              sizes="(min-width: 1024px) 25vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-[#FAF9F6] px-4 py-2 text-xs text-[#1A2A22]">
+              <Leaf size={14} className="text-[#D4A62A]" /> Sustainable living
+            </div>
+          </div>
+
+          {/* Values row */}
+          <ul className="grid gap-5 sm:grid-cols-3 lg:col-span-8">
+            {values.map(({ icon: Icon, title, text }) => (
+              <li key={title} className="rounded-3xl border border-[#52685B]/20 p-6">
+                <Icon className="text-[#D4A62A]" size={28} strokeWidth={1.4} />
+                <h3 className="mt-4 text-base text-[#1A2A22]">{title}</h3>
+                <p className="mt-1 text-sm text-[#52685B]">{text}</p>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      {/* ============ PARTNERS ============ */}
-      {/* <section aria-labelledby="partners-title" className="mx-auto max-w-7xl px-5 py-14 text-center sm:px-8">
-        <div className="flex justify-center">
-          <Eyebrow>Our Partners</Eyebrow>
-        </div>
-        <h2 id="partners-title" className="mt-3 text-3xl font-normal sm:text-4xl">
-          Trusted by Leading Brands
-        </h2>
-        <ul className="mt-8 grid grid-cols-2 items-center gap-y-6 sm:grid-cols-3 lg:grid-cols-6">
-          {partners.map((p, i) => (
-            <li
-              key={p}
-              className={`px-4 text-xl tracking-wide text-[#52685B] ${
-                i !== 0 ? "lg:border-l lg:border-[#52685B]/25" : ""
-              }`}
-            >
-              {p}
-            </li>
-          ))}
-        </ul>
-      </section> */}
+{/* ============ 4. PROCESS: sticky heading + vertical timeline ============ */}
 
-      {/* ============ OUR PEOPLE + VISION/MISSION ============ */}
-      <section aria-labelledby="people-title" className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.4fr]">
-          <div>
-            <Eyebrow line>Our People</Eyebrow>
-            <h2 id="people-title" className="mt-4 text-4xl font-normal leading-tight text-[#0f2645]">
-              Driven by People.
-              <br />
-              Inspired by Possibilities.
-            </h2>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-[#52685B]">
-              Our team of real estate experts, designers and strategists work together to create
-              exceptional spaces that enrich lives and communities.
-            </p>
-            <div className="mt-6">
-              <BtnDark href="/team">Meet Our Team</BtnDark>
-            </div>
-          </div>
+{/* ============ 4. PROCESS ============ */}
+<ProcessSection phoneTel={BUSINESS.phoneTel} />
 
-          <div className="grid overflow-hidden rounded-2xl sm:grid-cols-[1.1fr_1fr]">
-            <div className="relative min-h-[390px]">
-              <Image
-                src="/image/cta.jpeg"
-                alt="Dining area with large windows and indoor plants"
-                fill
-                sizes="(min-width: 1024px) 300px, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="flex flex-col justify-center gap-6 bg-[#0f2645] p-7 text-[#FAF9F6]">
-              <div>
-                <p className="flex items-center gap-3">
-                  <Eye size={22} strokeWidth={1.5} /> Vision
-                </p>
-                <p className="mt-2 text-xs leading-relaxed text-[#FAF9F6]/80">
-                  To create sustainable and future-ready communities.
-                </p>
-              </div>
-              <span className="h-px w-full bg-[#FAF9F6]/25" />
-              <div>
-                <p className="flex items-center gap-3">
-                  <Target size={22} strokeWidth={1.5} /> Mission
-                </p>
-                <p className="mt-2 text-xs leading-relaxed text-[#FAF9F6]/80">
-                  To deliver high-quality spaces with trust, innovation and care.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ============ FAQ ============ */}
-      <section aria-labelledby="faq-title" className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl lg:aspect-[4/3.4]">
+      {/* ============ 5. WHY: image-led split with list ============ */}
+      <section id="why" aria-labelledby="why-title" className="mx-auto max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 lg:py-28">
+        <div className="grid items-stretch gap-10 lg:grid-cols-2">
+          <div className="relative min-h-[380px] overflow-hidden rounded-3xl lg:min-h-full">
             <Image
-              src="/image/faq.jpg"
-              alt="Spacious living room with cream sofa and natural light"
+              src="/image/heroo.jpeg"
+              alt="Sustainable community project"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
             />
+            <Link
+              href="/projects"
+              className={`group absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-2xl bg-[#FAF9F6] p-4 transition hover:-translate-y-1 ${focusRing}`}
+            >
+              <span>
+                <span className="block text-sm">Creating</span>
+                <span className="block text-sm text-[#52685B]">Sustainable communities</span>
+              </span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0f2645] text-[#FAF9F6] transition group-hover:bg-[#D4AF37] group-hover:text-[#1A2A22]">
+                <ArrowUpRight size={16} />
+              </span>
+            </Link>
           </div>
-          <div>
-            <Eyebrow>FAQ</Eyebrow>
-            <h2 id="faq-title" className="mt-3 text-4xl font-normal text-[#0f2645]">
-              Frequently Asked Questions
+
+          <div className="flex flex-col justify-center">
+            <Label>Why choose Bringo</Label>
+            <h2 id="why-title" className="mt-4 text-3xl leading-tight text-[#0f2645] sm:text-4xl">
+              A better way to find your perfect space
             </h2>
-            <p className="mt-3 text-sm text-[#52685B]">
-              Find quick answers to some common questions about our services.
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-[#52685B]">
+              We combine experience, local market knowledge and customer focus to deliver real
+              estate solutions that make a difference.
             </p>
+
+            <ul className="mt-8 divide-y divide-[#52685B]/20 border-y border-[#52685B]/20">
+              {reasons.map(({ icon: Icon, title, text }) => (
+                <li key={title} className="flex items-center gap-5 py-5">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F3F0E8] text-[#D4A62A]">
+                    <Icon size={22} strokeWidth={1.4} />
+                  </span>
+                  <div>
+                    <h3 className="text-lg text-[#1A2A22]">{title}</h3>
+                    <p className="text-sm text-[#52685B]">{text}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ 6. VISION / MISSION over full-width image ============ */}
+      <section id="vision" aria-labelledby="vision-title" className="relative isolate scroll-mt-32 text-[#FAF9F6]">
+        <Image
+          src="/image/cta.jpeg"
+          alt="Dining area with large windows and indoor plants"
+          fill
+          sizes="100vw"
+          className="-z-20 object-cover"
+        />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#1A2A22]/75" />
+        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
+          <div className="max-w-2xl">
+            <Label light>Our people</Label>
+            <h2 id="vision-title" className="mt-5 text-4xl leading-tight sm:text-5xl">
+              Driven by people. Inspired by possibilities.
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-[#FAF9F6]/85">
+              Our team of real estate experts, designers and strategists work together to create
+              exceptional spaces that enrich lives and communities.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2">
+            <div className="rounded-3xl border border-[#FAF9F6]/20 bg-[#FAF9F6]/10 p-8 backdrop-blur-md">
+              <Eye size={30} strokeWidth={1.4} className="text-[#F5D77A]" />
+              <h3 className="mt-5 text-2xl">Vision</h3>
+              <p className="mt-2 text-base leading-relaxed text-[#FAF9F6]/85">
+                To create sustainable and future-ready communities.
+              </p>
+            </div>
+            <div className="rounded-3xl border border-[#FAF9F6]/20 bg-[#FAF9F6]/10 p-8 backdrop-blur-md">
+              <Target size={30} strokeWidth={1.4} className="text-[#F5D77A]" />
+              <h3 className="mt-5 text-2xl">Mission</h3>
+              <p className="mt-2 text-base leading-relaxed text-[#FAF9F6]/85">
+                To deliver high-quality spaces with trust, innovation and care.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-10">
+            <BtnGold href="/team">Meet our team</BtnGold>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ 7. FAQ: sticky heading left, accordion right ============ */}
+      <section id="faq" aria-labelledby="faq-title" className="mx-auto max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 lg:py-28">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
+          <div className="lg:sticky lg:top-40 lg:self-start">
+            <Label>FAQ</Label>
+            <h2 id="faq-title" className="mt-4 text-4xl leading-tight text-[#0f2645] sm:text-4xl">
+              Frequently asked questions
+            </h2>
+            <p className="mt-4 max-w-sm text-base leading-relaxed text-[#52685B]">
+              Quick answers to what we hear most. Can&apos;t find yours?
+            </p>
+            <div className="mt-6 overflow-hidden rounded-2xl">
+              <div className="relative aspect-[17/10]">
+                <Image
+                  src="/image/faq.jpg"
+                  alt="Spacious living room with cream sofa and natural light"
+                  fill
+                  sizes="(min-width: 1024px) 30vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <div className="mt-5">
+              <BtnNavy href="/contact">Ask us directly</BtnNavy>
+            </div>
+          </div>
+
+          <div className="rounded-3xl bg-[#F3F0E8] p-4 sm:p-8">
             <FaqAccordion items={faqs} />
           </div>
         </div>
       </section>
 
-      {/* ============ CTA + CONTACT ============ */}
-      <section aria-labelledby="cta-title" className="mx-auto max-w-7xl px-5 pb-16 pt-6 sm:px-8">
-        <div className="relative overflow-hidden rounded-3xl bg-[#0f2645] px-6 py-12 text-[#FAF9F6] sm:px-12 lg:py-16">
-          <Image
-            src="/image/ctaa.png"
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover object-right opacity-30 mix-blend-luminosity lg:opacity-45"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0f2645] via-[#0f2645]/90 to-transparent" />
-
-          <div className="relative z-10 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-xl">
-              <p className="text-[11px] uppercase tracking-[0.25em] text-[#FAF9F6]/80">
-                Let&apos;s Find Your Perfect Space
-              </p>
-              <h2
-                id="cta-title"
-                className="mt-4 text-4xl font-normal leading-tight sm:text-5xl"
-              >
-                Ready to Find Your Dream Property?
-              </h2>
-              <p className="mt-4 text-sm text-[#FAF9F6]/85">
-                Get expert guidance and exclusive property options tailored to your needs.
-              </p>
-
-              <address className="mt-6 space-y-3 text-sm not-italic text-[#FAF9F6]/90">
-                <a
-                  href={`tel:${BUSINESS.phoneTel}`}
-                  className="flex items-center gap-3 hover:text-[#FAF9F6]"
-                >
-                  <Phone size={16} className="shrink-0" />
-                  {BUSINESS.phoneDisplay}
-                </a>
-                <a
-                  href={`mailto:${BUSINESS.email}`}
-                  className="flex items-center gap-3 break-all hover:text-[#FAF9F6]"
-                >
-                  <Mail size={16} className="shrink-0" />
-                  {BUSINESS.email}
-                </a>
-                <p className="flex items-start gap-3">
-                  <MapPin size={16} className="mt-0.5 shrink-0" />
-                  <span>
-                    {BUSINESS.addressLines.map((line) => (
-                      <span key={line} className="block">
-                        {line}
-                      </span>
-                    ))}
-                  </span>
-                </p>
-              </address>
-
+      {/* ============ 8. CONTACT: split card ============ */}
+      <section id="contact" aria-labelledby="cta-title" className="mx-auto max-w-7xl scroll-mt-32 px-5 pb-20 sm:px-8 lg:pb-28">
+        <div className="grid overflow-hidden rounded-3xl lg:grid-cols-[1.1fr_1fr]">
+          <div className="relative isolate bg-[#0f2645] p-8 text-[#FAF9F6] sm:p-12">
+            <Image
+              src="/image/ctaa.png"
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              className="-z-20 object-cover opacity-25 mix-blend-luminosity"
+              aria-hidden="true"
+            />
+            <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-b from-[#0f2645]/60 to-[#0f2645]" />
+            <Label light>Let&apos;s find your perfect space</Label>
+            <h2 id="cta-title" className="mt-5 text-4xl leading-tight sm:text-5xl">
+              Ready to find your dream property?
+            </h2>
+            <p className="mt-4 max-w-md text-base text-[#FAF9F6]/85">
+              Get expert guidance and property options tailored to your needs.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <BtnGold href={`tel:${BUSINESS.phoneTel}`} icon={Phone}>
+                Call now
+              </BtnGold>
               <Link
                 href="/contact"
-                className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#FAF9F6] px-6 py-3 text-sm font-normal text-[#1A2A22] transition hover:bg-[#F3F0E8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FAF9F6]"
+                className={`inline-flex items-center gap-2 rounded-full border border-[#FAF9F6]/40 px-6 py-3 text-sm transition hover:bg-[#FAF9F6] hover:text-[#1A2A22] ${focusRing}`}
               >
-                Contact Us <ArrowRight size={16} />
+                Send an enquiry
               </Link>
             </div>
-
-            <div className="flex items-center gap-4 rounded-full bg-[#FAF9F6]/10 px-4 py-3 backdrop-blur">
-           
-              <span className="h-8 w-px bg-[#FAF9F6]/30" />
-              <div>
-                <p className="text-lg  text-[#D4A62A] leading-none">4.8/5</p>
-                <p className="text-[11px] text-[#D4A62A]">Customer Rating</p>
-              </div>
-            </div>
           </div>
+
+          <address className="flex flex-col justify-center divide-y divide-[#52685B]/20 bg-[#F3F0E8] px-8 py-6 not-italic sm:px-12">
+            <a href={`tel:${BUSINESS.phoneTel}`} className={`group flex items-center gap-4 py-5 ${focusRing}`}>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FAF9F6] text-[#D4A62A]">
+                <Phone size={18} />
+              </span>
+              <span className="flex-1">
+                <span className="block text-xs text-[#52685B]">Call us</span>
+                <span className="block text-lg text-[#0f2645]">{BUSINESS.phoneDisplay}</span>
+              </span>
+              <ArrowUpRight size={18} className="text-[#52685B] transition group-hover:text-[#0f2645]" />
+            </a>
+            <a href={`mailto:${BUSINESS.email}`} className={`group flex items-center gap-4 py-5 ${focusRing}`}>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FAF9F6] text-[#D4A62A]">
+                <Mail size={18} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-xs text-[#52685B]">Email us</span>
+                <span className="block break-all text-base text-[#0f2645]">{BUSINESS.email}</span>
+              </span>
+              <ArrowUpRight size={18} className="text-[#52685B] transition group-hover:text-[#0f2645]" />
+            </a>
+            <a
+              href={MAP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group flex items-start gap-4 py-5 ${focusRing}`}
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FAF9F6] text-[#D4A62A]">
+                <MapPin size={18} />
+              </span>
+              <span className="flex-1">
+                <span className="block text-xs text-[#52685B]">Visit our office</span>
+                <span className="block text-sm leading-relaxed text-[#0f2645]">
+                  {BUSINESS.addressLines.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </span>
+              </span>
+              <ArrowUpRight size={18} className="mt-1 text-[#52685B] transition group-hover:text-[#0f2645]" />
+            </a>
+          </address>
         </div>
       </section>
+
+      {/* ============ MOBILE STICKY ACTION BAR ============ */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#52685B]/15 bg-[#FAF9F6]/95 p-3 backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-md gap-3">
+          <a
+            href={`tel:${BUSINESS.phoneTel}`}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-full bg-[#0f2645] py-3 text-sm text-[#FAF9F6] ${focusRing}`}
+          >
+            <Phone size={16} /> Call now
+          </a>
+          <Link
+            href="/contact"
+            className={`flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] py-3 text-sm text-[#1A2A22] ${focusRing}`}
+          >
+            Enquire
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }
