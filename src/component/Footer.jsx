@@ -69,7 +69,7 @@ function ColumnHeading({ children }) {
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#1a2a22] text-[#faf9f6]">
+    <footer className="relative overflow-hidden bg-[#0f2645] text-[#faf9f6]">
       {/* Gradient definition used by the stroke icons (keep width/height 0, not display:none) */}
       <svg
         width="0"

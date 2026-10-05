@@ -71,7 +71,7 @@ const iconClass =
 const BtnDark = ({ href, children }) => (
   <Link
     href={href}
-    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#000]/20 py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
   >
     {/* Golden fill slides in from left */}
     <span
@@ -88,7 +88,7 @@ const BtnDark = ({ href, children }) => (
     <span className="relative z-10">{children}</span>
 
     {/* Arrow circle */}
-    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
       <FiArrowRight
         size={14}
         className="transition-transform duration-500 group-hover:-rotate-45"
@@ -142,7 +142,7 @@ export default function HomeHero() {
               initial="hidden"
               animate="show"
               custom={1}
-              className={`${marcellus.className} mt-6 text-[clamp(2.4rem,5.5vw,4.5rem)] font-normal leading-[1.06] tracking-tight text-[#faf9f6]`}
+              className={`${marcellus.className} mt-6 text-[clamp(2.4rem,5.5vw,4.5rem)] font-normal leading-[1.06] tracking-tight text-[#f3f0E8]`}
             >
               Find a Place You’ll Be{" "}
               <span className={` pr-1 ${goldText}`}>Proud</span> to Call
@@ -290,7 +290,7 @@ export default function HomeHero() {
 
         <button
           type="submit"
-          className="inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#1a2a22] px-8 text-sm font-semibold text-[#faf9f6] transition hover:bg-gradient-to-r hover:from-[#E2A10D] hover:via-[#FFCD39] hover:to-[#E2A10D] hover:text-[#1a2a22] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD39] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f3f0E8] sm:col-span-2 lg:col-span-1 lg:w-auto"
+          className="inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#0f2645] px-8 text-sm font-semibold text-[#faf9f6] transition hover:bg-gradient-to-r hover:from-[#E2A10D] hover:via-[#FFCD39] hover:to-[#E2A10D] hover:text-[#1a2a22] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD39] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f3f0E8] sm:col-span-2 lg:col-span-1 lg:w-auto"
         >
           <FiSearch aria-hidden="true" />
           Search

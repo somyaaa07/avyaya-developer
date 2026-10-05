@@ -29,7 +29,7 @@ export default function PropertyGuidance() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className={`${marcellus.className} text-[36px] leading-[1.1] text-[#1a2a22] sm:text-[46px] lg:text-[56px]`}
+            className={`${marcellus.className} text-[36px] leading-[1.1] text-[#0f2645] sm:text-[46px] lg:text-[56px]`}
           >
             Property Guidance
             <br />
@@ -66,12 +66,12 @@ export default function PropertyGuidance() {
                     className="text-[#D4A62A]"
                   />
                   <div>
-                    <p className="text-[30px] font-semibold leading-none text-[#1a2a22]">
+                    <p className={`${marcellus.className} text-[30px] font-semibold leading-none text-[#0f2645]`}>
                       {s.value}
                     </p>
                     <p
                       className={`mt-2 text-[15px] ${
-                        s.highlight ? "text-[#1a2a22]" : "text-[#52685B]"
+                        s.highlight ? "text-[#0f2645]" : "text-[#52685B]"
                       }`}
                     >
                       {s.label}

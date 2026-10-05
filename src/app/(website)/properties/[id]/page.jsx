@@ -35,8 +35,8 @@ const marcellus = Marcellus({
 const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
 
 const fieldBase =
-  'w-full rounded-xl border border-[#1A2A22]/15 bg-[#F3F0E8]/60 px-4 py-3 text-sm text-[#1A2A22] outline-none transition placeholder:text-[#52685B]/60 focus:border-[#D4AF37] focus:bg-[#FAF9F6] focus:ring-4 focus:ring-[#FFCD39]/30 disabled:opacity-60';
-const labelBase = 'mb-1.5 block text-sm text-[#1A2A22]';
+  'w-full rounded-xl border border-[#0f2645]z/15 bg-[#F3F0E8]/60 px-4 py-3 text-sm text-[#0f2645]z outline-none transition placeholder:text-[#52685B]/60 focus:border-[#D4AF37] focus:bg-[#FAF9F6] focus:ring-4 focus:ring-[#FFCD39]/30 disabled:opacity-60';
+const labelBase = 'mb-1.5 block text-sm text-[#0f2645]z';
 
 /* ---------------------------------------------------------------
    IMAGE GALLERY
@@ -60,7 +60,7 @@ function ImageGallery({ images = [], title }) {
   }
 
   const arrow =
-    'absolute top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#FAF9F6]/90 text-[#1A2A22] shadow-md backdrop-blur transition hover:bg-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
+    'absolute top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#FAF9F6]/90 text-[#0f2645]z shadow-md backdrop-blur transition hover:bg-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
 
   return (
     <div
@@ -69,14 +69,14 @@ function ImageGallery({ images = [], title }) {
         if (e.key === 'ArrowRight') go(1);
       }}
     >
-      <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-[#1A2A22] shadow-[0_20px_50px_-25px_rgba(26,42,34,0.5)]">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-[#0f2645]z shadow-[0_20px_50px_-25px_rgba(26,42,34,0.5)]">
         <img
           key={current}
           src={images[current].url}
           alt={`${title || 'Property'} – image ${current + 1}`}
           className="h-full w-full object-cover"
         />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#1A2A22]/40 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#0f2645]z/40 to-transparent" />
 
         {total > 1 && (
           <>
@@ -86,7 +86,7 @@ function ImageGallery({ images = [], title }) {
             <button type="button" onClick={() => go(1)} aria-label="Next image" className={`${arrow} right-4`}>
               <ChevronRight size={20} />
             </button>
-            <span className="absolute bottom-4 right-4 rounded-full bg-[#1A2A22]/65 px-3 py-1 text-xs text-[#FAF9F6] backdrop-blur">
+            <span className="absolute bottom-4 right-4 rounded-full bg-[#0f2645]z/65 px-3 py-1 text-xs text-[#FAF9F6] backdrop-blur">
               {current + 1} / {total}
             </span>
           </>
@@ -163,7 +163,7 @@ function SaveButton({ propertyId }) {
       className={`inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-60 ${
         saved
           ? 'border-red-300 bg-red-50 text-red-500'
-          : 'border-[#1A2A22]/20 bg-[#FAF9F6] text-[#52685B] hover:border-[#D4AF37] hover:text-[#1A2A22]'
+          : 'border-[#0f2645]z/20 bg-[#FAF9F6] text-[#52685B] hover:border-[#D4AF37] hover:text-[#0f2645]z'
       }`}
     >
       <Heart size={16} className={saved ? 'fill-red-500' : ''} aria-hidden="true" />
@@ -186,11 +186,11 @@ function AgentCard({ agent }) {
     'inline-flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
 
   return (
-    <div className="rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-6">
-      <h3 className={`${marcellus.className} text-xl text-[#1A2A22]`}>Listed by</h3>
+    <div className="rounded-3xl border border-[#0f2645]z/10 bg-[#FAF9F6] p-6">
+      <h3 className={`${marcellus.className} text-xl text-[#0f2645]z`}>Listed by</h3>
 
       <div className="mt-5 flex items-start gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1A2A22] text-xl text-[#F5D77A] ring-2 ring-[#D4AF37]/40">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#0f2645]z text-xl text-[#F5D77A] ring-2 ring-[#D4AF37]/40">
           {agent.photo ? (
             <img src={agent.photo} alt={agent.name} className="h-full w-full object-cover" />
           ) : (
@@ -198,7 +198,7 @@ function AgentCard({ agent }) {
           )}
         </div>
         <div className="min-w-0">
-          <p className="text-base font-medium text-[#1A2A22]">{agent.name}</p>
+          <p className="text-base font-medium text-[#0f2645]z">{agent.name}</p>
           {agent.email && <p className="break-all text-[13px] text-[#52685B]">{agent.email}</p>}
           {agent.description && (
             <p className="mt-2 text-[13px] leading-relaxed text-[#52685B]">{agent.description}</p>
@@ -208,7 +208,7 @@ function AgentCard({ agent }) {
 
       <div className="mt-5 flex flex-wrap gap-2">
         {agent.phone && (
-          <a href={`tel:${agent.phone}`} className={`${btn} bg-[#1A2A22] text-[#FAF9F6] hover:bg-[#52685B]`}>
+          <a href={`tel:${agent.phone}`} className={`${btn} bg-[#0f2645]z text-[#FAF9F6] hover:bg-[#52685B]`}>
             <Phone size={15} aria-hidden="true" /> Call
           </a>
         )}
@@ -225,7 +225,7 @@ function AgentCard({ agent }) {
         {agent.email && (
           <a
             href={`mailto:${agent.email}`}
-            className={`${btn} border border-[#1A2A22]/20 bg-[#FAF9F6] text-[#1A2A22] hover:border-[#D4AF37]`}
+            className={`${btn} border border-[#0f2645]z/20 bg-[#FAF9F6] text-[#0f2645]z hover:border-[#D4AF37]`}
           >
             <Mail size={15} aria-hidden="true" /> Email
           </a>
@@ -295,16 +295,16 @@ function InquiryForm({ propertyId }) {
 
   if (status === 'success') {
     return (
-      <div aria-live="polite" className="rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-8 text-center">
-        <span className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full text-[#1A2A22] ${goldBg}`}>
+      <div aria-live="polite" className="rounded-3xl border border-[#0f2645]z/10 bg-[#FAF9F6] p-8 text-center">
+        <span className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full text-[#0f2645]z ${goldBg}`}>
           <CheckCircle2 size={26} aria-hidden="true" />
         </span>
-        <p className={`${marcellus.className} mt-5 text-2xl text-[#1A2A22]`}>Inquiry sent</p>
+        <p className={`${marcellus.className} mt-5 text-2xl text-[#0f2645]z`}>Inquiry sent</p>
         <p className="mt-2 text-sm text-[#52685B]">The agent will contact you shortly.</p>
         <button
           type="button"
           onClick={() => setStatus('idle')}
-          className="mt-5 text-sm text-[#52685B] underline underline-offset-4 transition hover:text-[#1A2A22]"
+          className="mt-5 text-sm text-[#52685B] underline underline-offset-4 transition hover:text-[#0f2645]z"
         >
           Send another inquiry
         </button>
@@ -315,12 +315,12 @@ function InquiryForm({ propertyId }) {
   const loading = status === 'loading';
 
   return (
-    <div className="rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-6">
-      <h3 className={`${marcellus.className} text-xl text-[#1A2A22]`}>Send an inquiry</h3>
+    <div className="rounded-3xl border border-[#0f2645]z/10 bg-[#FAF9F6] p-6">
+      <h3 className={`${marcellus.className} text-xl text-[#0f2645]z`}>Send an inquiry</h3>
       {!session && (
         <p className="mt-1.5 text-[13px] text-[#52685B]">
           Send as a guest, or{' '}
-          <Link href="/login" className="text-[#1A2A22] underline underline-offset-4">
+          <Link href="/login" className="text-[#0f2645]z underline underline-offset-4">
             log in
           </Link>{' '}
           to use your account.
@@ -363,11 +363,11 @@ function InquiryForm({ propertyId }) {
         <button
           type="submit"
           disabled={loading}
-          className="group relative inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
+          className="group relative inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#0f2645]z py-2.5 pl-6 pr-2.5 text-sm text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#0f2645]z hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <span aria-hidden="true" className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100" />
           <span className="relative z-10">{loading ? 'Sending…' : 'Send inquiry'}</span>
-          <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+          <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645]z transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645]z group-hover:text-[#F5D77A]">
             {loading ? (
               <Loader2 size={17} className="animate-spin" aria-hidden="true" />
             ) : (
@@ -384,20 +384,20 @@ function InquiryForm({ propertyId }) {
    SMALL PIECES
 ---------------------------------------------------------------- */
 const TYPE_BADGE = {
-  buy: 'bg-[#1A2A22] text-[#F5D77A]',
-  sell: `${goldBg} text-[#1A2A22]`,
-  rent: 'bg-[#F3F0E8] text-[#1A2A22] ring-1 ring-[#1A2A22]/15',
+  buy: 'bg-[#0f2645]z text-[#F5D77A]',
+  sell: `${goldBg} text-[#0f2645]z`,
+  rent: 'bg-[#F3F0E8] text-[#0f2645]z ring-1 ring-[#0f2645]z/15',
 };
 
 function Fact({ icon: Icon, label, value }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-4">
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1A2A22] text-[#F5D77A]">
+    <div className="flex items-center gap-3 rounded-2xl border border-[#0f2645]z/10 bg-[#FAF9F6] p-4">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0f2645]z text-[#F5D77A]">
         <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
       </span>
       <div className="min-w-0">
         <p className="text-xs text-[#52685B]">{label}</p>
-        <p className="truncate text-[15px] capitalize text-[#1A2A22]">{value}</p>
+        <p className="truncate text-[15px] capitalize text-[#0f2645]z">{value}</p>
       </div>
     </div>
   );
@@ -430,13 +430,13 @@ function NotFound() {
       <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#F3F0E8] text-[#B8902F]">
         <SearchX size={34} strokeWidth={1.3} aria-hidden="true" />
       </span>
-      <h1 className={`${marcellus.className} mt-6 text-3xl text-[#1A2A22]`}>Property not found</h1>
+      <h1 className={`${marcellus.className} mt-6 text-3xl text-[#0f2645]z`}>Property not found</h1>
       <p className="mt-2 max-w-sm text-sm text-[#52685B]">
         This property does not exist or has been removed.
       </p>
       <Link
         href="/properties"
-        className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#1A2A22] px-6 py-3 text-sm text-[#FAF9F6] transition hover:bg-[#52685B]"
+        className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#0f2645]z px-6 py-3 text-sm text-[#FAF9F6] transition hover:bg-[#52685B]"
       >
         <ChevronLeft size={16} aria-hidden="true" /> Back to properties
       </Link>
@@ -472,7 +472,7 @@ export default function PropertyDetailPage() {
       });
   }, [id]);
 
-  const shell = `${marcellus.variable} min-h-screen bg-[#F3F0E8] font-[family-name:var(--font-marcellus)] font-normal text-[#1A2A22]`;
+  const shell = `${marcellus.variable} min-h-screen bg-[#F3F0E8] font-[family-name:var(--font-marcellus)] font-normal text-[#0f2645]z`;
 
   if (loading) return <div className={shell}><LoadingSkeleton /></div>;
   if (notFound || !property) return <div className={shell}><NotFound /></div>;
@@ -499,11 +499,11 @@ export default function PropertyDetailPage() {
       <div className="mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-1.5 text-[13px] text-[#52685B]">
-          <Link href="/" className="transition hover:text-[#1A2A22]">Home</Link>
+          <Link href="/" className="transition hover:text-[#0f2645]z">Home</Link>
           <ChevronRight size={13} aria-hidden="true" />
-          <Link href="/properties" className="transition hover:text-[#1A2A22]">Properties</Link>
+          <Link href="/properties" className="transition hover:text-[#0f2645]z">Properties</Link>
           <ChevronRight size={13} aria-hidden="true" />
-          <span className="line-clamp-1 text-[#1A2A22]">{property.title}</span>
+          <span className="line-clamp-1 text-[#0f2645]z">{property.title}</span>
         </nav>
 
         <div className="grid items-start gap-8 lg:grid-cols-[1fr_380px]">
@@ -539,7 +539,7 @@ export default function PropertyDetailPage() {
               </div>
 
               <div className="shrink-0 sm:text-right">
-                <p className="text-3xl text-[#1A2A22] sm:text-4xl">
+                <p className="text-3xl text-[#0f2645]z sm:text-4xl">
                   ₹{price}
                   {property.type === 'rent' && <span className="font-sans text-base text-[#52685B]"> /mo</span>}
                 </p>
@@ -565,10 +565,10 @@ export default function PropertyDetailPage() {
 
             {/* Description */}
             {property.description && (
-              <div className="mt-8 rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-6 sm:p-8">
+              <div className="mt-8 rounded-3xl border border-[#0f2645]z/10 bg-[#FAF9F6] p-6 sm:p-8">
                 <h2 className="text-2xl">About this property</h2>
                 <span aria-hidden="true" className={`mt-3 block h-[3px] w-14 rounded-full ${goldBg}`} />
-                <p className="mt-5 whitespace-pre-line font-sans text-[15px] leading-[1.8] text-[#1A2A22]/85">
+                <p className="mt-5 whitespace-pre-line font-sans text-[15px] leading-[1.8] text-[#0f2645]z/85">
                   {property.description}
                 </p>
               </div>

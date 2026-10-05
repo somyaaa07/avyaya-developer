@@ -52,7 +52,7 @@ export default function Testimonials() {
         <div>
           <h2
             id="testimonials-heading"
-            className={`${marcellus.className} text-[clamp(1.9rem,4vw,3rem)] font-normal leading-tight tracking-tight text-[#1a2a22]`}
+            className={`${marcellus.className} text-[clamp(1.9rem,4vw,3rem)] font-normal leading-tight tracking-tight text-[#0f2645]`}
           >
             Trusted by Families and Investors
           </h2>
@@ -94,7 +94,7 @@ export default function Testimonials() {
 
         {/* ===== Right: quote card ===== */}
         <div className="min-w-0">
-          <div className="relative overflow-hidden rounded-[28px] bg-[#1a2a22] p-6 shadow-[0_24px_60px_-24px_rgba(26,42,34,0.55)] sm:p-10 lg:p-12">
+          <div className="relative overflow-hidden rounded-[28px] bg-[#0f2645] p-6 shadow-[0_24px_60px_-24px_rgba(26,42,34,0.55)] sm:p-10 lg:p-12">
             <span
               aria-hidden="true"
               className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`}

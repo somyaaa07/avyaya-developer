@@ -74,7 +74,7 @@ function Card({ property, index, reduce }) {
             </div>
           )}
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#1a2a22]/55 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0f2645]/55 to-transparent" />
 
           {property.type && (
             <span
@@ -87,7 +87,7 @@ function Card({ property, index, reduce }) {
           )}
 
           {property.images?.length > 1 && (
-            <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-[#1a2a22]/65 px-2.5 py-1 text-[11px] text-[#faf9f6] backdrop-blur">
+            <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-[#0f2645]/65 px-2.5 py-1 text-[11px] text-[#faf9f6] backdrop-blur">
               <Camera size={12} aria-hidden="true" />
               {property.images.length}
             </span>
@@ -97,7 +97,7 @@ function Card({ property, index, reduce }) {
         {/* Body */}
         <div className="flex flex-1 flex-col px-3.5 pb-3 pt-5">
           <h3
-            className={`${marcellus.className} line-clamp-1 text-[22px] leading-snug text-[#1a2a22]`}
+            className={`${marcellus.className} line-clamp-1 text-[22px] leading-snug text-[#0f2645]`}
           >
             {property.title}
           </h3>
@@ -121,7 +121,7 @@ function Card({ property, index, reduce }) {
           )}
 
           <div className="mt-auto flex items-end justify-between pt-5">
-            <p className={`${marcellus.className} text-2xl leading-none text-[#1a2a22]`}>
+            <p className={`${marcellus.className} text-2xl leading-none text-[#0f2645]`}>
               {formatPrice(property.price)}
               {property.type === 'rent' && (
                 <span className="ml-1 font-sans text-sm text-[#52685B]">/mo</span>
@@ -129,7 +129,7 @@ function Card({ property, index, reduce }) {
             </p>
             <span
               aria-hidden="true"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a2a22] text-[#F5D77A] transition duration-300 group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1a2a22]"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A] transition duration-300 group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1a2a22]"
             >
               <ArrowUpRight size={17} />
             </span>
@@ -169,43 +169,37 @@ export default function PropertiesList({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    let ignore = false;
-    setLoading(true);
-    setError(false);
+useEffect(() => {
+  let ignore = false;
+  setLoading(true);
+  setError(false);
 
-    const url = type
-      ? `/api/admin/properties?type=${type}`
-      : `/api/admin/properties`;
+  const params = new URLSearchParams();
+  if (type) params.set('type', type);
+  params.set('limit', String(limit));
 
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        if (ignore) return;
-        const list = Array.isArray(data) ? data : [];
-        const newest = [...list]
-          .sort((a, b) => {
-            if (a.createdAt && b.createdAt) {
-              return new Date(b.createdAt) - new Date(a.createdAt);
-            }
-            return b.id - a.id;
-          })
-          .slice(0, limit);
-        setProperties(newest);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Fetch error:', err);
-        if (ignore) return;
-        setError(true);
-        setLoading(false);
-      });
+  fetch(`/api/properties?${params.toString()}`)
+    .then((res) => {
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      if (ignore) return;
+      // Server already created_at DESC order me bhej raha hai
+      setProperties(Array.isArray(data) ? data.slice(0, limit) : []);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error('Fetch error:', err);
+      if (ignore) return;
+      setError(true);
+      setLoading(false);
+    });
 
-    return () => {
-      ignore = true;
-    };
-  }, [type, limit]);
-
+  return () => {
+    ignore = true;
+  };
+}, [type, limit]);
   const href = viewAllHref || (type ? `/properties?type=${type}` : '/properties');
 
   return (
@@ -219,7 +213,7 @@ export default function PropertiesList({
           <div className="max-w-xl">
             <h2
               id="properties-list-title"
-              className={`${marcellus.className} text-[34px] leading-tight text-[#1a2a22] sm:text-[42px] lg:text-[48px]`}
+              className={`${marcellus.className} text-[34px] leading-tight text-[#0f2645] sm:text-[42px] lg:text-[48px]`}
             >
               {heading}
             </h2>
@@ -232,10 +226,10 @@ export default function PropertiesList({
 
           <Link
             href={href}
-            className="group inline-flex w-fit items-center gap-3 rounded-full border border-[#1a2a22]/20 bg-[#faf9f6] py-2 pl-5 pr-2 text-sm text-[#1a2a22] transition hover:border-[#D4AF37] hover:shadow-[0_8px_24px_rgba(212,175,55,0.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+            className="group inline-flex w-fit items-center gap-3 rounded-full border border-[#0f2645]/20 bg-[#faf9f6] py-2 pl-5 pr-2 text-sm text-[#0f2645] transition hover:border-[#D4AF37] hover:shadow-[0_8px_24px_rgba(212,175,55,0.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
           >
             View all properties
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1a2a22] text-[#F5D77A] transition group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1a2a22]">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A] transition group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1a2a22]">
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:-rotate-45" />
             </span>
           </Link>
@@ -253,7 +247,7 @@ export default function PropertiesList({
             <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f3f0E8] text-[#B8902F]">
               <SearchX size={28} strokeWidth={1.3} aria-hidden="true" />
             </span>
-            <p className={`${marcellus.className} mt-5 text-2xl text-[#1a2a22]`}>
+            <p className={`${marcellus.className} mt-5 text-2xl text-[#0f2645]`}>
               {error ? 'Could not load properties' : 'No properties listed yet'}
             </p>
             <p className="mt-2 max-w-sm text-sm text-[#52685B]">

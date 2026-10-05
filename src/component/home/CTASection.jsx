@@ -97,7 +97,7 @@ export default function CTACallback({ image = null }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-[28px] bg-[#1a2a22] shadow-[0_30px_70px_-30px_rgba(26,42,34,0.55)]"
+          className="relative overflow-hidden rounded-[28px] bg-[#0f2645] shadow-[0_30px_70px_-30px_rgba(26,42,34,0.55)]"
         >
           {/* top gold line */}
           <span
@@ -208,7 +208,7 @@ export default function CTACallback({ image = null }) {
                 </div>
               ) : (
                 <>
-                  <h3 className={`${serif} text-2xl text-[#1a2a22] sm:text-3xl`}>
+                  <h3 className={`${serif} text-2xl text-[#0f2645] sm:text-3xl`}>
                     Request a Callback
                   </h3>
                   <p className="mt-2 text-sm text-[#52685B]">
@@ -264,7 +264,7 @@ export default function CTACallback({ image = null }) {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="group relative inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-7 pr-2.5 text-base text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
+                      className="group relative inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-7 pr-2.5 text-base text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#0f2645] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       <span
                         aria-hidden="true"
@@ -277,7 +277,7 @@ export default function CTACallback({ image = null }) {
                       <span className="relative z-10">
                         {loading ? "Sending..." : "Request Callback"}
                       </span>
-                      <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+                      <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
                         {loading ? (
                           <CgSpinner size={20} className="animate-spin" aria-hidden="true" />
                         ) : (

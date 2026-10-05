@@ -44,7 +44,7 @@ const goldBg = "bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]";
 const BtnDark = ({ href, children }) => (
   <Link
     href={href}
-    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
   >
     <span
       aria-hidden="true"
@@ -101,7 +101,7 @@ export default function AboutSection() {
             </div>
 
             {/* Experience badge */}
-            <div className="absolute -bottom-6 right-4 flex items-center gap-4 rounded-2xl bg-[#1a2a22] px-6 py-4 text-[#faf9f6] shadow-xl ring-1 ring-[#D4AF37]/40 sm:right-8 lg:-right-6">
+            <div className="absolute -bottom-6 right-4 flex items-center gap-4 rounded-2xl bg-[#0f2645] px-6 py-4 text-[#faf9f6] shadow-xl ring-1 ring-[#D4AF37]/40 sm:right-8 lg:-right-6">
               <FiAward size={26} className="text-[#F5D77A]" aria-hidden="true" />
               <div>
                 <p className={`${serif} text-3xl leading-none text-[#F5D77A]`}>5+</p>
@@ -114,7 +114,7 @@ export default function AboutSection() {
           <motion.div {...reveal(0.1)} className="order-1 min-w-0 lg:order-2">
             <h2
               id="about-heading"
-              className={`${serif} text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.1] tracking-tight text-[#1a2a22]`}
+              className={`${serif} text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.1] tracking-tight text-[#0f2645]`}
             >
               Your Trusted Real Estate Partner
             </h2>
@@ -133,7 +133,7 @@ export default function AboutSection() {
             <ul className="mt-7 space-y-3.5">
               {points.map((point) => (
                 <li key={point} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#1a2a22] text-[#F5D77A]">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A]">
                     <FiCheck size={13} strokeWidth={3} aria-hidden="true" />
                   </span>
                   <span className="text-base text-[#1a2a22]">{point}</span>
@@ -150,7 +150,7 @@ export default function AboutSection() {
         {/* ===== Stats band ===== */}
         <motion.dl
           {...reveal()}
-          className="relative mt-20 grid grid-cols-1 overflow-hidden rounded-3xl bg-[#1a2a22] px-6 py-8 text-[#faf9f6] sm:grid-cols-3 sm:px-4 lg:mt-24"
+          className="relative mt-20 grid grid-cols-1 overflow-hidden rounded-3xl bg-[#0f2645] px-6 py-8 text-[#faf9f6] sm:grid-cols-3 sm:px-4 lg:mt-24"
         >
           <span
             aria-hidden="true"

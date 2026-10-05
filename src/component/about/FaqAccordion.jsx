@@ -23,7 +23,7 @@ export default function FaqAccordion({ items, faqs }) {
                 aria-expanded={isOpen}
                 aria-controls={`faq-panel-${i}`}
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="flex w-full items-center justify-between gap-4 rounded-xl px-5 py-4 text-left text-[15px] font-semibold text-[#1b2b22] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f4d36]"
+                className="flex w-full items-center justify-between gap-4 rounded-xl px-5 py-4 text-left text-[15px] font-semibold text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f4d36]"
               >
                 {item.q}
                 <Plus

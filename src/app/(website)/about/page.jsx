@@ -191,7 +191,7 @@ const Eyebrow = ({ children, line = false }) => (
 const BtnDark = ({ href, children }) => (
   <Link
     href={href}
-    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+    className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-6 pr-2.5 text-sm font-normal text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
   >
     {/* Golden fill slides in from left */}
     <span
@@ -252,7 +252,7 @@ export default function AboutPage() {
             <Eyebrow line>About Us</Eyebrow>
             <h1
               id="about-hero"
-              className="mt-5 text-5xl font-normal leading-[1.05] sm:text-6xl lg:text-[64px]"
+              className="mt-5 text-5xl font-normal leading-[1.05] sm:text-6xl lg:text-[64px] text-[#0f2645]"
             >
               More Than Properties, We Build Futures
             </h1>
@@ -270,7 +270,7 @@ export default function AboutPage() {
 
             <div className="mt-6 flex items-center gap-8">
               <div>
-                <p className="text-5xl font-normal">10+</p>
+                <p className="text-5xl font-normal text-[#0f2645]">10+</p>
                 <p className="text-xs text-[#52685B]">Years of Experience</p>
               </div>
               <span className="hidden h-14 w-px bg-[#52685B]/25 sm:block" />
@@ -313,7 +313,7 @@ export default function AboutPage() {
               <Link
                 href="/projects"
                 aria-label="View our projects"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1A2A22] text-[#FAF9F6] transition hover:bg-[#52685B]"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0f2645] text-[#FAF9F6] transition "
               >
                 <ArrowRight size={16} />
               </Link>
@@ -333,7 +333,7 @@ export default function AboutPage() {
               } ${i % 2 === 1 ? "border-l border-[#52685B]/25" : ""}`}
             >
               <Icon className="text-[#D4A62A]" size={28} strokeWidth={1.5} />
-              <dd className="mt-2 text-2xl">{value}</dd>
+              <dd className="mt-2 text-2xl text-[#0f2645]">{value}</dd>
               <dt className="text-xs text-[#52685B]">{label}</dt>
             </div>
           ))}
@@ -363,7 +363,7 @@ export default function AboutPage() {
                 className="object-cover"
               />
             </div>
-            <div className="absolute bottom-6 left-0 w-[46%] rounded-xl bg-[#1A2A22] p-4 text-sm text-[#FAF9F6] shadow-lg sm:bottom-2">
+            <div className="absolute bottom-6 left-0 w-[46%] rounded-xl bg-[#1A2A22] p-4 text-sm text-[#0f2645] shadow-lg sm:bottom-2">
               <p className="flex items-center justify-between gap-2">
                 Modern Spaces <ArrowRight size={14} />
               </p>
@@ -379,7 +379,7 @@ export default function AboutPage() {
                 <defs>
                   <path id="circlePath" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
                 </defs>
-                <text className="fill-[#D4A62A] text-[9px] uppercase tracking-[0.28em]">
+                <text className="fill-[#0f2645] text-[9px] uppercase tracking-[0.28em]">
                   <textPath href="#circlePath">Sustainable • Modern Living •</textPath>
                 </text>
               </svg>
@@ -390,7 +390,7 @@ export default function AboutPage() {
           {/* Text */}
           <div>
             <Eyebrow>Our Story</Eyebrow>
-            <h2 id="story-title" className="mt-4 text-4xl font-normal sm:text-5xl">
+            <h2 id="story-title" className="mt-4 text-4xl text-[#0f2645] font-normal sm:text-5xl">
               About Our Company
             </h2>
             <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-[#52685B]">
@@ -433,7 +433,7 @@ export default function AboutPage() {
             <div className="flex justify-center">
               <Eyebrow>Why Choose Bringo</Eyebrow>
             </div>
-            <h2 id="why-title" className="mt-4 text-3xl font-normal sm:text-4xl">
+            <h2 id="why-title" className="mt-4 text-3xl font-normal sm:text-4xl text-[#0f2645]">
               A Better Way to Find Your Perfect Space
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-[#52685B]">
@@ -458,7 +458,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ PARTNERS ============ */}
-      <section aria-labelledby="partners-title" className="mx-auto max-w-7xl px-5 py-14 text-center sm:px-8">
+      {/* <section aria-labelledby="partners-title" className="mx-auto max-w-7xl px-5 py-14 text-center sm:px-8">
         <div className="flex justify-center">
           <Eyebrow>Our Partners</Eyebrow>
         </div>
@@ -473,19 +473,18 @@ export default function AboutPage() {
                 i !== 0 ? "lg:border-l lg:border-[#52685B]/25" : ""
               }`}
             >
-              {/* Real logo: <Image src={`/images/partners/${p}.svg`} alt={`${p} logo`} width={110} height={40} /> */}
               {p}
             </li>
           ))}
         </ul>
-      </section>
+      </section> */}
 
       {/* ============ OUR PEOPLE + VISION/MISSION ============ */}
       <section aria-labelledby="people-title" className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.4fr]">
           <div>
             <Eyebrow line>Our People</Eyebrow>
-            <h2 id="people-title" className="mt-4 text-4xl font-normal leading-tight">
+            <h2 id="people-title" className="mt-4 text-4xl font-normal leading-tight text-[#0f2645]">
               Driven by People.
               <br />
               Inspired by Possibilities.
@@ -509,7 +508,7 @@ export default function AboutPage() {
                 className="object-cover"
               />
             </div>
-            <div className="flex flex-col justify-center gap-6 bg-[#1A2A22] p-7 text-[#FAF9F6]">
+            <div className="flex flex-col justify-center gap-6 bg-[#0f2645] p-7 text-[#FAF9F6]">
               <div>
                 <p className="flex items-center gap-3">
                   <Eye size={22} strokeWidth={1.5} /> Vision
@@ -546,7 +545,7 @@ export default function AboutPage() {
           </div>
           <div>
             <Eyebrow>FAQ</Eyebrow>
-            <h2 id="faq-title" className="mt-3 text-4xl font-normal">
+            <h2 id="faq-title" className="mt-3 text-4xl font-normal text-[#0f2645]">
               Frequently Asked Questions
             </h2>
             <p className="mt-3 text-sm text-[#52685B]">
@@ -559,7 +558,7 @@ export default function AboutPage() {
 
       {/* ============ CTA + CONTACT ============ */}
       <section aria-labelledby="cta-title" className="mx-auto max-w-7xl px-5 pb-16 pt-6 sm:px-8">
-        <div className="relative overflow-hidden rounded-3xl bg-[#1A2A22] px-6 py-12 text-[#FAF9F6] sm:px-12 lg:py-16">
+        <div className="relative overflow-hidden rounded-3xl bg-[#0f2645] px-6 py-12 text-[#FAF9F6] sm:px-12 lg:py-16">
           <Image
             src="/image/ctaa.png"
             alt=""
@@ -568,7 +567,7 @@ export default function AboutPage() {
             className="object-cover object-right opacity-30 mix-blend-luminosity lg:opacity-45"
             aria-hidden="true"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A2A22] via-[#1A2A22]/90 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0f2645] via-[#0f2645]/90 to-transparent" />
 
           <div className="relative z-10 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-xl">

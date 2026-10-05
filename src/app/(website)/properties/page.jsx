@@ -55,9 +55,9 @@ const EMPTY_FILTERS = {
 };
 
 const TYPE_BADGE = {
-  buy: 'bg-[#1A2A22] text-[#F5D77A]',
-  sell: 'bg-gradient-to-r from-[#D4AF37] to-[#F5D77A] text-[#1A2A22]',
-  rent: 'bg-[#FAF9F6] text-[#1A2A22]',
+  buy: 'bg-[#0f2645] text-[#F5D77A]',
+  sell: 'bg-gradient-to-r from-[#D4AF37] to-[#F5D77A] text-[#0f2645]',
+  rent: 'bg-[#FAF9F6] text-[#0f2645]',
 };
 
 const SORT_OPTIONS = [
@@ -86,7 +86,7 @@ const GoldBtn = ({ children, onClick, type = 'button', className = '' }) => (
   <button
     type={type}
     onClick={onClick}
-    className={`group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] px-7 py-3 text-sm font-normal text-[#1A2A22] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_20px_rgba(166,124,30,0.3)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_14px_30px_rgba(166,124,30,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] ${className}`}
+    className={`group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] px-7 py-3 text-sm font-normal text-[#0f2645] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_20px_rgba(166,124,30,0.3)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_14px_30px_rgba(166,124,30,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] ${className}`}
   >
     <span
       aria-hidden="true"
@@ -110,7 +110,7 @@ function PropertyCard({ p }) {
   return (
     <Link
       href={`/properties/${p.id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-[#1A2A22]/10 bg-[#FAF9F6] p-2.5 transition duration-300 hover:border-[#D4AF37]/60 hover:shadow-[0_18px_40px_-18px_rgba(26,42,34,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+      className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-[#0f2645]/10 bg-[#FAF9F6] p-2.5 transition duration-300 hover:border-[#D4AF37]/60 hover:shadow-[0_18px_40px_-18px_rgba(26,42,34,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#F3F0E8]">
@@ -128,7 +128,7 @@ function PropertyCard({ p }) {
           </div>
         )}
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#1A2A22]/55 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0f2645]/55 to-transparent" />
 
         {p.type && (
           <span
@@ -141,7 +141,7 @@ function PropertyCard({ p }) {
         )}
 
         {p.images?.length > 1 && (
-          <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-[#1A2A22]/65 px-2.5 py-1 text-[11px] text-[#FAF9F6] backdrop-blur">
+          <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-[#0f2645]/65 px-2.5 py-1 text-[11px] text-[#FAF9F6] backdrop-blur">
             <Camera size={12} aria-hidden="true" /> {p.images.length}
           </span>
         )}
@@ -149,7 +149,7 @@ function PropertyCard({ p }) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col px-3.5 pb-3 pt-5">
-        <h3 className="line-clamp-1 text-[22px] leading-snug text-[#1A2A22]">{p.title}</h3>
+        <h3 className="line-clamp-1 text-[22px] leading-snug text-[#0f2645]">{p.title}</h3>
         <p className="mt-1.5 flex items-center gap-1.5 text-sm text-[#52685B]">
           <MapPin size={14} className="shrink-0 text-[#B8902F]" aria-hidden="true" />
           <span className="line-clamp-1">
@@ -168,13 +168,13 @@ function PropertyCard({ p }) {
         )}
 
         <div className="mt-auto flex items-end justify-between pt-5">
-          <p className="text-2xl leading-none text-[#1A2A22]">
+          <p className="text-2xl leading-none text-[#0f2645]">
             ₹{Number(p.price).toLocaleString('en-IN')}
             {p.type === 'rent' && <span className="ml-1 font-sans text-sm text-[#52685B]">/mo</span>}
           </p>
           <span
             aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1A2A22] text-[#F5D77A] transition duration-300 group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1A2A22]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A] transition duration-300 group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#0f2645]"
           >
             <ArrowUpRight size={17} />
           </span>
@@ -189,12 +189,12 @@ function PropertyCard({ p }) {
 ---------------------------------------------------------------- */
 function FilterChip({ label, onRemove }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/50 bg-[#FAF9F6] py-1.5 pl-4 pr-2 text-xs capitalize text-[#1A2A22]">
+    <span className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/50 bg-[#FAF9F6] py-1.5 pl-4 pr-2 text-xs capitalize text-[#0f2645]">
       {label}
       <button
         onClick={onRemove}
         aria-label={`Remove ${label}`}
-        className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1A2A22] text-[#F5D77A] transition hover:bg-[#52685B]"
+        className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A] transition hover:bg-[#52685B]"
       >
         <X size={11} />
       </button>
@@ -206,10 +206,10 @@ function FilterChip({ label, onRemove }) {
    FORM PIECES
 ---------------------------------------------------------------- */
 const fieldBase =
-  'w-full rounded-xl border border-[#52685B]/25 bg-[#FAF9F6] px-4 py-3 text-sm text-[#1A2A22] outline-none transition placeholder:text-[#52685B]/60 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/25';
+  'w-full rounded-xl border border-[#52685B]/25 bg-[#FAF9F6] px-4 py-3 text-sm text-[#0f2645] outline-none transition placeholder:text-[#52685B]/60 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/25';
 
 const Label = ({ children, htmlFor }) => (
-  <label htmlFor={htmlFor} className="mb-2 block text-sm text-[#1A2A22]">
+  <label htmlFor={htmlFor} className="mb-2 block text-sm text-[#0f2645]">
     {children}
   </label>
 );
@@ -311,8 +311,8 @@ function FilterFields({ idPrefix, filters, cities, setFilters, applyFilters, upd
                 aria-pressed={active}
                 className={`rounded-full border px-4 py-2 text-[13px] transition duration-300 ${
                   active
-                    ? 'border-[#1A2A22] bg-[#1A2A22] text-[#F5D77A]'
-                    : 'border-[#52685B]/25 bg-[#FAF9F6] text-[#52685B] hover:border-[#D4AF37] hover:text-[#1A2A22]'
+                    ? 'border-[#0f2645] bg-[#0f2645] text-[#F5D77A]'
+                    : 'border-[#52685B]/25 bg-[#FAF9F6] text-[#52685B] hover:border-[#D4AF37] hover:text-[#0f2645]'
                 }`}
               >
                 {b === '' ? 'Any' : `${b}+`}
@@ -332,7 +332,7 @@ function Pagination({ page, totalPages, onChange }) {
   if (totalPages <= 1) return null;
 
   const arrow =
-    'flex h-11 w-11 items-center justify-center rounded-full border border-[#1A2A22]/20 bg-[#FAF9F6] text-[#1A2A22] transition hover:border-[#D4AF37] hover:shadow-[0_6px_20px_rgba(212,175,55,0.25)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#1A2A22]/20 disabled:hover:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
+    'flex h-11 w-11 items-center justify-center rounded-full border border-[#0f2645]/20 bg-[#FAF9F6] text-[#0f2645] transition hover:border-[#D4AF37] hover:shadow-[0_6px_20px_rgba(212,175,55,0.25)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#0f2645]/20 disabled:hover:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
 
   return (
     <nav aria-label="Pagination" className="mt-10 flex flex-wrap items-center justify-center gap-2">
@@ -352,8 +352,8 @@ function Pagination({ page, totalPages, onChange }) {
             aria-current={n === page ? 'page' : undefined}
             className={`flex h-11 min-w-[44px] items-center justify-center rounded-full border px-3 text-sm transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] ${
               n === page
-                ? 'border-transparent bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] text-[#1A2A22] shadow-md'
-                : 'border-[#1A2A22]/20 bg-[#FAF9F6] text-[#52685B] hover:border-[#D4AF37] hover:text-[#1A2A22]'
+                ? 'border-transparent bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] text-[#0f2645] shadow-md'
+                : 'border-[#0f2645]/20 bg-[#FAF9F6] text-[#52685B] hover:border-[#D4AF37] hover:text-[#0f2645]'
             }`}
           >
             {n}
@@ -473,19 +473,19 @@ function PropertiesContent() {
   const fieldProps = { filters, cities, setFilters, applyFilters, updateFilter };
 
   const toolbarBtn =
-    'items-center gap-2 rounded-full border border-[#1A2A22]/20 bg-[#FAF9F6] px-5 py-2.5 text-[13px] text-[#1A2A22] transition hover:border-[#D4AF37] hover:shadow-[0_6px_20px_rgba(212,175,55,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
+    'items-center gap-2 rounded-full border border-[#0f2645]/20 bg-[#FAF9F6] px-5 py-2.5 text-[13px] text-[#0f2645] transition hover:border-[#D4AF37] hover:shadow-[0_6px_20px_rgba(212,175,55,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]';
   const countBadge = (
-    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1A2A22] text-[10px] text-[#F5D77A]">
+    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0f2645] text-[10px] text-[#F5D77A]">
       {activeFilters.length}
     </span>
   );
 
   return (
     <div
-      className={`${marcellus.variable} min-h-screen bg-[#FAF9F6] font-[family-name:var(--font-marcellus)] font-normal text-[#1A2A22]`}
+      className={`${marcellus.variable} min-h-screen bg-[#0f2645] font-[family-name:var(--font-marcellus)] font-normal text-[#0f2645]`}
     >
       {/* ============ HERO + SEARCH ============ */}
-      <section className="relative overflow-hidden bg-[#1A2A22] px-5 pb-28 pt-14 sm:px-8 lg:pb-32 lg:pt-20">
+      <section className="relative overflow-hidden bg-[#0f2645] px-5 pb-28 pt-14 sm:px-8 lg:pb-32 lg:pt-20">
         <div className="relative mx-auto max-w-4xl text-center">
           <h1 className="text-4xl leading-[1.1] text-[#FAF9F6] sm:text-5xl lg:text-6xl">
             Find Your Perfect Property
@@ -513,7 +513,7 @@ function PropertiesContent() {
                   aria-pressed={active}
                   className={`rounded-full px-5 py-2 text-[13px] capitalize transition duration-300 sm:px-7 ${
                     active
-                      ? 'bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] text-[#1A2A22] shadow-md'
+                      ? 'bg-gradient-to-br from-[#F5D77A] via-[#D4AF37] to-[#A67C1E] text-[#0f2645] shadow-md'
                       : 'text-[#FAF9F6]/80 hover:text-[#F5D77A]'
                   }`}
                 >
@@ -534,14 +534,14 @@ function PropertiesContent() {
                 value={filters.search}
                 onChange={(e) => setFilters({ ...filters, search: e.target.value })}
                 onKeyDown={(e) => e.key === 'Enter' && applyFilters(filters)}
-                className="w-full bg-transparent py-3 text-[15px] text-[#1A2A22] outline-none placeholder:text-[#52685B]/60"
+                className="w-full bg-transparent py-3 text-[15px] text-[#0f2645] outline-none placeholder:text-[#52685B]/60"
               />
               {filters.search && (
                 <button
                   type="button"
                   aria-label="Clear search"
                   onClick={() => updateFilter('search', '')}
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#F3F0E8] text-[#52685B] transition hover:bg-[#1A2A22] hover:text-[#F5D77A]"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#F3F0E8] text-[#52685B] transition hover:bg-[#0f2645] hover:text-[#F5D77A]"
                 >
                   <X size={12} />
                 </button>
@@ -561,7 +561,7 @@ function PropertiesContent() {
           {/* Toolbar */}
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="text-2xl text-[#1A2A22]" aria-live="polite">
+              <h2 className="text-2xl text-[#0f2645]" aria-live="polite">
                 {loading
                   ? 'Searching...'
                   : `${properties.length} propert${properties.length === 1 ? 'y' : 'ies'} found`}
@@ -626,7 +626,7 @@ function PropertiesContent() {
               ))}
               <button
                 onClick={resetFilters}
-                className="ml-1 text-xs text-[#52685B] underline underline-offset-4 transition hover:text-[#1A2A22]"
+                className="ml-1 text-xs text-[#52685B] underline underline-offset-4 transition hover:text-[#0f2645]"
               >
                 Clear all
               </button>
@@ -640,13 +640,13 @@ function PropertiesContent() {
           >
             {/* ---------- DESKTOP FILTER SIDEBAR ---------- */}
             {sidebarOpen && (
-              <aside className="hidden rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] p-6 lg:sticky lg:top-24 lg:block">
+              <aside className="hidden rounded-3xl border border-[#0f2645]/10 bg-[#FAF9F6] p-6 lg:sticky lg:top-24 lg:block">
                 <div className="mb-5 flex items-center justify-between">
-                  <h2 className="text-xl text-[#1A2A22]">Filters</h2>
+                  <h2 className="text-xl text-[#0f2645]">Filters</h2>
                   {activeFilters.length > 0 && (
                     <button
                       onClick={resetFilters}
-                      className="text-xs text-[#52685B] underline underline-offset-4 transition hover:text-[#1A2A22]"
+                      className="text-xs text-[#52685B] underline underline-offset-4 transition hover:text-[#0f2645]"
                     >
                       Reset all
                     </button>
@@ -664,7 +664,7 @@ function PropertiesContent() {
                   {[1, 2, 3, 4, 5, 6].map((n) => (
                     <div
                       key={n}
-                      className="animate-pulse overflow-hidden rounded-[22px] border border-[#1A2A22]/10 bg-[#FAF9F6] p-2.5"
+                      className="animate-pulse overflow-hidden rounded-[22px] border border-[#0f2645]/10 bg-[#FAF9F6] p-2.5"
                     >
                       <div className="aspect-[4/3] rounded-2xl bg-[#52685B]/15" />
                       <div className="space-y-3 px-3.5 pb-4 pt-5">
@@ -676,11 +676,11 @@ function PropertiesContent() {
                   ))}
                 </div>
               ) : properties.length === 0 ? (
-                <div className="flex flex-col items-center rounded-3xl border border-[#1A2A22]/10 bg-[#FAF9F6] px-6 py-20 text-center">
+                <div className="flex flex-col items-center rounded-3xl border border-[#0f2645]/10 bg-[#FAF9F6] px-6 py-20 text-center">
                   <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#F3F0E8] text-[#B8902F]">
                     <SearchX size={34} strokeWidth={1.3} />
                   </span>
-                  <p className="mt-6 text-2xl text-[#1A2A22]">No properties found</p>
+                  <p className="mt-6 text-2xl text-[#0f2645]">No properties found</p>
                   <p className="mt-2 max-w-sm text-sm text-[#52685B]">
                     Try changing or clearing your filters to see more results.
                   </p>
@@ -707,18 +707,18 @@ function PropertiesContent() {
       {drawerOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Filters">
           <div
-            className="absolute inset-0 bg-[#1A2A22]/50"
+            className="absolute inset-0 bg-[#0f2645]/50"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
           <div className="absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-[28px] bg-[#FAF9F6] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#1A2A22]/10 px-6 py-4">
-              <h2 className="text-xl text-[#1A2A22]">Filters</h2>
+            <div className="flex items-center justify-between border-b border-[#0f2645]/10 px-6 py-4">
+              <h2 className="text-xl text-[#0f2645]">Filters</h2>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close filters"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#1A2A22]/15 text-[#1A2A22] transition hover:bg-[#F3F0E8]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#0f2645]/15 text-[#0f2645] transition hover:bg-[#F3F0E8]"
               >
                 <X size={18} />
               </button>
@@ -728,7 +728,7 @@ function PropertiesContent() {
               <FilterFields idPrefix="m" {...fieldProps} />
             </div>
 
-            <div className="flex items-center gap-3 border-t border-[#1A2A22]/10 px-6 py-4">
+            <div className="flex items-center gap-3 border-t border-[#0f2645]/10 px-6 py-4">
               <button
                 type="button"
                 onClick={resetFilters}
