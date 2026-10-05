@@ -22,9 +22,9 @@ const HERO_IMAGE = {
 };
 
 const stats = [
-  { value: "10+", label: "Years of Experience" },
-  { value: "50+", label: "Projects Delivered" },
-  { value: "1000+", label: "Happy Families" },
+  { value: "5+", label: "Years of Experience" },
+  { value: "200+", label: "Projects Delivered" },
+  { value: "600+", label: "Happy Families" },
 ];
 
 const locations = ["Noida", "Greater Noida", "Ghaziabad", "Delhi"];
@@ -133,7 +133,7 @@ export default function HomeHero() {
               <span
                 className={`text-xs font-semibold uppercase tracking-[0.28em] ${goldText}`}
               >
-                Trusted Bringo Real Estate · Greater Noida
+                Trusted Avayay Developers  · Greater Noida
               </span>
             </motion.div>
 

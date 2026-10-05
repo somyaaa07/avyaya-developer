@@ -7,30 +7,29 @@ import HowWeHelp from "@/component/home/HowWeHelp";
 import AboutSection from "@/component/home/AboutSection";
 
 export const metadata = {
-  title: "Bringo Real Estates | Premium Properties in Greater Noida",
+  title: "Avyaya Developers| Premium Properties in Greater Noida",
   description:
-    "Bringo Real Estates helps you discover premium residential and commercial properties in Greater Noida. Visit us at FF01, FF02 Kaveri City Center, Delta 1, Greater Noida, Gautam Buddha Nagar, UP 201306.",
+    "Avyaya Developers helps you discover premium residential and commercial properties in Greater Noida. Visit us at FF01, FF02 Kaveri City Center, Delta 1, Greater Noida, Gautam Buddha Nagar, UP 201306.",
   keywords: [
-    "Bringo Real Estates",
+    "Avyaya Developers Real Estates",
     "real estate Greater Noida",
     "properties in Greater Noida",
     "property dealer Greater Noida",
     "residential property Greater Noida",
     "commercial property Greater Noida",
-    "Kaveri City Center",
-    "Delta 1 Greater Noida",
+    
   ],
-  authors: [{ name: "Bringo Real Estates" }],
-  creator: "Bringo Real Estates",
-  publisher: "Bringo Real Estates",
+  authors: [{ name: "Avyaya Developers" }],
+  creator: "Avyaya Developers",
+  publisher: "Avyaya Developers",
 
   openGraph: {
-    title: "Bringo Real Estates | Premium Properties in Greater Noida",
+    title: "Avyaya Developers Real Estates | Premium Properties in Greater Noida",
     description:
-      "Explore residential and commercial properties with Bringo Real Estates in Greater Noida.",
+      "Explore residential and commercial properties with Avyaya Developers in Greater Noida.",
     type: "website",
     locale: "en_IN",
-    siteName: "Bringo Real Estates",
+    siteName: "Avyaya Developers",
   },
 
   robots: {

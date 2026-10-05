@@ -24,7 +24,7 @@ export default function ContactMap() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="relative overflow-hidden rounded-3xl border border-[#e8e3d3] bg-[#f3f0E8]"
-          style={{ boxShadow: "0 30px 60px -35px rgba(26,42,34,0.35)" }}
+          style={{ boxShadow: "0 30px 60px -35px rgba(15,38,69,0.35)" }}
         >
           {/* Top gold hairline: #e2a10d sides, #ffcd39 center */}
           <span
@@ -55,17 +55,17 @@ export default function ContactMap() {
                     className="h-px w-8"
                     style={{ background: "linear-gradient(90deg, #e2a10d, #ffcd39)" }}
                   />
-                  <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#52685B]">
+                  <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#0f2645]/70">
                     Visit Us
                   </span>
                 </div>
                 <h2
-                  className={`${marcellus.className} mt-2 text-[clamp(1.5rem,3vw,2.1rem)] leading-[1.15] tracking-tight text-[#1a2a22]`}
+                  className={`${marcellus.className} mt-2 text-[clamp(1.5rem,3vw,2.1rem)] leading-[1.15] tracking-tight text-[#0f2645]`}
                 >
                   Find Us on the Map
                 </h2>
-                <p className="mt-1.5 text-sm leading-relaxed text-[#52685B]">
-                  <span className="font-medium text-[#1a2a22]">{mapData.name}</span>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#0f2645]/70">
+                  <span className="font-medium text-[#0f2645]">{mapData.name}</span>
                   <span className="mx-2 text-[#e2a10d]">•</span>
                   <span className="break-words">{mapData.address}</span>
                 </p>
@@ -77,7 +77,7 @@ export default function ContactMap() {
               href={directionsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex w-fit shrink-0 items-center gap-3 overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm font-medium text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:ring-[#D4AF37] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+              className="group relative inline-flex w-fit shrink-0 items-center gap-3 overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-6 pr-2.5 text-sm font-medium text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#0f2645] hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:ring-[#D4AF37] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
             >
               <span
                 aria-hidden="true"
@@ -88,7 +88,7 @@ export default function ContactMap() {
                 className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -translate-x-full -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:translate-x-[450%] group-hover:opacity-100"
               />
               <span className="relative z-10">Get Directions</span>
-              <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+              <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
                 <ArrowUpRight
                   size={14}
                   className="transition-transform duration-500 group-hover:rotate-45"

@@ -20,7 +20,7 @@ const serif = `${marcellus.className} font-normal`;
 
 /* ---------------- DATA ---------------- */
 const ABOUT_IMAGE = {
-  src: "/banner/about.png",
+  src: "/banner/about.jpeg",
   alt: "Luxury living room with floor-to-ceiling windows",
 };
 
@@ -33,8 +33,8 @@ const points = [
 
 // "Years of Experience" image badge me hai, isliye yahan 3 stats
 const stats = [
-  { icon: FiHome, value: "500+", label: "Properties Listed" },
-  { icon: FiUsers, value: "300+", label: "Happy Clients" },
+  { icon: FiHome, value: "200+", label: "Properties Listed" },
+  { icon: FiUsers, value: "600+", label: "Happy Clients" },
   { icon: FiMapPin, value: "10+", label: "Cities Covered" },
 ];
 
@@ -73,104 +73,143 @@ export default function AboutSection() {
     initial: reduce ? false : { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-60px" },
-    transition: { duration: 0.65, delay, ease: "easeOut" },
+    transition: { duration: 0.7, delay, ease: "easeOut" },
   });
 
   return (
     <section
-      className="relative overflow-hidden bg-[#faf9f6] py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-[#faf9f6] py-16 sm:py-20 lg:py-28"
       aria-labelledby="about-heading"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-20">
-          {/* ===== Image side ===== */}
-          <motion.div {...reveal()} className="relative order-2 min-w-0 lg:order-1">
-            {/* offset gold frame */}
-            <span
-              aria-hidden="true"
-              className="absolute -left-3 -top-3 hidden h-full w-full rounded-t-[220px] rounded-b-3xl border border-[#D4AF37]/50 lg:block"
-            />
-            <div className="relative aspect-[4/4.4] overflow-hidden rounded-3xl bg-[#f3f0E8] shadow-[0_25px_60px_-30px_rgba(26,42,34,0.5)] lg:rounded-b-3xl lg:rounded-t-[220px]">
-              <img
-                src="https://i.pinimg.com/736x/df/4f/3c/df4f3cff511a1ba9edb0de5023b8f683.jpg"
-                alt={ABOUT_IMAGE.alt}
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1a2a22]/40 to-transparent" />
-            </div>
+      {/* soft beige wash on the right */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] lg:block"
+      />
 
-            {/* Experience badge */}
-            <div className="absolute -bottom-6 right-4 flex items-center gap-4 rounded-2xl bg-[#0f2645] px-6 py-4 text-[#faf9f6] shadow-xl ring-1 ring-[#D4AF37]/40 sm:right-8 lg:-right-6">
-              <FiAward size={26} className="text-[#F5D77A]" aria-hidden="true" />
-              <div>
-                <p className={`${serif} text-3xl leading-none text-[#F5D77A]`}>5+</p>
-                <p className="mt-1 text-xs text-[#faf9f6]/75">Years of Experience</p>
-              </div>
-            </div>
-          </motion.div>
-
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-16 lg:grid-cols-[1fr_0.92fr] lg:gap-20">
           {/* ===== Text side ===== */}
-          <motion.div {...reveal(0.1)} className="order-1 min-w-0 lg:order-2">
+          <motion.div {...reveal()} className="min-w-0">
             <h2
               id="about-heading"
-              className={`${serif} text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.1] tracking-tight text-[#0f2645]`}
+              className={`${serif} text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.08] tracking-tight text-[#0f2645]`}
             >
               Your Trusted Real Estate Partner
             </h2>
             <span
               aria-hidden="true"
-              className={`mt-5 block h-[3px] w-16 rounded-full ${goldBg}`}
+              className={`mt-6 block h-[3px] w-16 rounded-full ${goldBg}`}
             />
 
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#52685B]">
-              Bringo Real Estate Services is committed to making property
-              decisions simple, transparent and rewarding. Whether you are
-              looking for your dream home, a commercial space, or a smart
-              investment, our expert team is here to guide you at every step.
+            <p className="mt-7 max-w-xl text-base leading-[1.8] text-[#52685B]">
+              At Avyaya Developers, we create and present thoughtfully planned residential, commercial, and investment opportunities in promising locations. With a focus on quality, transparency, and long-term value, we help our customers make confident property decisions and build a better future.
             </p>
 
-            <ul className="mt-7 space-y-3.5">
-              {points.map((point) => (
-                <li key={point} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A]">
-                    <FiCheck size={13} strokeWidth={3} aria-hidden="true" />
-                  </span>
-                  <span className="text-base text-[#1a2a22]">{point}</span>
-                </li>
+            {/* points: 2 x 2 grid */}
+            <ul className="mt-10 grid gap-x-8 sm:grid-cols-2">
+              {points.map((point, i) => (
+                <motion.li
+                  key={point}
+                  initial={reduce ? false : { opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.55,
+                    delay: 0.15 + i * 0.08,
+                    ease: "easeOut",
+                  }}
+                  className="group relative border-t border-[#0f2645]/15 py-5 pr-2"
+                >
+                  {/* gold line grows on hover */}
+                  <span
+                    aria-hidden="true"
+                    className={`absolute -top-px left-0 h-px w-0 transition-all duration-500 group-hover:w-full ${goldBg}`}
+                  />
+                  <div className="flex items-start gap-3.5">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A] transition-transform duration-300 group-hover:scale-110">
+                      <FiCheck size={12} strokeWidth={3} aria-hidden="true" />
+                    </span>
+                    <span className="text-[15px] leading-snug text-[#1a2a22]">
+                      {point}
+                    </span>
+                  </div>
+                </motion.li>
               ))}
             </ul>
 
-            <div className="mt-9">
+            <div className="mt-8">
               <BtnDark href="/about">Learn More About Us</BtnDark>
+            </div>
+          </motion.div>
+
+          {/* ===== Image side ===== */}
+          <motion.div
+            {...reveal(0.12)}
+            className="relative mx-auto w-full max-w-[520px] min-w-0 lg:max-w-none"
+          >
+            {/* navy offset block */}
+            <span
+              aria-hidden="true"
+              className="absolute -right-4 -top-4 h-[88%] w-[88%] rounded-[28px] bg-[#0f2645] sm:-right-6 sm:-top-6"
+            />
+            {/* gold hairline offset */}
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-4 -left-4 hidden h-[60%] w-[60%] rounded-[28px] border border-[#D4AF37]/60 sm:block"
+            />
+
+            <div className="group relative aspect-[4/5] overflow-hidden rounded-[28px] bg-[#f3f0E8] shadow-[0_35px_70px_-30px_rgba(15,38,69,0.6)]">
+              <img
+                src={ABOUT_IMAGE.src}
+                alt={ABOUT_IMAGE.alt}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f2645]/40 via-transparent to-transparent" />
+            </div>
+
+            {/* Experience badge */}
+            <div className="absolute -bottom-6 left-4 flex items-center gap-4 rounded-2xl bg-[#faf9f6] px-5 py-4 shadow-[0_24px_50px_-20px_rgba(15,38,69,0.55)] ring-1 ring-[#D4AF37]/40 sm:-left-8 sm:px-6">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0f2645] text-[#F5D77A]">
+                <FiAward size={22} aria-hidden="true" />
+              </span>
+              <div>
+                <p className={`${serif} text-3xl leading-none text-[#0f2645]`}>5+</p>
+                <p className="mt-1.5 text-xs text-[#52685B]">Years of Experience</p>
+              </div>
             </div>
           </motion.div>
         </div>
 
-        {/* ===== Stats band ===== */}
+        {/* ===== Stats ===== */}
         <motion.dl
           {...reveal()}
-          className="relative mt-20 grid grid-cols-1 overflow-hidden rounded-3xl bg-[#0f2645] px-6 py-8 text-[#faf9f6] sm:grid-cols-3 sm:px-4 lg:mt-24"
+          className="relative mt-24 grid grid-cols-1 border-y border-[#0f2645]/15 sm:grid-cols-3 lg:mt-28"
         >
           <span
             aria-hidden="true"
-            className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`}
+            className={`absolute -top-px left-0 h-px w-1/3 ${goldBg}`}
           />
           {stats.map(({ icon: Icon, value, label }, i) => (
             <div
               key={label}
-              className={`flex items-center justify-center gap-4 py-4 sm:py-2 ${
-                i !== 0 ? "border-t border-[#faf9f6]/15 sm:border-l sm:border-t-0" : ""
+              className={`group flex items-center gap-5 px-2 py-8 sm:justify-center sm:px-6 sm:py-10 ${
+                i !== 0
+                  ? "border-t border-[#0f2645]/15 sm:border-l sm:border-t-0"
+                  : ""
               }`}
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#faf9f6]/10 text-[#F5D77A]">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#D4AF37]/50 text-[#B8902F] transition-all duration-500 group-hover:border-transparent group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
                 <Icon size={22} aria-hidden="true" />
               </span>
               <div>
-                <dd className={`${serif} text-3xl leading-none text-[#F5D77A]`}>
+                <dd
+                  className={`${serif} text-4xl leading-none text-[#0f2645] sm:text-[46px]`}
+                >
                   {value}
                 </dd>
-                <dt className="mt-1.5 text-sm text-[#faf9f6]/70">{label}</dt>
+                <dt className="mt-2 text-sm text-[#52685B]">{label}</dt>
               </div>
             </div>
           ))}

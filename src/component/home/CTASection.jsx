@@ -5,7 +5,6 @@ import { Marcellus } from "next/font/google";
 import { FaWhatsapp } from "react-icons/fa";
 import {
   FiPhone,
-  
   FiClock,
   FiArrowRight,
   FiCheck,
@@ -25,9 +24,9 @@ const serif = `${marcellus.className} font-normal`;
 const goldBg = "bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]";
 
 // TODO: replace with your real details
-const PHONE = "+91 9999300301";
-const PHONE_HREF = "tel:+9999300301";
-const WHATSAPP_URL = "https://wa.me/919999300301";
+const PHONE = "+91 7004397655";
+const PHONE_HREF = "tel:+917004397655";
+const WHATSAPP_URL = "https://wa.me/+917004397655";
 const HOURS = "Mon – Sat, 10 AM – 7 PM";
 
 const contactLinks = [
@@ -43,15 +42,15 @@ const contactLinks = [
 ];
 
 const fieldClass =
-  "w-full rounded-xl border border-[#1a2a22]/15 bg-[#f3f0E8]/60 py-3.5 pl-11 pr-4 text-base text-[#1a2a22] placeholder:text-[#52685B]/70 transition focus:border-[#D4AF37] focus:bg-[#faf9f6] focus:outline-none focus:ring-4 focus:ring-[#ffcd39]/30 disabled:opacity-60";
-const labelClass = "mb-1.5 block text-sm text-[#1a2a22]";
+  "w-full border-0 border-b border-[#1a2a22]/25 bg-transparent py-3 pl-8 pr-2 text-base text-[#1a2a22] placeholder:text-[#52685B]/70 transition-colors duration-300 focus:border-[#D4AF37] focus:outline-none focus:ring-0 disabled:opacity-60";
+const labelClass = "block text-sm text-[#52685B]";
 const fieldIcon =
-  "pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#52685B]";
+  "pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-[#D4AF37]";
 
 export default function CTACallback({ image = null }) {
   const reduce = useReducedMotion();
   const [form, setForm] = useState({ name: "", phone: "" });
-  const [status, setStatus] = useState("idle"); 
+  const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) =>
@@ -92,37 +91,47 @@ export default function CTACallback({ image = null }) {
       aria-labelledby="cta-callback-heading"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-[28px] bg-[#0f2645] shadow-[0_30px_70px_-30px_rgba(26,42,34,0.55)]"
-        >
-          {/* top gold line */}
-          <span
-            aria-hidden="true"
-            className={`absolute inset-x-0 top-0 z-10 h-[3px] ${goldBg}`}
-          />
-          {image && (
-            <>
-              <img
-                src={image}
-                alt=""
-                aria-hidden="true"
-                className="absolute inset-0 h-full w-full object-cover opacity-25"
-              />
-              <div className="absolute inset-0 bg-[#1a2a22]/80" />
-            </>
-          )}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#e2a10d]/10 blur-3xl"
-          />
+        <div className="grid items-center lg:grid-cols-[1.25fr_1fr]">
+          {/* ===== LEFT: navy panel ===== */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, x: -28 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="relative min-w-0 overflow-hidden rounded-[28px] bg-[#0f2645] px-6 pb-20 pt-10 shadow-[0_30px_70px_-30px_rgba(15,38,69,0.6)] sm:px-10 sm:pt-12 lg:min-h-[580px] lg:py-16 lg:pl-14 lg:pr-36"
+          >
+            {image && (
+              <>
+                <img
+                  src={image}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover opacity-25"
+                />
+                <div className="absolute inset-0 bg-[#1a2a22]/80" />
+              </>
+            )}
 
-          <div className="relative grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:p-14">
-            {/* ===== LEFT: message + contact ===== */}
-            <div className="min-w-0">
+            {/* concentric rings */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-40 -left-40 h-[420px] w-[420px] rounded-full border border-[#D4AF37]/15"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-28 -left-28 h-[300px] w-[300px] rounded-full border border-[#D4AF37]/20"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-16 -left-16 h-[180px] w-[180px] rounded-full bg-[#e2a10d]/10 blur-2xl"
+            />
+
+            <div className="relative">
+              <span aria-hidden="true" className="mb-6 flex items-center gap-3">
+                <span className="block h-px w-12 bg-[#D4AF37]" />
+                <span className="block h-1.5 w-1.5 rotate-45 bg-[#D4AF37]" />
+              </span>
+
               <h2
                 id="cta-callback-heading"
                 className={`${serif} text-[clamp(1.9rem,3.8vw,3rem)] leading-[1.12] tracking-tight text-[#faf9f6]`}
@@ -138,65 +147,92 @@ export default function CTACallback({ image = null }) {
                 no-pressure guidance on the right property for you.
               </p>
 
-              <ul className="mt-9 divide-y divide-[#faf9f6]/10 border-y border-[#faf9f6]/10">
-                {contactLinks.map(({ icon: Icon, label, value, href, external }) => {
-                  const content = (
-                    <>
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#faf9f6]/10 text-[#F5D77A] transition group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1a2a22]">
-                        <Icon size={20} aria-hidden="true" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-xs text-[#faf9f6]/55">{label}</span>
-                        <span className="block break-words text-base text-[#faf9f6]">
-                          {value}
+              <ul className="mt-9 space-y-3">
+                {contactLinks.map(
+                  ({ icon: Icon, label, value, href, external }) => {
+                    const content = (
+                      <>
+                        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#D4AF37]/40 text-[#F5D77A] transition duration-300 group-hover:border-transparent group-hover:bg-gradient-to-br group-hover:from-[#F5D77A] group-hover:to-[#B8902F] group-hover:text-[#1a2a22]">
+                          <Icon size={20} aria-hidden="true" />
                         </span>
-                      </span>
-                      {href && (
-                        <FiArrowRight
-                          size={16}
-                          aria-hidden="true"
-                          className="shrink-0 text-[#faf9f6]/40 transition group-hover:translate-x-1 group-hover:text-[#F5D77A]"
-                        />
-                      )}
-                    </>
-                  );
-                  const rowClass = "group flex items-center gap-4 py-4";
-                  return (
-                    <li key={label}>
-                      {href ? (
-                        <a
-                          href={href}
-                          {...(external && {
-                            target: "_blank",
-                            rel: "noopener noreferrer",
-                          })}
-                          className={`${rowClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcd39]`}
-                        >
-                          {content}
-                        </a>
-                      ) : (
-                        <div className={rowClass}>{content}</div>
-                      )}
-                    </li>
-                  );
-                })}
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-xs text-[#faf9f6]/55">
+                            {label}
+                          </span>
+                          <span className="block break-words text-base text-[#faf9f6]">
+                            {value}
+                          </span>
+                        </span>
+                        {href && (
+                          <FiArrowRight
+                            size={16}
+                            aria-hidden="true"
+                            className="shrink-0 text-[#faf9f6]/40 transition duration-300 group-hover:translate-x-1 group-hover:text-[#F5D77A]"
+                          />
+                        )}
+                      </>
+                    );
+                    const rowClass =
+                      "group flex items-center gap-4 rounded-2xl border border-[#faf9f6]/10 bg-[#faf9f6]/[0.04] px-4 py-3.5 transition duration-300 hover:border-[#D4AF37]/50 hover:bg-[#faf9f6]/[0.08]";
+                    return (
+                      <li key={label}>
+                        {href ? (
+                          <a
+                            href={href}
+                            {...(external && {
+                              target: "_blank",
+                              rel: "noopener noreferrer",
+                            })}
+                            className={`${rowClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcd39]`}
+                          >
+                            {content}
+                          </a>
+                        ) : (
+                          <div className={rowClass}>{content}</div>
+                        )}
+                      </li>
+                    );
+                  },
+                )}
               </ul>
             </div>
+          </motion.div>
 
-            {/* ===== RIGHT: form card ===== */}
-            <div className="min-w-0 rounded-3xl bg-[#faf9f6] p-6 shadow-xl sm:p-9">
+          {/* ===== RIGHT: floating form card ===== */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, x: 28 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+            className="relative z-10 -mt-12 min-w-0 px-3 sm:px-6 lg:-ml-28 lg:mt-0 lg:px-0"
+          >
+            {/* offset gold frame */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-3 -right-3 hidden h-full w-full rounded-[28px] border border-[#D4AF37]/50 lg:block"
+            />
+
+            <div className="relative overflow-hidden rounded-[28px] bg-[#faf9f6] p-6 shadow-[0_30px_70px_-25px_rgba(15,38,69,0.45)] sm:p-10">
+              <span
+                aria-hidden="true"
+                className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`}
+              />
+
               {status === "success" ? (
                 <div aria-live="polite" className="py-6 text-center">
                   <span
-                    className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full text-[#1a2a22] ${goldBg}`}
+                    className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full text-[#1a2a22] ring-8 ring-[#D4AF37]/15 ${goldBg}`}
                   >
                     <FiCheck size={28} strokeWidth={2.5} aria-hidden="true" />
                   </span>
-                  <h3 className={`${serif} mt-6 text-2xl text-[#1a2a22] sm:text-3xl`}>
+                  <h3
+                    className={`${serif} mt-6 text-2xl text-[#1a2a22] sm:text-3xl`}
+                  >
                     Request received
                   </h3>
                   <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-[#52685B]">
-                    Thank you! We’ll call you back shortly on the number you shared.
+                    Thank you! We’ll call you back shortly on the number you
+                    shared.
                   </p>
                   <button
                     type="button"
@@ -208,20 +244,26 @@ export default function CTACallback({ image = null }) {
                 </div>
               ) : (
                 <>
-                  <h3 className={`${serif} text-2xl text-[#0f2645] sm:text-3xl`}>
+                  <h3
+                    className={`${serif} text-2xl text-[#0f2645] sm:text-3xl`}
+                  >
                     Request a Callback
                   </h3>
                   <p className="mt-2 text-sm text-[#52685B]">
                     Takes less than a minute. Both fields are required.
                   </p>
 
-                  <form onSubmit={handleSubmit} className="mt-7 space-y-5">
+                  <form onSubmit={handleSubmit} className="mt-8 space-y-7">
                     <div>
                       <label htmlFor="cta-name" className={labelClass}>
                         Full name
                       </label>
                       <div className="relative">
-                        <FiUser size={17} className={fieldIcon} aria-hidden="true" />
+                        <FiUser
+                          size={17}
+                          className={fieldIcon}
+                          aria-hidden="true"
+                        />
                         <input
                           id="cta-name"
                           name="name"
@@ -242,7 +284,11 @@ export default function CTACallback({ image = null }) {
                         Phone number
                       </label>
                       <div className="relative">
-                        <FiPhone size={17} className={fieldIcon} aria-hidden="true" />
+                        <FiPhone
+                          size={17}
+                          className={fieldIcon}
+                          aria-hidden="true"
+                        />
                         <input
                           id="cta-phone"
                           name="phone"
@@ -279,7 +325,11 @@ export default function CTACallback({ image = null }) {
                       </span>
                       <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
                         {loading ? (
-                          <CgSpinner size={20} className="animate-spin" aria-hidden="true" />
+                          <CgSpinner
+                            size={20}
+                            className="animate-spin"
+                            aria-hidden="true"
+                          />
                         ) : (
                           <FiArrowRight
                             size={16}
@@ -314,8 +364,8 @@ export default function CTACallback({ image = null }) {
                 </>
               )}
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

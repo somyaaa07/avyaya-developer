@@ -12,18 +12,32 @@ const marcellus = Marcellus({
 });
 
 const stats = [
-  { icon: Users, value: "25+", label: "Happy Clients" },
-  { icon: Home, value: "4.8k+", label: "Successful Matches", highlight: true },
-  { icon: Award, value: "08+", label: "Years Experience" },
+  { icon: Users, value: "200+", label: "Happy Clients" },
+  { icon: Home, value: "5.8k+", label: "Successful Matches", highlight: true },
+  { icon: Award, value: "5+", label: "Years Experience" },
   { icon: Handshake, value: "40+", label: "Homes Closed" },
 ];
 
 export default function PropertyGuidance() {
   return (
-    <section className="w-full bg-[#faf9f6] py-12 sm:py-16 lg:py-20">
-      <div className="mx-auto grid max-w-[1300px] grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:gap-12 lg:px-10">
+    <section className="relative w-full overflow-hidden bg-[#faf9f6] py-14 sm:py-20 lg:py-28">
+      {/* Large soft backdrop panel behind the right side */}
+      {/* <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[42%] bg-[#f3f0E8] lg:block" /> */}
+
+      <div className="relative mx-auto grid max-w-[1300px] grid-cols-1 items-center gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:px-10">
         {/* LEFT */}
         <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-6 flex items-center gap-3"
+          >
+            <span className="block h-px w-12 bg-[#D4A62A]" />
+            <span className="block h-1.5 w-1.5 rotate-45 bg-[#D4A62A]" />
+          </motion.div>
+
           <motion.h2
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -41,12 +55,13 @@ export default function PropertyGuidance() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="mt-4 text-[16px] text-[#52685B] sm:text-[18px]"
+            className="mt-5 border-l-2 border-[#D4A62A] pl-4 text-[16px] text-[#52685B] sm:text-[18px]"
           >
             Curated homes and clear advice for every move.
           </motion.p>
 
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+          {/* Stats: editorial grid with hairline dividers */}
+          <div className="mt-12 grid grid-cols-1 border-t border-[#0f2645]/15 sm:grid-cols-2">
             {stats.map((s, i) => {
               const Icon = s.icon;
               return (
@@ -56,27 +71,48 @@ export default function PropertyGuidance() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.15 + i * 0.1 }}
-                  className={`flex items-center gap-5 rounded-2xl px-6 py-7 ${
-                    s.highlight ? "bg-[#f3f0E8]" : "bg-[#f3f0E8]"
+                  className={`group relative flex flex-col gap-6 border-b border-[#0f2645]/15 px-2 py-8 transition-colors duration-500 sm:px-6 ${
+                    i % 2 === 0 ? "sm:border-r" : ""
+                  } ${
+                    s.highlight
+                      ? "bg-[#0f2645] sm:-my-px sm:border-[#0f2645]"
+                      : "hover:bg-[#f3f0E8]"
                   }`}
                 >
-                  <Icon
-                    size={34}
-                    strokeWidth={1.4}
-                    className="text-[#D4A62A]"
-                  />
+                  <div className="flex items-start justify-between">
+                    <Icon
+                      size={30}
+                      strokeWidth={1.3}
+                      className="text-[#D4A62A]"
+                    />
+                    <span
+                      className={`${marcellus.className} text-[13px] tracking-widest ${
+                        s.highlight ? "text-[#D4A62A]" : "text-[#0f2645]/30"
+                      }`}
+                    >
+                      0{i + 1}
+                    </span>
+                  </div>
+
                   <div>
-                    <p className={`${marcellus.className} text-[30px] font-semibold leading-none text-[#0f2645]`}>
+                    <p
+                      className={`${marcellus.className} text-[40px] font-semibold leading-none sm:text-[44px] ${
+                        s.highlight ? "text-[#faf9f6]" : "text-[#0f2645]"
+                      }`}
+                    >
                       {s.value}
                     </p>
                     <p
-                      className={`mt-2 text-[15px] ${
-                        s.highlight ? "text-[#0f2645]" : "text-[#52685B]"
+                      className={`mt-3 text-[15px] ${
+                        s.highlight ? "text-[#faf9f6]" : "text-[#52685B]"
                       }`}
                     >
                       {s.label}
                     </p>
                   </div>
+
+                  {/* Gold underline that grows on hover */}
+                  <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#D4A62A] transition-all duration-500 group-hover:w-full" />
                 </motion.div>
               );
             })}
@@ -89,33 +125,36 @@ export default function PropertyGuidance() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative mx-auto h-[420px] w-full max-w-[620px] sm:h-[520px] lg:h-[560px]"
+          className="relative mx-auto h-[440px] w-full max-w-[620px] sm:h-[540px] lg:h-[580px]"
         >
-          {/* Building */}
-          <div className="absolute left-0 top-0 h-[82%] w-[64%] overflow-hidden rounded-2xl">
+          {/* Outline arch behind main image */}
+          <div className="pointer-events-none absolute left-4 top-4 h-[86%] w-[62%] rounded-t-[999px] rounded-b-md border border-[#D4A62A]/60" />
+
+          {/* Building: arch */}
+          <div className="absolute left-0 top-0 h-[86%] w-[62%] overflow-hidden rounded-t-[999px] rounded-b-md">
             <Image
               src="/building.png"
               alt="Modern residential building"
               fill
-              sizes="(max-width: 1024px) 64vw, 400px"
+              sizes="(max-width: 1024px) 62vw, 390px"
               className="object-cover"
             />
           </div>
 
-          {/* Family */}
-          <div className="absolute bottom-0 right-0 h-[62%] w-[60%] overflow-hidden rounded-2xl border-4 border-[#faf9f6] bg-[#f3f0E8]">
+          {/* Family: offset block with cut corner */}
+          <div className="absolute bottom-0 right-0 h-[52%] w-[50%] overflow-hidden rounded-tl-[90px] rounded-br-md border-[6px] border-[#faf9f6] bg-[#f3f0E8]">
             <Image
               src="/building1.png"
               alt="Modern residential building"
               fill
-              sizes="(max-width: 1024px) 60vw, 375px"
+              sizes="(max-width: 1024px) 50vw, 310px"
               className="object-cover"
             />
           </div>
 
           {/* Tagline */}
-          <div className="absolute right-0 top-[6%] hidden w-[16%] sm:block">
-            <span className="block h-px w-full bg-[#D4A62A]/50" />
+          <div className="absolute right-0 top-[4%] hidden w-[30%] pl-6 sm:block">
+            <span className="block h-px w-12 bg-[#D4A62A]" />
             <p
               className={`${marcellus.className} my-4 text-[20px] italic leading-[1.4] text-[#52685B] lg:text-[24px]`}
             >
@@ -126,7 +165,7 @@ export default function PropertyGuidance() {
               <br />
               Home
             </p>
-            <span className="block h-px w-full bg-[#D4A62A]/50" />
+            <span className="block h-px w-12 bg-[#D4A62A]" />
           </div>
         </motion.div>
       </div>

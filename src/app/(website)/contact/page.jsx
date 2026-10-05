@@ -7,9 +7,9 @@ import ContactMap from "@/component/contact/ContactMap";
 import FAQSection from "@/component/contact/FAQSection";
 
 export const metadata = {
-  title: "Contact Us | Bringo Real Estates ",
+  title: "Contact Us | Avyaya Developer ",
   description:
-    "Get in touch with Bringo Real Estates for residential, commercial, land and investment enquiries.",
+    "Get in touch with Avyaya Developer for residential, commercial, land and investment enquiries.",
 };
 
 export default function ContactPage() {
@@ -23,7 +23,7 @@ export default function ContactPage() {
           <ContactForm />
         </div>
       </section>
-      <WhatsAppCTA />
+      {/* <WhatsAppCTA /> */}
    
       <ContactMap />
       <FAQSection />
