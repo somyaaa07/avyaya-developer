@@ -34,20 +34,20 @@ const services = [
 ];
 
 const socials = [
-  { label: "Facebook", icon: FiFacebook, href: "#" },
-  { label: "Instagram", icon: FiInstagram, href: "#" },
-  { label: "YouTube", icon: FiYoutube, href: "#" },
+  { label: "Facebook", icon: FiFacebook, href:"https://www.facebook.com/share/1PfHxWvUja/" },
+  { label: "Instagram", icon: FiInstagram, href: "https://www.instagram.com/avyayadeveloper?igsh=MTByeTV3bW1za203dA==" },
+  { label: "YouTube", icon: FiYoutube, href: "https://youtube.com/@avyayadeveloper?si=cBUOCNZS7QAL84bl" },
 ];
 
 const contact = [
-  { icon: FiPhone, text: "+91 9999300301", href: "tel:+919999300301" },
+  { icon: FiPhone, text: "+91 7004397655", href: "tel:+917004397655" },
   {
     icon: FiMail,
-    text: "bringo.realstates@gmail.com",
-    href: "mailto:bringo.realstates@gmail.com",
+    text: "info@avyayadeveloper.com",
+    href: "mailto:info@avyayadeveloper.com",
   },
   
-  { icon: FiMapPin, text: "FF01,FF02 Kaveri City Center,Delta 1.Greater Noida,Gautam Buddha Nagar,UP 201306" },
+  { icon: FiMapPin, text: "Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4 Greater Noida,Uttar Pradesh - 201009" },
 ];
 
 const linkClass =
@@ -109,20 +109,19 @@ export default function Footer() {
       <div className="relative mx-auto max-w-7xl px-4 pt-14 sm:px-6 sm:pt-16 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-4 -mt-16">
+          <div className="sm:col-span-2 lg:col-span-4 -mt-2">
             <Link
   href="/"
   className="inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ffcd39]"
 >
   <img
-    src="/uploads/logo.png"
-    alt="Bingo Real Estate"
-    className="h-40 w-auto object-contain"
+    src="/logo1.png"
+    alt="Avyaya Developers"
+    className="h-20 w-auto object-contain"
   />
 </Link>
-            <p className="-mt-12 max-w-sm text-sm leading-relaxed text-[#f3f0E8]/70">
-              Building trusted residential, commercial and investment
-              opportunities across Delhi NCR with transparency and care.
+            <p className= "-t-8 max-w-sm text-sm leading-relaxed text-[#f3f0E8]/70">
+              Avyaya Developer — building landmark residences and commercial spaces with integrity, design excellence, and a commitment to every family's dream.
             </p>
             <div className="mt-6 flex gap-3">
               {socials.map(({ label, icon: Icon, href }) => (
@@ -203,7 +202,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#52685B]/50 py-6 text-center sm:flex-row sm:text-left">
           <p className="text-xs text-[#f3f0E8]/60 sm:text-sm">
-            © {new Date().getFullYear()} Bringo Real Estates. All rights reserved.
+            © {new Date().getFullYear()} Avyaya Developers. All rights reserved.
           </p>
           <div className="flex items-center gap-5 text-xs sm:text-sm">
             

@@ -14,7 +14,8 @@ const items = [
   { icon: Phone, label: "Phone", value: PHONE, href: PHONE_HREF },
   { icon: Mail, label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
   { icon: Clock, label: "Working Hours", value: workingHours },
-  { icon: MapPin, label: "Location", value: "Noida, Uttar Pradesh" },
+  { icon: MapPin, label: "Location", value: `Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4 Greater Noida,
+Uttar Pradesh - 201009` },
 ];
 
 export default function ContactInfo() {
@@ -26,8 +27,8 @@ export default function ContactInfo() {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="relative min-w-0 overflow-hidden rounded-3xl p-7 sm:p-10"
       style={{
-        background: "#1a2a22",
-        boxShadow: "0 30px 60px -30px rgba(26,42,34,0.55)",
+        background: "#0f2645",
+        boxShadow: "0 30px 60px -30px rgba(15,38,69,0.55)",
       }}
     >
       {/* Top gold hairline: #e2a10d sides, #ffcd39 center */}
@@ -90,7 +91,7 @@ export default function ContactInfo() {
               }}
             >
               <span
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[#ffcd39] transition-all duration-300 group-hover:text-[#1a2a22]"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[#ffcd39] transition-all duration-300 group-hover:text-[#0f2645]"
                 style={{
                   border: "1px solid rgba(226,161,13,0.55)",
                   background: "rgba(255,205,57,0.06)",

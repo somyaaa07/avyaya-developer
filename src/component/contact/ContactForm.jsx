@@ -14,7 +14,7 @@ const marcellus = Marcellus({
 const initialState = { name: "", phone: "", email: "", enquiryType: "", message: "" };
 
 const fieldClass =
-  "w-full rounded-xl border border-[#e8e3d3] bg-[#faf9f6] px-4 py-3.5 text-base text-[#1a2a22] placeholder:text-[#52685B]/60 transition-all duration-300 hover:border-[#e2a10d]/60 focus:border-[#e2a10d] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ffcd39]/20 disabled:opacity-60";
+  "w-full rounded-xl border border-[#e8e3d3] bg-[#faf9f6] px-4 py-3.5 text-base text-[#0f2645] placeholder:text-[#52685B]/60 transition-all duration-300 hover:border-[#e2a10d]/60 focus:border-[#e2a10d] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ffcd39]/20 disabled:opacity-60";
 const labelClass =
   "mb-2 block text-[11px] font-medium uppercase tracking-[0.2em] text-[#52685B]";
 
@@ -57,7 +57,7 @@ export default function ContactForm() {
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
       className="relative min-w-0 overflow-hidden rounded-3xl border border-[#e8e3d3] bg-[#f3f0E8] p-6 sm:p-10"
-      style={{ boxShadow: "0 30px 60px -35px rgba(26,42,34,0.35)" }}
+      style={{ boxShadow: "0 30px 60px -35px rgba(15,38,69,0.35)" }}
     >
       {/* Top gold hairline: #e2a10d sides, #ffcd39 center */}
       <span
@@ -80,7 +80,7 @@ export default function ContactForm() {
       </div>
 
       <h3
-        className={`${marcellus.className} mt-4 text-[clamp(1.6rem,3vw,2.2rem)] leading-[1.15] tracking-tight text-[#1a2a22]`}
+        className={`${marcellus.className} mt-4 text-[clamp(1.6rem,3vw,2.2rem)] leading-[1.15] tracking-tight text-[#0f2645]`}
       >
         Send us an enquiry
       </h3>
@@ -136,7 +136,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={loading}
-          className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-6 pr-2.5 text-sm font-medium text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:ring-[#D4AF37] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
+          className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-6 pr-2.5 text-sm font-medium text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#0f2645] hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:ring-[#D4AF37] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {/* Golden fill */}
           <span
@@ -155,7 +155,7 @@ export default function ContactForm() {
           </span>
 
           {/* Arrow */}
-          <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+          <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
             {loading ? (
               <Loader2 size={14} className="animate-spin" aria-hidden="true" />
             ) : (
@@ -171,7 +171,7 @@ export default function ContactForm() {
         <div aria-live="polite">
           {status === "success" && (
             <p
-              className="flex items-start gap-2 rounded-xl px-4 py-3 text-sm text-[#1a2a22]"
+              className="flex items-start gap-2 rounded-xl px-4 py-3 text-sm text-[#0f2645]"
               style={{
                 background: "rgba(255,205,57,0.18)",
                 border: "1px solid rgba(226,161,13,0.5)",
