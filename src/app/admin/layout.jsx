@@ -164,8 +164,8 @@ export default function AdminLayout({ children }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // /admin/login ko authentication check se exclude karna hai
-  const isAdminLoginPage = pathname === '/admin/login';
-
+// Public auth pages skip the authentication check
+const isAdminLoginPage = pathname === '/admin/login' || pathname === '/admin/signup';
   // Role lowercase: "admin" aur "ADMIN" dono work karein
   const userRole = session?.user?.role?.toLowerCase();
   const isAdmin = status === 'authenticated' && userRole === 'admin';

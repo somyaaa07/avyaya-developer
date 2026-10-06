@@ -46,18 +46,18 @@ const STICKY_TOP = "top-16 lg:top-20";
 
 const BUSINESS = {
   name: "Bringo Real Estates",
-  phoneDisplay: "+91 7004397655",
-  phoneTel: "++917004397655",
-  email: "info@avyayadeveloper.com",
+  phoneDisplay: "7004397655",
+  phoneTel: "+917004397655",
+  email: "nfo@avyayadeveloper.com",
   addressLines: [
-    "Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4 Greater Noida,Uttar Pradesh - 201009",
+    'Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4 Greater Noida,Uttar Pradesh - 201009'
   ],
   schemaAddress: {
     "@type": "PostalAddress",
-    streetAddress: "FF01, FF02 Kaveri City Center, Delta 1",
+    streetAddress: "Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4",
     addressLocality: "Greater Noida",
     addressRegion: "Uttar Pradesh",
-    postalCode: "201306",
+    postalCode: "201009",
     addressCountry: "IN",
   },
 };
@@ -67,7 +67,7 @@ const MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
 )}`;
 
 export const metadata = {
-  title: "About Bringo Real Estates | Property Dealers in Greater Noida",
+  title: "About Avyaya Developer | Property Dealers in Greater Noida",
   description:
     "Bringo Real Estates helps families and investors buy, sell and invest in residential and commercial properties in Greater Noida. Transparent deals, verified projects and end-to-end support. Call +91 7004397655.",
   keywords: [
@@ -92,7 +92,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Bringo Real Estates",
+    title: "About Avyaya Developer",
     description: "More than properties, we build futures.",
     images: ["/image/about.png"],
   },
@@ -104,7 +104,7 @@ export const metadata = {
 const stats = [
   { icon: Home, value: "200+", label: "Properties sold" },
   { icon: Users, value: "600+", label: "Happy customers" },
-  // { icon: Building2, value: "50+", label: "Ongoing projects" },
+  { icon: Building2, value: "50+", label: "Ongoing projects" },
   { icon: Star, value: "4.8/5", label: "Customer rating" },
 ];
 

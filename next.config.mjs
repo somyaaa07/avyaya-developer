@@ -1,9 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['sequelize', 'mysql2'],
-    images: {
-    domains: ['localhost'],
-  },
+ images: {
+  remotePatterns: [
+    {
+      protocol: "https",
+      hostname: "example.com",
+    },
+  ],
+},
   webpack: (config) => {
     config.externals.push({
       'pg-hstore':  'pg-hstore',

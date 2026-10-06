@@ -27,7 +27,7 @@ const marcellus = Marcellus({
 const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
 
 const inputClass =
-  'w-full rounded-xl border border-[#1A2A22]/15 bg-[#F3F0E8]/60 py-3.5 pl-11 pr-4 font-sans text-[15px] text-[#1A2A22] outline-none transition placeholder:text-[#52685B]/60 hover:border-[#1A2A22]/30 focus:border-[#D4AF37] focus:bg-white focus:ring-4 focus:ring-[#FFCD39]/30 disabled:opacity-60';
+  'w-full rounded-xl border border-[#0f2645]/15 bg-[#F3F0E8]/60 py-3.5 pl-11 pr-4 font-sans text-[15px] text-[#0f2645] outline-none transition placeholder:text-[#52685B]/60 hover:border-[#0f2645]/30 focus:border-[#D4AF37] focus:bg-white focus:ring-4 focus:ring-[#FFCD39]/30 disabled:opacity-60';
 
 const iconClass =
   'pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#52685B]';
@@ -100,20 +100,20 @@ function Stepper({ step }) {
               <span
                 className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors duration-300 ${
                   done
-                    ? 'bg-[#1A2A22] text-[#F5D77A]'
+                    ? 'bg-[#0f2645] text-[#F5D77A]'
                     : active
-                    ? 'bg-white text-[#1A2A22] ring-2 ring-[#D4AF37]'
-                    : 'bg-[#1A2A22]/8 text-[#52685B]'
+                    ? 'bg-white text-[#0f2645] ring-2 ring-[#D4AF37]'
+                    : 'bg-[#0f2645]/8 text-[#52685B]'
                 }`}
               >
                 {done ? '✓' : n}
               </span>
-              <span className={`text-sm ${active || done ? 'text-[#1A2A22]' : 'text-[#52685B]'}`}>
+              <span className={`text-sm ${active || done ? 'text-[#0f2645]' : 'text-[#52685B]'}`}>
                 {label}
               </span>
             </span>
             {n < STEPS.length && (
-              <span className="mx-3 h-[2px] flex-1 overflow-hidden rounded bg-[#1A2A22]/10">
+              <span className="mx-3 h-[2px] flex-1 overflow-hidden rounded bg-[#0f2645]/10">
                 <span
                   className={`block h-full transition-all duration-500 ${goldBg}`}
                   style={{ width: done ? '100%' : '0%' }}
@@ -140,15 +140,15 @@ export default function SignupPage() {
   const [checking, setChecking] = useState(true);
 
   // If an admin already exists, signup is closed — send to login
-  useEffect(() => {
-    fetch('/api/signup')
-      .then((r) => r.json())
-      .then((d) => {
-        if (!d.needsSetup) router.replace('/admin/login');
-        else setChecking(false);
-      })
-      .catch(() => setChecking(false));
-  }, [router]);
+useEffect(() => {
+  fetch('/api/signup')
+    .then((r) => r.json())
+    .then((d) => {
+      if (d.needsSetup === false) router.replace('/admin/login');
+      else setChecking(false);
+    })
+    .catch(() => setChecking(false));
+}, [router]);
 
   const getStrength = (val) => {
     let score = 0;
@@ -214,10 +214,10 @@ export default function SignupPage() {
 
   return (
     <div
-      className={`${marcellus.className} grid min-h-screen bg-[#FAF9F6] font-normal text-[#1A2A22] lg:grid-cols-[1.05fr_1fr]`}
+      className={`${marcellus.className} grid min-h-screen bg-[#FAF9F6] font-normal text-[#0f2645] lg:grid-cols-[1.05fr_1fr]`}
     >
       {/* ===== Brand panel (desktop) ===== */}
-      <aside className="relative hidden overflow-hidden bg-[#1A2A22] p-12 text-[#FAF9F6] lg:flex lg:flex-col lg:justify-between">
+      <aside className="relative hidden overflow-hidden bg-[#0f2645] p-12 text-[#FAF9F6] lg:flex lg:flex-col lg:justify-between">
         <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
     
 
@@ -262,12 +262,12 @@ export default function SignupPage() {
         >
           <Link
             href="/"
-            className="mb-6 inline-flex items-center gap-2 font-sans text-sm text-[#52685B] transition hover:text-[#1A2A22] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4AF37] lg:hidden"
+            className="mb-6 inline-flex items-center gap-2 font-sans text-sm text-[#52685B] transition hover:text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4AF37] lg:hidden"
           >
             <ArrowLeft size={16} aria-hidden="true" /> Back to website
           </Link>
 
-          <div className="relative overflow-hidden rounded-3xl border border-[#1A2A22]/10 bg-white p-7 shadow-[0_24px_60px_-20px_rgba(26,42,34,0.25)] sm:p-10">
+          <div className="relative overflow-hidden rounded-3xl border border-[#0f2645]/10 bg-white p-7 shadow-[0_24px_60px_-20px_rgba(26,42,34,0.25)] sm:p-10">
             <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
 
             <h1 className="text-4xl leading-tight">Create admin account</h1>
@@ -276,7 +276,7 @@ export default function SignupPage() {
               Set up the first admin to manage properties and inquiries.
             </p>
 
-            <div className="mt-6 border-y border-[#1A2A22]/10 py-4">
+            <div className="mt-6 border-y border-[#0f2645]/10 py-4">
               <Stepper step={step} />
             </div>
 
@@ -371,7 +371,7 @@ export default function SignupPage() {
                     onClick={() => setShowPass((p) => !p)}
                     aria-label={showPass ? 'Hide password' : 'Show password'}
                     aria-pressed={showPass}
-                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-[#52685B] transition hover:bg-[#1A2A22]/5 hover:text-[#1A2A22] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-[#52685B] transition hover:bg-[#0f2645]/5 hover:text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
                   >
                     {showPass ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
                   </button>
@@ -404,15 +404,15 @@ export default function SignupPage() {
                   checked={terms}
                   onChange={(e) => setTerms(e.target.checked)}
                   disabled={loading}
-                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[#1A2A22]"
+                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[#0f2645]"
                 />
                 <label htmlFor="terms" className="cursor-pointer font-sans text-[13px] leading-relaxed text-[#52685B]">
                   I agree to the{' '}
-                  <a href="#" className="text-[#1A2A22] underline underline-offset-4 transition hover:text-[#B8902F]">
+                  <a href="#" className="text-[#0f2645] underline underline-offset-4 transition hover:text-[#B8902F]">
                     Terms of Service
                   </a>{' '}
                   and{' '}
-                  <a href="/privacy" className="text-[#1A2A22] underline underline-offset-4 transition hover:text-[#B8902F]">
+                  <a href="/privacy" className="text-[#0f2645] underline underline-offset-4 transition hover:text-[#B8902F]">
                     Privacy Policy
                   </a>
                 </label>
@@ -421,14 +421,14 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative mt-2 inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#1A2A22] py-2.5 pl-7 pr-2.5 text-base text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#1A2A22] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
+                className="group relative mt-2 inline-flex w-full items-center justify-between overflow-hidden rounded-full bg-[#0f2645] py-2.5 pl-7 pr-2.5 text-base text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#0f2645] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 <span
                   aria-hidden="true"
                   className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
                 <span className="relative z-10">{loading ? 'Creating account…' : 'Create account'}</span>
-                <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#1A2A22] transition-all duration-500 group-hover:bg-none group-hover:bg-[#1A2A22] group-hover:text-[#F5D77A]">
+                <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
                   {loading ? (
                     <Loader2 size={18} className="animate-spin" aria-hidden="true" />
                   ) : (
@@ -446,7 +446,7 @@ export default function SignupPage() {
               Already registered?{' '}
               <a
                 href="/admin/login"
-                className="text-[#1A2A22] underline underline-offset-4 transition hover:text-[#B8902F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+                className="text-[#0f2645] underline underline-offset-4 transition hover:text-[#B8902F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
               >
                 Admin login
               </a>

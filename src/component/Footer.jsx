@@ -22,15 +22,16 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Properties", href: "/properties" },
-  // { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },
 ];
 
 const services = [
   { label: "Residential Properties", href: "/properties" },
   { label: "Commercial Properties", href: "/properties" },
-  { label: "Land / Plotting", href: "/properties" },
-  // { label: "Investment Advisory", href: "/properties" },
+  { label: "Buy", href: "/properties?type=buy" },
+    { label: "Sell", href: "/properties?type=sell"},
+    {label: "Rent", href:"/properties?type=rent"}
+
 ];
 
 const socials = [
