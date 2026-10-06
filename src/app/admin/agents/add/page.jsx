@@ -19,7 +19,7 @@ const inputStyle = {
 
 const focusHandlers = {
   onFocus: e => {
-    e.target.style.borderColor = '#2e5d42';
+    e.target.style.borderColor = '#0f2645';
     e.target.style.boxShadow = '0 0 0 3px rgba(46,93,66,0.08)';
     e.target.style.background = '#fff';
   },
@@ -33,7 +33,7 @@ const focusHandlers = {
 const labelStyle = {
   fontSize: '11px',
   fontWeight: '600',
-  color: '#2e5d42',
+  color: '#0f2645',
   letterSpacing: '0.12em',
   textTransform: 'uppercase',
   display: 'block',
@@ -63,7 +63,7 @@ export default function AddAgentPage() {
   };
 
   return (
-    <div style={{ fontFamily: "'Jost', sans-serif", maxWidth: '580px' }}>
+    <div style={{ fontFamily: "'Jost', sans-serif", maxWidth: '780px' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
       `}</style>
@@ -79,7 +79,7 @@ export default function AddAgentPage() {
           onClick={() => router.push('/admin/agents')}
           style={{
             background: 'none', border: 'none', cursor: 'pointer',
-            color: '#2e5d42', fontSize: '13px', fontFamily: "'Jost', sans-serif",
+            color: '#0f2645', fontSize: '13px', fontFamily: "'Jost', sans-serif",
             display: 'flex', alignItems: 'center', gap: '6px',
             marginBottom: '16px', padding: 0,
           }}
@@ -87,8 +87,8 @@ export default function AddAgentPage() {
           ← Back to Agents
         </motion.button>
         <p style={{
-          fontSize: '11px', color: '#2e5d42', letterSpacing: '0.25em',
-          textTransform: 'uppercase', fontWeight: '500', marginBottom: '6px',
+          fontSize: '11px', color: '#0f2645', letterSpacing: '0.25em',
+          textTransform: 'uppercase', fontWeight: '500', marginBottom: '10px',
         }}>New Entry</p>
         <h1 style={{ fontFamily: "'Marcellus', serif", fontSize: '38px', color: '#1a3628', lineHeight: 1 }}>
           Add Agent
@@ -184,7 +184,7 @@ export default function AddAgentPage() {
             disabled={saving}
             style={{
               padding: '13px 28px',
-              background: '#2e5d42',
+              background: '#0f2645',
               color: '#fafaef',
               border: 'none',
               borderRadius: '10px',
@@ -207,7 +207,7 @@ export default function AddAgentPage() {
             style={{
               padding: '13px 24px',
               background: '#f3f7f4',
-              color: '#2e5d42',
+              color: '#0f2645',
               border: '1px solid #dce8df',
               borderRadius: '10px',
               fontSize: '14px',

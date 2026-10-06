@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
-import { requireAdmin } from '@/lib/auth';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export const runtime = 'nodejs';
 
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
-// File ke starting bytes se asli type pata karte hain
+
 function detectImageType(buf) {
   if (buf.length < 12) return null;
 
@@ -36,9 +37,11 @@ function detectImageType(buf) {
 }
 
 export async function POST(req) {
-  // Sirf admin upload kar sakta hai
-  const { error } = await requireAdmin();
-  if (error) return error;
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Please log in to upload images.' }, { status: 401 });
+  }
 
   try {
     const formData = await req.formData();
@@ -50,7 +53,7 @@ export async function POST(req) {
 
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
-        { error: 'File too large. Max 5MB' },
+        { error: 'File too large. Max 5MB.' },
         { status: 400 }
       );
     }
@@ -60,7 +63,7 @@ export async function POST(req) {
     const ext = detectImageType(buffer);
     if (!ext) {
       return NextResponse.json(
-        { error: 'Sirf JPG, PNG, WEBP ya GIF image allowed hai' },
+        { error: 'Only JPG, PNG, WEBP or GIF images are allowed.' },
         { status: 400 }
       );
     }
@@ -82,7 +85,7 @@ export async function POST(req) {
   } catch (err) {
     console.error('❌ Upload error:', err);
     return NextResponse.json(
-      { error: 'Upload nahi ho paya' },
+      { error: 'Upload failed. Please try again.' },
       { status: 500 }
     );
   }

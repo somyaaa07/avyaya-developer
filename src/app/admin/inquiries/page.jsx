@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const C = {
-  primary:     '#2e5d42',
+  primary:     '#0f2645',
   primaryPale: '#e8f0eb',
   bg:          '#f8fafc',
   white:       '#ffffff',

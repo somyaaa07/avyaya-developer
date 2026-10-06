@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const typeColors = {
-  buy:  { bg: '#e8f0eb', text: '#2e5d42' },
+  buy:  { bg: '#e8f0eb', text: '#0f2645' },
   sell: { bg: '#f5edd8', text: '#a07830' },
   rent: { bg: '#dce5f5', text: '#3a5a9c' },
 };
@@ -62,10 +62,10 @@ const fetchProperties = () => {
       >
         <div>
           <p style={{
-            fontSize: '11px', color: '#2e5d42', letterSpacing: '0.25em',
+            fontSize: '11px', color: '#0f2645', letterSpacing: '0.25em',
             textTransform: 'uppercase', fontWeight: '500', marginBottom: '6px',
           }}>Management</p>
-          <h1 style={{ fontFamily: "'Marcellus', serif", fontSize: '38px', color: '#1a3628', lineHeight: 1 }}>
+          <h1 style={{ fontFamily: "'Marcellus', serif", fontSize: '38px', color: '#0f2645', lineHeight: 1 }}>
             Properties
           </h1>
         </div>
@@ -74,7 +74,7 @@ const fetchProperties = () => {
           <Link href="/admin/properties/add" style={{
             display: 'flex', alignItems: 'center', gap: '8px',
             padding: '12px 22px',
-            background: '#2e5d42',
+            background: '#0f2645',
             color: '#fafaef',
             borderRadius: '10px',
             textDecoration: 'none',
@@ -106,12 +106,12 @@ const fetchProperties = () => {
           display: 'grid',
           gridTemplateColumns: '2.5fr 1.5fr 1fr 1fr 1fr 1fr',
           padding: '14px 24px',
-          background: '#f3f7f4',
+          background: '#f3f5f7',
           borderBottom: '1px solid #e4ede6',
         }}>
           {['Title', 'Price', 'Type', 'City', 'Status', 'Actions'].map(h => (
             <span key={h} style={{
-              fontSize: '11px', color: '#2e5d42', fontWeight: '600',
+              fontSize: '11px', color: '#0f2645', fontWeight: '600',
               letterSpacing: '0.15em', textTransform: 'uppercase',
             }}>{h}</span>
           ))}
@@ -151,10 +151,10 @@ const fetchProperties = () => {
                   }}
                 >
                   {/* Title */}
-                  <span style={{ fontSize: '14px', fontWeight: '500', color: '#1a3628' }}>{p.title}</span>
+                  <span style={{ fontSize: '14px', fontWeight: '500', color: '#0f2645' }}>{p.title}</span>
 
                   {/* Price */}
-                  <span style={{ fontSize: '13px', color: '#2e5d42', fontWeight: '600' }}>
+                  <span style={{ fontSize: '13px', color: '#0f2645', fontWeight: '600' }}>
                     ₹{Number(p.price).toLocaleString('en-IN')}
                   </span>
 
@@ -184,7 +184,7 @@ const fetchProperties = () => {
                     fontSize: '11px',
                     fontWeight: '500',
                     background: p.status === 'active' ? '#e8f0eb' : '#fef0f0',
-                    color: p.status === 'active' ? '#2e5d42' : '#c0392b',
+                    color: p.status === 'active' ? '#0f2645' : '#c0392b',
                     width: 'fit-content',
                   }}>
                     {p.status}
@@ -199,7 +199,7 @@ const fetchProperties = () => {
                         borderRadius: '8px',
                         fontSize: '12px',
                         textDecoration: 'none',
-                        color: '#2e5d42',
+                        color: '#0f2645',
                         fontWeight: '500',
                       }}>
                         Edit

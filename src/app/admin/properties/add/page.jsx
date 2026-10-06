@@ -1,332 +1,506 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Marcellus } from 'next/font/google';
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  ChevronDown,
+  Loader2,
+  Minus,
+  Plus,
+} from 'lucide-react';
 import ImageUpload from '@/component/ImageUploads';
+import TagInput from '@/component/TagInput';
 
-const COLORS = {
-  primary: '#2e5d42',
-  primaryLight: '#3d7a58',
-  primaryPale: '#e8f0eb',
-  bg: '#fafaef',
-  white: '#ffffff',
-  border: '#d6ddd8',
-  text: '#1a2e22',
-  muted: '#6b7c72',
-  accent: '#c8a96e',
-  error: '#c0392b',
+const marcellus = Marcellus({ subsets: ['latin'], weight: '400', display: 'swap' });
+
+const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
+
+/* ── Option lists ─────────────────────────────────────────── */
+const LISTING_TYPES = [
+  { value: 'buy', label: 'Buy' },
+  { value: 'sell', label: 'Sell' },
+  { value: 'rent', label: 'Rent' },
+];
+const PROPERTY_TYPES = ['apartment', 'house', 'villa', 'plot', 'commercial', 'residential'].map((v) => ({
+  value: v,
+  label: v.charAt(0).toUpperCase() + v.slice(1),
+}));
+const STATUSES = [
+  { value: 'active', label: 'Active' },
+  { value: 'sold', label: 'Sold' },
+  { value: 'rented', label: 'Rented' },
+];
+const FURNISHING = [
+  { value: 'unfurnished', label: 'Unfurnished' },
+  { value: 'semi-furnished', label: 'Semi-furnished' },
+  { value: 'furnished', label: 'Furnished' },
+];
+const PARKING = [
+  { value: 'none', label: 'None' },
+  { value: 'bike', label: 'Bike' },
+  { value: 'car', label: 'Car' },
+  { value: 'both', label: 'Car + Bike' },
+];
+const TRANSACTION = [
+  { value: 'new', label: 'New' },
+  { value: 'resale', label: 'Resale' },
+];
+const FACING = ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West'].map((v) => ({
+  value: v,
+  label: v,
+}));
+
+const AMENITY_SUGGESTIONS = ['Lift', 'Power Backup', 'Gym', 'Swimming Pool', 'Security', 'CCTV', 'Club House', 'Park', 'Play Area', 'Gated Society'];
+const HIGHLIGHT_SUGGESTIONS = ['Corner Property', 'Park Facing', 'Main Road', 'Vastu Compliant', 'Ready to Move', 'Newly Built', 'Prime Location'];
+const LANDMARK_SUGGESTIONS = ['Metro Station', 'School', 'Hospital', 'Shopping Mall', 'Market', 'Bus Stand', 'Highway'];
+
+/* ── Helpers ──────────────────────────────────────────────── */
+const toNum = (v) => (v === '' || v == null ? null : Number(v));
+
+const priceWords = (v) => {
+  const n = Number(v);
+  if (!n || n <= 0) return '';
+  if (n >= 1e7) return `${+(n / 1e7).toFixed(2)} Crore`;
+  if (n >= 1e5) return `${+(n / 1e5).toFixed(2)} Lakh`;
+  if (n >= 1e3) return `${+(n / 1e3).toFixed(1)} Thousand`;
+  return '';
 };
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.5, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
+/* ── Shared styles (login page ke inputs jaise) ──────────── */
+const inputCls = (invalid) =>
+  `w-full rounded-xl border bg-[#F3F0E8]/60 px-4 py-3 font-sans text-[15px] text-[#0f2645] outline-none transition placeholder:text-[#52685B]/60 hover:border-[#0f2645]/30 focus:bg-white focus:ring-4 disabled:opacity-60 ${
+    invalid
+      ? 'border-[#9C3B2B] focus:border-[#9C3B2B] focus:ring-[#9C3B2B]/15'
+      : 'border-[#0f2645]/15 focus:border-[#D4AF37] focus:ring-[#FFCD39]/30'
+  }`;
 
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.07 } },
-};
-
-function FloatingField({ label, children, span = false, index = 0 }) {
+/* ── Small UI pieces ──────────────────────────────────────── */
+function FormField({ name, label, htmlFor, required, hint, error, span = false, children }) {
   return (
-    <motion.div variants={fadeUp} custom={index} style={{ gridColumn: span ? '1 / -1' : undefined }}>
-      <label style={{
-        display: 'block',
-        fontFamily: "'Jost', sans-serif",
-        fontSize: '11px',
-        fontWeight: '600',
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        color: COLORS.primary,
-        marginBottom: '8px',
-      }}>
-        {label}
-      </label>
+    <div id={name ? `field-${name}` : undefined} className={span ? 'sm:col-span-full' : undefined}>
+      {label && (
+        <label htmlFor={htmlFor} className="mb-1.5 block text-sm">
+          {label}
+          {required && <span aria-hidden="true" className="ml-1 text-[#9C3B2B]">*</span>}
+        </label>
+      )}
       {children}
-    </motion.div>
+      {error ? (
+        <p id={name ? `${name}-err` : undefined} className="mt-1.5 flex items-center gap-1.5 font-sans text-xs text-[#9C3B2B]">
+          <AlertCircle size={13} aria-hidden="true" /> {error}
+        </p>
+      ) : hint ? (
+        <p className="mt-1.5 font-sans text-xs text-[#52685B]">{hint}</p>
+      ) : null}
+    </div>
   );
 }
 
-const fieldStyle = {
-  width: '100%',
-  padding: '12px 16px',
-  fontFamily: "'Jost', sans-serif",
-  fontSize: '15px',
-  color: COLORS.text,
-  background: COLORS.white,
-  border: `1.5px solid ${COLORS.border}`,
-  borderRadius: '10px',
-  outline: 'none',
-  boxSizing: 'border-box',
-  transition: 'border-color 0.2s, box-shadow 0.2s',
-};
-
-function Field({ as: Tag = 'input', style: extra, ...props }) {
-  const [focused, setFocused] = useState(false);
+function Input({ id, prefix, suffix, invalid, describedBy, className = '', ...props }) {
   return (
-    <Tag
-      {...props}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      style={{
-        ...fieldStyle,
-        ...(Tag === 'textarea' ? { resize: 'vertical', minHeight: '90px' } : {}),
-        ...(Tag === 'select' ? {
-          cursor: 'pointer', appearance: 'none',
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232e5d42' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'right 14px center',
-        } : {}),
-        borderColor: focused ? COLORS.primary : COLORS.border,
-        boxShadow: focused ? `0 0 0 3px ${COLORS.primaryPale}` : 'none',
-        ...extra,
-      }}
-    />
+    <div className="relative">
+      {prefix && (
+        <span aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-sans text-[15px] text-[#52685B]">
+          {prefix}
+        </span>
+      )}
+      <input
+        id={id}
+        aria-invalid={invalid || undefined}
+        aria-describedby={invalid ? describedBy : undefined}
+        className={`${inputCls(invalid)} ${prefix ? 'pl-9' : ''} ${suffix ? 'pr-16' : ''} ${className}`}
+        {...props}
+      />
+      {suffix && (
+        <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-sans text-[13px] text-[#52685B]">
+          {suffix}
+        </span>
+      )}
+    </div>
   );
 }
 
+function Select({ id, value, onChange, children, className = '' }) {
+  return (
+    <div className={`relative ${className}`}>
+      <select id={id} value={value} onChange={onChange} className={`${inputCls(false)} cursor-pointer appearance-none pr-10`}>
+        {children}
+      </select>
+      <ChevronDown size={17} aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#52685B]" />
+    </div>
+  );
+}
+
+/* Pill-style single choice. allowClear lets the user unselect (optional fields). */
+function ChoiceGroup({ value, onChange, options, allowClear = false, label }) {
+  return (
+    <div role="group" aria-label={label} className="flex flex-wrap gap-2">
+      {options.map((o) => {
+        const active = value === o.value;
+        return (
+          <button
+            key={o.value}
+            type="button"
+            aria-pressed={active}
+            onClick={() => onChange(active && allowClear ? '' : o.value)}
+            className={`rounded-full border px-5 py-2 font-sans text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] ${
+              active
+                ? 'border-[#0f2645] bg-[#0f2645] text-[#FAF9F6] shadow-[0_4px_12px_rgba(15,38,69,0.22)]'
+                : 'border-[#0f2645]/15 bg-white text-[#0f2645] hover:border-[#D4AF37] hover:bg-[#F3F0E8]'
+            }`}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* +/- counter. Empty value shows an en dash. */
+function Stepper({ value, onChange, label, min = 0, max = 20 }) {
+  const n = value === '' || value == null ? null : Number(value);
+  const btn =
+    'flex h-10 w-10 items-center justify-center rounded-xl border border-[#0f2645]/15 bg-white text-[#0f2645] transition hover:border-[#D4AF37] hover:bg-[#F3F0E8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:text-[#0f2645]/25 disabled:hover:border-[#0f2645]/15 disabled:hover:bg-white';
+  return (
+    <div role="group" aria-label={label} className="inline-flex items-center gap-3">
+      <button type="button" className={btn} disabled={n == null} aria-label={`Decrease ${label}`} onClick={() => onChange(n <= min ? '' : n - 1)}>
+        <Minus size={16} aria-hidden="true" />
+      </button>
+      <span aria-live="polite" className={`min-w-[28px] text-center text-2xl ${n == null ? 'text-[#0f2645]/25' : 'text-[#0f2645]'}`}>
+        {n == null ? '–' : n}
+      </span>
+      <button type="button" className={btn} disabled={n != null && n >= max} aria-label={`Increase ${label}`} onClick={() => onChange(n == null ? min : Math.min(max, n + 1))}>
+        <Plus size={16} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+function Section({ step, title, subtitle, children }) {
+  return (
+    <section className="relative mb-5 overflow-hidden rounded-3xl border border-[#0f2645]/10 bg-white">
+      <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${goldBg}`} />
+      <div className="flex items-center gap-4 border-b border-[#0f2645]/10 px-6 py-4 sm:px-8">
+        <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0f2645] text-base text-[#F5D77A]">
+          {step}
+        </span>
+        <div>
+          <h2 className="text-lg leading-tight sm:text-xl">{title}</h2>
+          {subtitle && <p className="mt-0.5 font-sans text-xs text-[#52685B]">{subtitle}</p>}
+        </div>
+      </div>
+      <div className="p-6 sm:p-8">{children}</div>
+    </section>
+  );
+}
+
+const grid2 = 'grid grid-cols-1 gap-5 sm:grid-cols-2';
+const grid3 = 'grid grid-cols-1 gap-5 sm:grid-cols-3';
+
+/* ── Page ─────────────────────────────────────────────────── */
 export default function AddPropertyPage() {
   const router = useRouter();
+  const reduce = useReducedMotion();
   const [agents, setAgents] = useState([]);
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // ── CHANGED: images is now an array ──
   const [form, setForm] = useState({
     title: '', description: '', price: '',
     type: 'buy', property_type: 'apartment',
     location: '', city: '', area: '',
     bedrooms: '', bathrooms: '',
-    images: [],   // ← array of URLs
+    balcony: '', total_floors: '',
+    age_of_property: '', furnishing: '', transaction_type: '',
+    parking: '', facing: '', construction_type: '',
+    amenities: [], nearby_landmarks: [], property_highlights: [],
+    images: [],
     agent_id: '', status: 'active',
   });
 
   useEffect(() => {
-    fetch('/api/admin/agents').then(r => r.json()).then(setAgents);
+    fetch('/api/admin/agents')
+      .then((r) => r.json())
+      .then((d) => setAgents(Array.isArray(d) ? d : []))
+      .catch(() => {});
   }, []);
 
-  const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
+  const update = (key, val) => {
+    setForm((f) => ({ ...f, [key]: val }));
+    setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
+  };
+  const set = (key) => (e) => update(key, e.target.value);
 
-  const handleSubmit = async () => {
+  /* Required-field progress for the sticky bar */
+  const checks = [
+    !!form.title.trim(),
+    Number(form.price) > 0,
+    !!form.location.trim(),
+    !!form.city.trim(),
+    form.images.length > 0,
+  ];
+  const done = checks.filter(Boolean).length;
+  const pct = (done / checks.length) * 100;
+
+  const validate = () => {
+    const e = {};
+    if (!form.title.trim()) e.title = 'Give the property a title.';
+    if (!(Number(form.price) > 0)) e.price = 'Enter a valid price.';
+    if (!form.location.trim()) e.location = 'Enter the address or locality.';
+    if (!form.city.trim()) e.city = 'Enter the city.';
+    if (form.images.length === 0) e.images = 'Upload at least one image.';
+    return e;
+  };
+
+  const handleSubmit = async (ev) => {
+    ev?.preventDefault();
+    if (loading) return;
     setError('');
-
-    if (!form.title || !form.price || !form.city) {
-      setError('Title, Price aur City required hai.');
-      return;
-    }
-    if (form.images.length === 0) {
-      setError('Kam se kam ek image upload karo.');
+    const e = validate();
+    setErrors(e);
+    const first = Object.keys(e)[0];
+    if (first) {
+      document.getElementById(`field-${first}`)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
       return;
     }
 
     setLoading(true);
+    const payload = {
+      ...form,
+      area: toNum(form.area),
+      bedrooms: toNum(form.bedrooms),
+      bathrooms: toNum(form.bathrooms),
+      balcony: toNum(form.balcony),
+      total_floors: toNum(form.total_floors),
+      agent_id: form.agent_id === '' ? null : Number(form.agent_id),
+    };
 
     try {
       const res = await fetch('/api/admin/properties', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),  // images array bhi jayega
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
         router.push('/admin/properties');
-      } else {
-        const data = await res.json();
-        setError(data.error || 'Something went wrong.');
+        return; // loading true hi rehne do, page change hone tak button disabled rahe
       }
-    } catch (err) {
-      setError('Network error. Try again.');
-    } finally {
-      setLoading(false);
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || 'Could not save this property. Please try again.');
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    } catch {
+      setError('Couldn’t reach the server. Check your connection and try again.');
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     }
+    setLoading(false);
   };
 
+  const words = priceWords(form.price);
+
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: ${COLORS.bg}; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        input::placeholder, textarea::placeholder { color: #a0b0a8; }
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
-      `}</style>
-
+    <div className={`${marcellus.className} mx-auto max-w-5xl font-normal text-[#0f2645]`}>
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        style={{ minHeight: '100vh', background: COLORS.bg, padding: '40px 24px 80px', fontFamily: "'Jost', sans-serif" }}
+        initial={reduce ? false : { opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        <div style={{ maxWidth: '780px', margin: '0 auto' }}>
+        {/* Header */}
+        <header className="mb-8">
+          <Link
+            href="/admin/properties"
+            className="mb-5 inline-flex items-center gap-2 font-sans text-sm text-[#52685B] transition hover:text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4AF37]"
+          >
+            <ArrowLeft size={16} aria-hidden="true" /> Back to properties
+          </Link>
+          <h1 className="text-3xl leading-tight sm:text-4xl">Add new property</h1>
+          <span aria-hidden="true" className={`mt-4 block h-[3px] w-14 rounded-full ${goldBg}`} />
+          <p className="mt-4 font-sans text-sm text-[#52685B]">
+            Fill in the details below. Fields marked * are required.
+          </p>
+        </header>
 
-          {/* Header */}
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '36px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '8px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: COLORS.primary, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                  <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round"/>
-                  <path d="M9 21V12h6v9" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
+        {/* Server error */}
+        {error && (
+          <p role="alert" className="mb-5 flex items-start gap-2.5 rounded-xl border border-[#9C3B2B]/25 bg-[#F6E3DF] px-4 py-3 font-sans text-sm text-[#9C3B2B]">
+            <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" /> {error}
+          </p>
+        )}
+
+        <form onSubmit={handleSubmit} noValidate aria-busy={loading}>
+          {/* 1. Basics */}
+          <Section step={1} title="Basic information" subtitle="What are you listing, and for how much?">
+            <div className={grid2}>
+              <FormField name="title" label="Property title" htmlFor="title" required span error={errors.title}>
+                <Input id="title" placeholder="e.g. Luxury 3BHK Apartment in Sector 45" value={form.title} onChange={set('title')} invalid={!!errors.title} describedBy="title-err" />
+              </FormField>
+
+              <FormField label="Description" htmlFor="description" span hint={`${form.description.length} characters`}>
+                <textarea
+                  id="description"
+                  rows={4}
+                  placeholder="Highlight what makes this property special…"
+                  value={form.description}
+                  onChange={set('description')}
+                  className={`${inputCls(false)} resize-y leading-relaxed`}
+                />
+              </FormField>
+
+              <FormField name="price" label="Price" htmlFor="price" required error={errors.price} hint={words ? `≈ ₹${words}` : 'Enter the full amount'}>
+                <Input id="price" type="number" min="0" prefix="₹" placeholder="5000000" value={form.price} onChange={set('price')} invalid={!!errors.price} describedBy="price-err" />
+              </FormField>
+
+              <FormField label="Listing type">
+                <ChoiceGroup label="Listing type" value={form.type} onChange={(v) => update('type', v)} options={LISTING_TYPES} />
+              </FormField>
+
+              <FormField label="Property type" span>
+                <ChoiceGroup label="Property type" value={form.property_type} onChange={(v) => update('property_type', v)} options={PROPERTY_TYPES} />
+              </FormField>
+
+              <FormField label="Status" span>
+                <ChoiceGroup label="Status" value={form.status} onChange={(v) => update('status', v)} options={STATUSES} />
+              </FormField>
+            </div>
+          </Section>
+
+          {/* 2. Location */}
+          <Section step={2} title="Location" subtitle="Where is it located?">
+            <div className={grid2}>
+              <FormField name="location" label="Full address / locality" htmlFor="location" required span error={errors.location}>
+                <Input id="location" placeholder="Sector 45, Noida, Uttar Pradesh" value={form.location} onChange={set('location')} invalid={!!errors.location} describedBy="location-err" />
+              </FormField>
+              <FormField name="city" label="City" htmlFor="city" required error={errors.city}>
+                <Input id="city" placeholder="Noida" value={form.city} onChange={set('city')} invalid={!!errors.city} describedBy="city-err" />
+              </FormField>
+              <FormField label="Area" htmlFor="area">
+                <Input id="area" type="number" min="0" suffix="sq ft" placeholder="1200" value={form.area} onChange={set('area')} />
+              </FormField>
+            </div>
+          </Section>
+
+          {/* 3. Specs */}
+          <Section step={3} title="Specifications" subtitle="Rooms, building details and extras">
+            <div className={`${grid3} mb-7`}>
+              <FormField label="Bedrooms">
+                <Stepper label="bedrooms" value={form.bedrooms} onChange={(v) => update('bedrooms', v)} />
+              </FormField>
+              <FormField label="Bathrooms">
+                <Stepper label="bathrooms" value={form.bathrooms} onChange={(v) => update('bathrooms', v)} />
+              </FormField>
+              <FormField label="Balconies">
+                <Stepper label="balconies" value={form.balcony} onChange={(v) => update('balcony', v)} />
+              </FormField>
+            </div>
+
+            <div className={`${grid3} mb-7`}>
+              <FormField label="Total floors" htmlFor="total_floors">
+                <Input id="total_floors" type="number" min="0" placeholder="10" value={form.total_floors} onChange={set('total_floors')} />
+              </FormField>
+              <FormField label="Age of property" htmlFor="age_of_property">
+                <Input id="age_of_property" placeholder="e.g. 2 years" value={form.age_of_property} onChange={set('age_of_property')} />
+              </FormField>
+              <FormField label="Construction type" htmlFor="construction_type">
+                <Input id="construction_type" placeholder="e.g. RCC, Brick" value={form.construction_type} onChange={set('construction_type')} />
+              </FormField>
+            </div>
+
+            <div className="grid gap-6">
+              <FormField label="Furnishing">
+                <ChoiceGroup label="Furnishing" value={form.furnishing} onChange={(v) => update('furnishing', v)} options={FURNISHING} allowClear />
+              </FormField>
+              <FormField label="Parking">
+                <ChoiceGroup label="Parking" value={form.parking} onChange={(v) => update('parking', v)} options={PARKING} allowClear />
+              </FormField>
+              <FormField label="Facing">
+                <ChoiceGroup label="Facing" value={form.facing} onChange={(v) => update('facing', v)} options={FACING} allowClear />
+              </FormField>
+              <FormField label="Transaction type">
+                <ChoiceGroup label="Transaction type" value={form.transaction_type} onChange={(v) => update('transaction_type', v)} options={TRANSACTION} allowClear />
+              </FormField>
+              <FormField label="Assigned agent" htmlFor="agent_id">
+                <Select id="agent_id" value={form.agent_id} onChange={set('agent_id')} className="max-w-sm">
+                  <option value="">No agent assigned</option>
+                  {agents.map((a) => (
+                    <option key={a.id} value={a.id}>{a.name}</option>
+                  ))}
+                </Select>
+              </FormField>
+            </div>
+          </Section>
+
+          {/* 4. Features */}
+          <Section step={4} title="Amenities and highlights" subtitle="Help buyers see the value at a glance">
+            <div className="grid gap-7">
+              <FormField label="Amenities">
+                <TagInput value={form.amenities} onChange={(v) => update('amenities', v)} placeholder="Gym, Lift, Power Backup…" suggestions={AMENITY_SUGGESTIONS} />
+              </FormField>
+              <FormField label="Property highlights">
+                <TagInput value={form.property_highlights} onChange={(v) => update('property_highlights', v)} placeholder="Corner plot, Park facing…" suggestions={HIGHLIGHT_SUGGESTIONS} />
+              </FormField>
+              <FormField label="Nearby landmarks">
+                <TagInput value={form.nearby_landmarks} onChange={(v) => update('nearby_landmarks', v)} placeholder="Metro Station, City Mall…" suggestions={LANDMARK_SUGGESTIONS} />
+              </FormField>
+            </div>
+          </Section>
+
+          {/* 5. Images */}
+          <Section step={5} title="Property images" subtitle="The first image is used as the cover photo">
+            <FormField name="images" error={errors.images}>
+              <div className={`rounded-2xl ${errors.images ? 'outline outline-2 outline-offset-4 outline-[#9C3B2B]/40' : ''}`}>
+                <ImageUpload value={form.images} onChange={(urls) => update('images', urls)} />
               </div>
-              <div>
-                <p style={{ fontFamily: "'Jost', sans-serif", fontSize: '12px', color: COLORS.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Property Management</p>
-                <h1 style={{ fontFamily: "'Marcellus', serif", fontSize: '28px', color: COLORS.text, lineHeight: 1.1 }}>Add New Property</h1>
+            </FormField>
+          </Section>
+
+          {/* Sticky action bar */}
+          <div className="sticky bottom-4 z-20 mt-6 flex flex-wrap items-center gap-4 rounded-2xl border border-[#0f2645]/10 bg-white/90 px-5 py-3.5 shadow-[0_10px_34px_rgba(15,38,69,0.18)] backdrop-blur">
+            <div className="min-w-[180px] flex-1">
+              <p className="mb-2 font-sans text-[13px]">
+                <strong className="font-semibold">{done}</strong> of {checks.length} required fields complete
+              </p>
+              <div className="h-1.5 overflow-hidden rounded-full bg-[#0f2645]/10" role="progressbar" aria-valuemin={0} aria-valuemax={checks.length} aria-valuenow={done} aria-label="Required fields completed">
+                <motion.div
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: reduce ? 0 : 0.4 }}
+                  className={`h-full rounded-full ${goldBg}`}
+                />
               </div>
             </div>
-            <div style={{ height: '2px', background: `linear-gradient(90deg, ${COLORS.primary}, ${COLORS.accent}, transparent)`, borderRadius: '2px', marginTop: '16px' }} />
-          </motion.div>
 
-          {/* Error */}
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -8, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                style={{ background: '#fdf0ef', border: `1px solid ${COLORS.error}30`, borderLeft: `4px solid ${COLORS.error}`, borderRadius: '10px', padding: '12px 16px', color: COLORS.error, fontSize: '14px', marginBottom: '20px' }}
-              >
-                {error}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Basic Info */}
-          <Section title="Basic Information" icon="✦" delay={0}>
-            <motion.div variants={stagger} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-              <FloatingField label="Property Title" span index={0}>
-                <Field placeholder="e.g. Luxury Villa in Sector 45" value={form.title} onChange={set('title')} />
-              </FloatingField>
-              <FloatingField label="Description" span index={1}>
-                <Field as="textarea" placeholder="Describe the property…" value={form.description} onChange={set('description')} />
-              </FloatingField>
-              <FloatingField label="Price (₹)" index={2}>
-                <Field type="number" placeholder="50,00,000" value={form.price} onChange={set('price')} />
-              </FloatingField>
-              <FloatingField label="Listing Type" index={3}>
-                <Field as="select" value={form.type} onChange={set('type')}>
-                  <option value="buy">Buy</option>
-                  <option value="sell">Sell</option>
-                  <option value="rent">Rent</option>
-                </Field>
-              </FloatingField>
-              <FloatingField label="Property Type" index={4}>
-                <Field as="select" value={form.property_type} onChange={set('property_type')}>
-                  <option value="apartment">Apartment</option>
-                  <option value="house">House</option>
-                  <option value="villa">Villa</option>
-                  <option value="plot">Plot</option>
-                  <option value="commercial">Commercial</option>
-                </Field>
-              </FloatingField>
-              <FloatingField label="Status" index={5}>
-                <Field as="select" value={form.status} onChange={set('status')}>
-                  <option value="active">Active</option>
-                  <option value="sold">Sold</option>
-                  <option value="rented">Rented</option>
-                </Field>
-              </FloatingField>
-            </motion.div>
-          </Section>
-
-          {/* Location */}
-          <Section title="Location Details" icon="◈" delay={0.1}>
-            <motion.div variants={stagger} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-              <FloatingField label="Full Location / Address" span index={0}>
-                <Field placeholder="Sector 45, Noida, Uttar Pradesh" value={form.location} onChange={set('location')} />
-              </FloatingField>
-              <FloatingField label="City" index={1}>
-                <Field placeholder="Noida" value={form.city} onChange={set('city')} />
-              </FloatingField>
-              <FloatingField label="Area (sq ft)" index={2}>
-                <Field type="number" placeholder="1200" value={form.area} onChange={set('area')} />
-              </FloatingField>
-            </motion.div>
-          </Section>
-
-          {/* Specs */}
-          <Section title="Property Specifications" icon="◇" delay={0.2}>
-            <motion.div variants={stagger} initial="hidden" animate="show" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
-              <FloatingField label="Bedrooms" index={0}>
-                <Field type="number" placeholder="3" value={form.bedrooms} onChange={set('bedrooms')} />
-              </FloatingField>
-              <FloatingField label="Bathrooms" index={1}>
-                <Field type="number" placeholder="2" value={form.bathrooms} onChange={set('bathrooms')} />
-              </FloatingField>
-              <FloatingField label="Assigned Agent" index={2}>
-                <Field as="select" value={form.agent_id} onChange={set('agent_id')}>
-                  <option value="">Select Agent</option>
-                  {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </Field>
-              </FloatingField>
-            </motion.div>
-          </Section>
-
-          {/* ── CHANGED: Multi-image upload ── */}
-          <Section title="Property Images" icon="▣" delay={0.3}>
-            <ImageUpload
-              value={form.images}
-              onChange={(urls) => setForm({ ...form, images: urls })}
-            />
-          </Section>
-
-          {/* Actions */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
-            <motion.button
-              whileHover={{ scale: 1.02, backgroundColor: COLORS.primaryLight }}
-              whileTap={{ scale: 0.97 }}
-              onClick={handleSubmit}
-              disabled={loading}
-              style={{
-                padding: '13px 32px',
-                background: loading ? COLORS.muted : COLORS.primary,
-                color: '#fff', border: 'none', borderRadius: '10px',
-                fontFamily: "'Jost', sans-serif", fontSize: '15px', fontWeight: '600',
-                letterSpacing: '0.04em',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                display: 'flex', alignItems: 'center', gap: '8px',
-                transition: 'background 0.2s',
-              }}
-            >
-              {loading ? (
-                <>
-                  <span style={{ display: 'inline-block', width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-                  Saving…
-                </>
-              ) : 'Save Property'}
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => router.push('/admin/properties')}
-              style={{ padding: '13px 24px', background: 'transparent', color: COLORS.muted, border: `1.5px solid ${COLORS.border}`, borderRadius: '10px', fontFamily: "'Jost', sans-serif", fontSize: '15px', fontWeight: '500', cursor: 'pointer' }}
+            <Link
+              href="/admin/properties"
+              className="inline-flex items-center justify-center rounded-full border border-[#0f2645]/20 px-6 py-3 font-sans text-sm text-[#52685B] transition hover:border-[#0f2645]/40 hover:text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
             >
               Cancel
-            </motion.button>
-          </motion.div>
-        </div>
-      </motion.div>
-    </>
-  );
-}
+            </Link>
 
-function Section({ title, icon, delay = 0, children }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-      style={{ background: COLORS.white, borderRadius: '16px', border: `1px solid ${COLORS.border}`, overflow: 'hidden', marginBottom: '20px' }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '16px 24px', borderBottom: `1px solid ${COLORS.primaryPale}`, background: COLORS.primaryPale }}>
-        <span style={{ color: COLORS.primary, fontSize: '14px' }}>{icon}</span>
-        <h2 style={{ fontFamily: "'Marcellus', serif", fontSize: '17px', color: COLORS.primary, fontWeight: '400' }}>{title}</h2>
-      </div>
-      <div style={{ padding: '24px' }}>{children}</div>
-    </motion.div>
+            <button
+              type="submit"
+              disabled={loading}
+              aria-busy={loading}
+              className="group relative inline-flex min-w-[200px] items-center justify-between overflow-hidden rounded-full bg-[#0f2645] py-2 pl-6 pr-2 text-base text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition-all duration-500 hover:text-[#0f2645] hover:shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:ring-[#F5D77A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              <span aria-hidden="true" className="absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-[#D4AF37] via-[#F5D77A] to-[#D4AF37] transition-transform duration-500 ease-out group-hover:scale-x-100" />
+              <span className="relative z-10">{loading ? 'Saving…' : 'Save property'}</span>
+              <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
+                {loading ? (
+                  <Loader2 size={17} className="animate-spin" aria-hidden="true" />
+                ) : (
+                  <ArrowRight size={15} className="transition-transform duration-500 group-hover:-rotate-45" aria-hidden="true" />
+                )}
+              </span>
+            </button>
+          </div>
+        </form>
+      </motion.div>
+    </div>
   );
 }
