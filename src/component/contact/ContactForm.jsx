@@ -84,7 +84,7 @@ export default function ContactForm() {
       >
         Send us an enquiry
       </h3>
-      <p className="mt-2 text-sm text-[#52685B]">Fields marked * are required.</p>
+      {/* <p className="mt-2 text-sm text-[#52685B]">Fields marked * are required.</p> */}
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate={false}>
         <div className="grid gap-5 sm:grid-cols-2">
