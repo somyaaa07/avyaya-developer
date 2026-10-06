@@ -87,15 +87,11 @@ export default function ContactHero() {
               Let’s Start a Conversation
             </h1>
 
-            <span
-              aria-hidden="true"
-              className="mt-7 block h-[3px] w-16 rounded-full bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]"
-            />
+           
 
             <p className="mt-7 max-w-lg text-[15px] leading-relaxed text-[#FAF9F6]/75 sm:text-base">
               Have a question, project idea, or need expert guidance? Our team
-              is here to help you with the right information and support. Reach
-              out and we’ll get back to you with the right guidance.
+              is here to help you with the right information and support.
             </p>
 
             <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">

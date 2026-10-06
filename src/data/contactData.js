@@ -14,7 +14,7 @@ export const contactMethods = [
     icon: "Phone",
     label: "Call Us",
     value: PHONE,
-    note: "Mon – Sat, 10 AM – 7 PM",
+    note: " 9 AM – 8 PM",
     href: PHONE_HREF,
   },
   {
@@ -53,7 +53,7 @@ export const enquiryTypes = [
   "General Enquiry",
 ];
 
-export const workingHours = "Mon – Sat, 10 AM – 7 PM";
+export const workingHours = " 9 AM – 8 PM";
 
 
 

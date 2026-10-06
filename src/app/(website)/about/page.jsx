@@ -327,7 +327,7 @@ export default function AboutPage() {
                   Call {BUSINESS.phoneDisplay}
                 </BtnGold>
                 <Link
-                  href="/projects"
+                  href="/properties"
                   className={`inline-flex items-center justify-center gap-2 rounded-full border border-[#FAF9F6]/40 px-6 py-3 text-sm transition hover:bg-[#FAF9F6] hover:text-[#1A2A22] ${focusRing}`}
                 >
                   View projects
@@ -459,7 +459,7 @@ export default function AboutPage() {
               className="object-cover"
             />
             <Link
-              href="/projects"
+              href="/properties"
               className={`group absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-2xl bg-[#FAF9F6] p-4 transition hover:-translate-y-1 ${focusRing}`}
             >
               <span>
@@ -539,7 +539,7 @@ export default function AboutPage() {
           </div>
 
           <div className="mt-10">
-            <BtnGold href="/team">Meet our team</BtnGold>
+            <BtnGold href="/contact">Meet our team</BtnGold>
           </div>
         </div>
       </section>

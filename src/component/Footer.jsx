@@ -11,6 +11,7 @@ import {
   FiYoutube,
   FiArrowUp,
 } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 // Gold gradient: #e2a10d on the sides, #ffcd39 in the center
 const goldBg = "bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]";
@@ -38,6 +39,7 @@ const socials = [
   { label: "Facebook", icon: FiFacebook, href:"https://www.facebook.com/share/1PfHxWvUja/" },
   { label: "Instagram", icon: FiInstagram, href: "https://www.instagram.com/avyayadeveloper?igsh=MTByeTV3bW1za203dA==" },
   { label: "YouTube", icon: FiYoutube, href: "https://youtube.com/@avyayadeveloper?si=cBUOCNZS7QAL84bl" },
+  {label: "WhatsApp Channel",icon: FaWhatsapp,href: "https://whatsapp.com/channel/0029VbDTt9E2f3EBdzNuYD2m",},
 ];
 
 const contact = [
