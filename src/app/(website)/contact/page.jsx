@@ -16,7 +16,7 @@ export default function ContactPage() {
   return (
     <main className="overflow-x-hidden bg-white text-[#1b2b23]">
       <ContactHero />
-      <ContactIntro />
+      {/* <ContactIntro /> */}
       <section id="enquiry-form" className="scroll-mt-20 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
           <ContactInfo />

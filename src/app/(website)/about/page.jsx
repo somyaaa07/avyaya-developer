@@ -46,13 +46,11 @@ const STICKY_TOP = "top-16 lg:top-20";
 
 const BUSINESS = {
   name: "Bringo Real Estates",
-  phoneDisplay: "9999300301",
-  phoneTel: "+919999300301",
-  email: "bringo.realstates@gmail.com",
+  phoneDisplay: "+91 7004397655",
+  phoneTel: "++917004397655",
+  email: "info@avyayadeveloper.com",
   addressLines: [
-    "FF01, FF02 Kaveri City Center, Delta 1,",
-    "Greater Noida, Gautam Buddha Nagar,",
-    "Uttar Pradesh 201306",
+    "Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4 Greater Noida,Uttar Pradesh - 201009",
   ],
   schemaAddress: {
     "@type": "PostalAddress",
@@ -71,7 +69,7 @@ const MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
 export const metadata = {
   title: "About Bringo Real Estates | Property Dealers in Greater Noida",
   description:
-    "Bringo Real Estates helps families and investors buy, sell and invest in residential and commercial properties in Greater Noida. Transparent deals, verified projects and end-to-end support. Call 99993 00301.",
+    "Bringo Real Estates helps families and investors buy, sell and invest in residential and commercial properties in Greater Noida. Transparent deals, verified projects and end-to-end support. Call +91 7004397655.",
   keywords: [
     "Bringo Real Estates",
     "real estate Greater Noida",
@@ -104,9 +102,9 @@ export const metadata = {
    CONTENT  (verify stats are real before going live)
 ---------------------------------------------------------------- */
 const stats = [
-  { icon: Home, value: "500+", label: "Properties sold" },
-  { icon: Users, value: "10,000+", label: "Happy customers" },
-  { icon: Building2, value: "50+", label: "Ongoing projects" },
+  { icon: Home, value: "200+", label: "Properties sold" },
+  { icon: Users, value: "600+", label: "Happy customers" },
+  // { icon: Building2, value: "50+", label: "Ongoing projects" },
   { icon: Star, value: "4.8/5", label: "Customer rating" },
 ];
 
@@ -153,7 +151,7 @@ const faqs = [
   },
   {
     q: "How can I schedule a property visit?",
-    a: "Call us on 99993 00301 or use the Contact page. We will confirm a convenient time and arrange a guided site visit for you.",
+    a: "Call us on 7004397655 or use the Contact page. We will confirm a convenient time and arrange a guided site visit for you.",
   },
   {
     q: "Do you provide financing assistance?",
@@ -169,14 +167,14 @@ const faqs = [
   },
 ];
 
-const navLinks = [
-  { href: "#story", label: "Our story" },
-  { href: "#process", label: "How we work" },
-  { href: "#why", label: "Why Bringo" },
-  { href: "#vision", label: "Vision" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
-];
+// const navLinks = [
+//   { href: "#story", label: "Our story" },
+//   { href: "#process", label: "How we work" },
+//   { href: "#why", label: "Why Bringo" },
+//   { href: "#vision", label: "Vision" },
+//   { href: "#faq", label: "FAQ" },
+//   { href: "#contact", label: "Contact" },
+// ];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -348,7 +346,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 2. STICKY SECTION MENU ============ */}
-      <nav
+      {/* <nav
         aria-label="On this page"
         className={`  z-30 border-b border-[#52685B]/15 bg-[#FAF9F6]/90 backdrop-blur`}
       >
@@ -364,7 +362,7 @@ export default function AboutPage() {
             </li>
           ))}
         </ul>
-      </nav>
+      </nav> */}
 
       {/* ============ 3. STORY: statement + mosaic ============ */}
       <section id="story" aria-labelledby="story-title" className="mx-auto max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 lg:py-28">
