@@ -23,7 +23,7 @@ import {
 const marcellus = Marcellus({ subsets: ['latin'], weight: '400', display: 'swap' });
 
 const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
-const EMAIL_KEY = 'bringo_user_email';
+const EMAIL_KEY = 'avyaya_user_email';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /* Sirf apni site ke andar ka callback allow karo (open redirect se bachne ke liye) */

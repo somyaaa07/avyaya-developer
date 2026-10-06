@@ -138,13 +138,13 @@ function NavbarInner() {
     </Link>
   );
 
-  const signupBtn = (extra = "", onClick) => (
+  const listPropertyBtn = (extra = "", onClick) => (
     <Link
       href="/signup"
       onClick={onClick}
-      className={`inline-flex items-center justify-center rounded-lg border border-[#0F1F3D] bg-[#0F1F3D] px-4 py-2 text-sm font-medium text-white transition hover:border-[#1A3260] hover:bg-[#1A3260] ${focusRing} ${extra}`}
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-[#0F1F3D] bg-[#0F1F3D] px-4 py-2 text-sm font-medium text-white transition hover:border-[#1A3260] hover:bg-[#1A3260] ${focusRing} ${extra}`}
     >
-      Sign Up
+      Free Property Listing
     </Link>
   );
 
@@ -192,7 +192,7 @@ function NavbarInner() {
           ) : (
             <>
               {loginBtn()}
-              {signupBtn()}
+              {listPropertyBtn()}
             </>
           )}
         </div>
@@ -272,7 +272,7 @@ function NavbarInner() {
                   ) : (
                     <>
                       {loginBtn("flex-1 py-3", () => setOpen(false))}
-                      {signupBtn("flex-1 py-3", () => setOpen(false))}
+                      {listPropertyBtn("flex-1 py-3", () => setOpen(false))}
                     </>
                   )}
                 </div>

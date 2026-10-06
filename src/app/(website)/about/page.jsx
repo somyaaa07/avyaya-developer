@@ -39,16 +39,16 @@ const marcellus = Marcellus({
    Gold #D4AF37 / #F5D77A / #D4A62A / #B8902F
 ---------------------------------------------------------------- */
 
-const SITE_URL = "https://www.bringorealestates.com";
+const SITE_URL = "https://www.avyayadeveloper.com";
 
 /* Change this if your site navbar height is different (sticky section menu sits below it) */
 const STICKY_TOP = "top-16 lg:top-20";
 
 const BUSINESS = {
-  name: "Bringo Real Estates",
+  name: "Avyaya Developer",
   phoneDisplay: "7004397655",
   phoneTel: "+917004397655",
-  email: "nfo@avyayadeveloper.com",
+  email: "info@avyayadeveloper.com",
   addressLines: [
     'Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4 Greater Noida,Uttar Pradesh - 201009'
   ],
@@ -63,39 +63,57 @@ const BUSINESS = {
 };
 
 const MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  "Bringo Real Estates, Kaveri City Center, Delta 1, Greater Noida"
+    "Office Number 1529, 15th Floor, Galaxy Diamond Plaza, Sector 4, Greater Noida, Uttar Pradesh - 201009",
 )}`;
 
 export const metadata = {
-  title: "About Avyaya Developer | Property Dealers in Greater Noida",
+  title: "About Avyaya Developers | Real Estate in Greater Noida",
+
   description:
-    "Bringo Real Estates helps families and investors buy, sell and invest in residential and commercial properties in Greater Noida. Transparent deals, verified projects and end-to-end support. Call +91 7004397655.",
+    "Avyaya Developers offers premium residential, commercial and property investment opportunities in Greater Noida. Explore thoughtfully planned properties with trusted guidance and long-term value.",
+
   keywords: [
-    "Bringo Real Estates",
+    "Avyaya Developers",
+    "Avyaya Developer",
+    "Avyaya Developers Greater Noida",
     "real estate Greater Noida",
-    "property dealers in Greater Noida",
-    "buy flat in Greater Noida",
+    "property developers in Greater Noida",
+    "real estate company Greater Noida",
+    "residential property Greater Noida",
     "commercial property Greater Noida",
-    "Kaveri City Center Delta 1",
-    "RERA approved properties",
+    "property investment Greater Noida",
+    "plots in Greater Noida",
+    "luxury homes Greater Noida",
   ],
-  alternates: { canonical: `${SITE_URL}/about` },
+
+  alternates: {
+    canonical: `${SITE_URL}/about`,
+  },
+
   openGraph: {
-    title: "About Bringo Real Estates | More Than Properties, We Build Futures",
+    title: "About Avyaya Developers | Building Spaces, Creating Futures",
+
     description:
-      "Trusted real estate consultants in Greater Noida for homes, plots and commercial spaces.",
+      "Discover Avyaya Developers — creating thoughtfully planned residential, commercial and investment opportunities in Greater Noida with a focus on quality, transparency and lasting value.",
+
     url: `${SITE_URL}/about`,
+
     siteName: BUSINESS.name,
-    images: [{ url: "/image/about.png", width: 1200, height: 630 }],
+
+    images: [
+      {
+        url: "/image/about.png",
+        width: 1200,
+        height: 630,
+        alt: "Avyaya Developers - Real Estate Greater Noida",
+      },
+    ],
+
     type: "website",
     locale: "en_IN",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "About Avyaya Developer",
-    description: "More than properties, we build futures.",
-    images: ["/image/about.png"],
-  },
+
+  
 };
 
 /* ---------------------------------------------------------------
@@ -167,14 +185,7 @@ const faqs = [
   },
 ];
 
-// const navLinks = [
-//   { href: "#story", label: "Our story" },
-//   { href: "#process", label: "How we work" },
-//   { href: "#why", label: "Why Bringo" },
-//   { href: "#vision", label: "Vision" },
-//   { href: "#faq", label: "FAQ" },
-//   { href: "#contact", label: "Contact" },
-// ];
+
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -190,7 +201,7 @@ const jsonLd = {
       address: BUSINESS.schemaAddress,
       areaServed: ["Greater Noida", "Noida", "Gautam Buddha Nagar"],
       description:
-        "Bringo Real Estates helps families, businesses and investors buy, sell and invest in residential and commercial properties in Greater Noida.",
+        "Avyaya Developer Real Estates helps families, businesses and investors buy, sell and invest in residential and commercial properties in Greater Noida.",
     },
     {
       "@type": "FAQPage",
@@ -291,7 +302,7 @@ export default function AboutPage() {
         <div className="mx-auto flex min-h-[88vh] max-w-7xl flex-col justify-end px-5 pb-10 pt-28 sm:px-8">
           <div className="grid items-end gap-10 lg:grid-cols-[1.4fr_1fr]">
             <div>
-              <Label light>About Bringo Real Estates</Label>
+              <Label light>About Avyaya Developer</Label>
               <h1
                 id="about-hero"
                 className="mt-5 max-w-3xl text-[2.9rem] leading-[1.03] sm:text-6xl lg:text-7xl"
@@ -462,7 +473,7 @@ export default function AboutPage() {
           </div>
 
           <div className="flex flex-col justify-center">
-            <Label>Why choose Bringo</Label>
+            <Label>Why choose Avyaya Developer</Label>
             <h2 id="why-title" className="mt-4 text-3xl leading-tight text-[#0f2645] sm:text-4xl">
               A better way to find your perfect space
             </h2>

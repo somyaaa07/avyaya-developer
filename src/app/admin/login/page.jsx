@@ -21,7 +21,7 @@ import {
 const marcellus = Marcellus({ subsets: ['latin'], weight: '400', display: 'swap' });
 
 const goldBg = 'bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D]';
-const EMAIL_KEY = 'bringo_admin_email';
+const EMAIL_KEY = 'Avyaya_admin_email';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const inputClass = (invalid) =>
