@@ -19,7 +19,7 @@ const marcellus = Marcellus({
   display: "swap",
 });
 
-const initialState = {
+const initialFormData = {
   name: "",
   phone: "",
   email: "",
@@ -27,20 +27,48 @@ const initialState = {
   message: "",
 };
 
-const fieldClass =
-  "w-full rounded-xl border border-[#0f2645]/15 bg-[#faf9f6] px-4 py-3 text-base text-[#0f2645] placeholder:text-[#0f2645]/45 transition-all duration-300 hover:border-[#e2a10d]/60 focus:border-[#e2a10d] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ffcd39]/20 disabled:opacity-60";
+const inputBase =
+  "w-full rounded-xl border bg-[#faf9f6] px-4 py-3 text-base text-[#0f2645] placeholder:text-[#0f2645]/45 transition-all duration-300 hover:border-[#e2a10d]/60 focus:bg-white focus:outline-none focus:ring-4 disabled:opacity-60";
+const okBorder =
+  "border-[#0f2645]/15 focus:border-[#e2a10d] focus:ring-[#ffcd39]/20";
+const badBorder = "border-red-300 focus:border-red-400 focus:ring-red-200/60";
 const labelClass =
   "mb-1.5 block text-[11px] font-medium uppercase tracking-[0.2em] text-[#0f2645]/70";
+
+function validate(data) {
+  const errors = {};
+  if (!data.name.trim()) errors.name = "Please enter your name.";
+  const digits = data.phone.replace(/\D/g, "");
+  if (!data.phone.trim()) errors.phone = "Please enter your phone number.";
+  else if (digits.length < 10) errors.phone = "Phone number looks too short.";
+  if (data.email.trim() && !/^\S+@\S+\.\S+$/.test(data.email.trim()))
+    errors.email = "Please enter a valid email address.";
+  return errors;
+}
+
+function FieldError({ id, message }) {
+  if (!message) return null;
+  return (
+    <p id={id} className="mt-1.5 flex items-center gap-1.5 text-xs text-red-600">
+      <AlertCircle size={13} aria-hidden="true" />
+      {message}
+    </p>
+  );
+}
 
 export default function EnquiryModal({ open, onClose }) {
   const reduce = useReducedMotion();
   const [mounted, setMounted] = useState(false);
-  const [form, setForm] = useState(initialState);
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
-  const [errorMsg, setErrorMsg] = useState("");
+  const [serverError, setServerError] = useState("");
+  const dialogRef = useRef(null);
   const firstFieldRef = useRef(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Lock body scroll, close on Escape, focus first field
   useEffect(() => {
@@ -57,45 +85,73 @@ export default function EnquiryModal({ open, onClose }) {
     };
   }, [open, onClose]);
 
-  // Reset when closed
+  // Reset state after the modal has closed
   useEffect(() => {
-    if (!open) {
-      const t = setTimeout(() => {
-        setStatus("idle");
-        setErrorMsg("");
-      }, 300);
-      return () => clearTimeout(t);
-    }
+    if (open) return;
+    const t = setTimeout(() => {
+      setStatus("idle");
+      setServerError("");
+      setErrors({});
+    }, 300);
+    return () => clearTimeout(t);
   }, [open]);
 
-  const handleChange = (e) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (status === "loading") return;
+
+    const found = validate(formData);
+    setErrors(found);
+    if (Object.keys(found).length) {
+      const firstBad = Object.keys(found)[0];
+      dialogRef.current?.querySelector(`[name="${firstBad}"]`)?.focus();
+      return;
+    }
+
     setStatus("loading");
-    setErrorMsg("");
+    setServerError("");
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          enquiryType: formData.enquiryType,
+          message: formData.message,
+        }),
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || data.error || "Something went wrong.");
-      }
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Something went wrong.");
+
       setStatus("success");
-      setForm(initialState);
-    } catch (err) {
-      setErrorMsg(err.message || "Unable to send. Please try again.");
+    } catch (error) {
+      console.error("Enquiry submission error:", error);
+      setServerError(
+        error.message || "Unable to submit enquiry. Please try again."
+      );
       setStatus("error");
     }
   };
 
-  const loading = status === "loading";
+  const handleDone = () => {
+    setFormData(initialFormData);
+    onClose();
+  };
 
   if (!mounted) return null;
+
+  const loading = status === "loading";
+  const firstName = formData.name.trim().split(" ")[0];
 
   return createPortal(
     <AnimatePresence>
@@ -120,6 +176,7 @@ export default function EnquiryModal({ open, onClose }) {
 
           {/* Panel */}
           <motion.div
+            ref={dialogRef}
             initial={reduce ? false : { opacity: 0, y: 32, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.97 }}
@@ -154,10 +211,7 @@ export default function EnquiryModal({ open, onClose }) {
               />
 
               <div className="relative flex h-full flex-col">
-                <span
-                  aria-hidden="true"
-                  className="mb-6 flex items-center gap-3"
-                >
+                <span aria-hidden="true" className="mb-6 flex items-center gap-3">
                   <span className="block h-px w-12 bg-[#D4AF37]" />
                   <span className="block h-1.5 w-1.5 rotate-45 bg-[#D4AF37]" />
                 </span>
@@ -199,28 +253,34 @@ export default function EnquiryModal({ open, onClose }) {
             <div className="min-w-0 p-6 sm:p-10">
               {status === "success" ? (
                 <div
+                  role="status"
                   aria-live="polite"
                   className="flex min-h-[420px] flex-col items-center justify-center text-center"
                 >
-                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#e2a10d] via-[#ffcd39] to-[#e2a10d] text-[#0f2645] ring-8 ring-[#D4AF37]/15">
+                  <motion.span
+                    initial={reduce ? false : { scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 220, damping: 16 }}
+                    className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#e2a10d] via-[#ffcd39] to-[#e2a10d] text-[#0f2645] ring-8 ring-[#D4AF37]/15"
+                  >
                     <CheckCircle2 size={28} aria-hidden="true" />
-                  </span>
+                  </motion.span>
                   <h3
                     id="enquiry-modal-title"
                     className={`${marcellus.className} mt-6 text-3xl text-[#0f2645]`}
                   >
-                    Enquiry received
+                    {firstName ? `Thank you, ${firstName}` : "Thank you"}
                   </h3>
                   <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-[#0f2645]/70">
-                    Thank you! Your enquiry has been sent. We’ll get back to you
-                    shortly.
+                    Your enquiry has been submitted. Our team will get in touch
+                    with you soon.
                   </p>
                   <button
                     type="button"
-                    onClick={onClose}
-                    className="mt-7 text-sm text-[#0f2645]/70 underline underline-offset-4 transition hover:text-[#0f2645]"
+                    onClick={handleDone}
+                    className="mt-7 inline-flex items-center rounded-full bg-[#0f2645] px-8 py-3 text-sm font-medium text-[#FAF9F6] ring-1 ring-[#D4AF37]/40 transition hover:bg-gradient-to-r hover:from-[#D4AF37] hover:via-[#F5D77A] hover:to-[#D4AF37] hover:text-[#0f2645] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
                   >
-                    Close
+                    Done
                   </button>
                 </div>
               ) : (
@@ -243,11 +303,13 @@ export default function EnquiryModal({ open, onClose }) {
                   >
                     Send us an enquiry
                   </h3>
-                  <p className="mt-2 text-sm text-[#0f2645]/70">
-                    Fields marked * are required.
-                  </p>
+                 
 
-                  <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+                  <form
+                    onSubmit={handleSubmit}
+                    noValidate
+                    className="mt-7 space-y-4"
+                  >
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
                         <label htmlFor="modal-name" className={labelClass}>
@@ -260,12 +322,15 @@ export default function EnquiryModal({ open, onClose }) {
                           type="text"
                           required
                           autoComplete="name"
-                          value={form.name}
+                          value={formData.name}
                           onChange={handleChange}
                           disabled={loading}
                           placeholder="Your full name"
-                          className={fieldClass}
+                          aria-invalid={!!errors.name}
+                          aria-describedby={errors.name ? "err-name" : undefined}
+                          className={`${inputBase} ${errors.name ? badBorder : okBorder}`}
                         />
+                        <FieldError id="err-name" message={errors.name} />
                       </div>
                       <div>
                         <label htmlFor="modal-phone" className={labelClass}>
@@ -278,14 +343,15 @@ export default function EnquiryModal({ open, onClose }) {
                           required
                           autoComplete="tel"
                           inputMode="tel"
-                          pattern="[0-9+\-\s]{10,15}"
-                          title="Enter a valid phone number"
-                          value={form.phone}
+                          value={formData.phone}
                           onChange={handleChange}
                           disabled={loading}
                           placeholder="+91 00000 00000"
-                          className={fieldClass}
+                          aria-invalid={!!errors.phone}
+                          aria-describedby={errors.phone ? "err-phone" : undefined}
+                          className={`${inputBase} ${errors.phone ? badBorder : okBorder}`}
                         />
+                        <FieldError id="err-phone" message={errors.phone} />
                       </div>
                     </div>
 
@@ -299,12 +365,15 @@ export default function EnquiryModal({ open, onClose }) {
                           name="email"
                           type="email"
                           autoComplete="email"
-                          value={form.email}
+                          value={formData.email}
                           onChange={handleChange}
                           disabled={loading}
                           placeholder="you@example.com"
-                          className={fieldClass}
+                          aria-invalid={!!errors.email}
+                          aria-describedby={errors.email ? "err-email" : undefined}
+                          className={`${inputBase} ${errors.email ? badBorder : okBorder}`}
                         />
+                        <FieldError id="err-email" message={errors.email} />
                       </div>
                       <div>
                         <label htmlFor="modal-type" className={labelClass}>
@@ -313,10 +382,10 @@ export default function EnquiryModal({ open, onClose }) {
                         <select
                           id="modal-type"
                           name="enquiryType"
-                          value={form.enquiryType}
+                          value={formData.enquiryType}
                           onChange={handleChange}
                           disabled={loading}
-                          className={fieldClass}
+                          className={`${inputBase} ${okBorder}`}
                         >
                           <option value="">Select type</option>
                           {enquiryTypes.map((t) => (
@@ -330,18 +399,17 @@ export default function EnquiryModal({ open, onClose }) {
 
                     <div>
                       <label htmlFor="modal-message" className={labelClass}>
-                        Message *
+                        Message
                       </label>
                       <textarea
                         id="modal-message"
                         name="message"
                         rows={4}
-                        required
-                        value={form.message}
+                        value={formData.message}
                         onChange={handleChange}
                         disabled={loading}
                         placeholder="Tell us about your requirements..."
-                        className={`${fieldClass} resize-y`}
+                        className={`${inputBase} ${okBorder} resize-y`}
                       />
                     </div>
 
@@ -359,7 +427,7 @@ export default function EnquiryModal({ open, onClose }) {
                         className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -translate-x-full -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:translate-x-[450%] group-hover:opacity-100"
                       />
                       <span className="relative z-10">
-                        {loading ? "Sending..." : "Send Enquiry"}
+                        {loading ? "Submitting…" : "Send Enquiry"}
                       </span>
                       <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#F5D77A] to-[#B8902F] text-[#0f2645] transition-all duration-500 group-hover:bg-none group-hover:bg-[#0f2645] group-hover:text-[#F5D77A]">
                         {loading ? (
@@ -389,7 +457,7 @@ export default function EnquiryModal({ open, onClose }) {
                             className="mt-0.5 shrink-0"
                             aria-hidden="true"
                           />
-                          {errorMsg}
+                          {serverError}
                         </p>
                       )}
                     </div>
@@ -401,6 +469,6 @@ export default function EnquiryModal({ open, onClose }) {
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body,
+    document.body
   );
 }
