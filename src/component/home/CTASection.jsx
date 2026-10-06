@@ -23,11 +23,11 @@ const serif = `${marcellus.className} font-normal`;
 
 const goldBg = "bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]";
 
-// TODO: replace with your real details
+
 const PHONE = "+91 7004397655";
 const PHONE_HREF = "tel:+917004397655";
 const WHATSAPP_URL = "https://wa.me/+917004397655";
-const HOURS = "Mon – Sat, 10 AM – 7 PM";
+const HOURS = " 9 AM – 8 PM";
 
 const contactLinks = [
   { icon: FiPhone, label: "Call us", value: PHONE, href: PHONE_HREF },
@@ -129,14 +129,7 @@ export default function CTACallback({ image = null }) {
             )}
 
             {/* concentric rings */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-40 -left-40 h-[420px] w-[420px] rounded-full border border-[#D4AF37]/15"
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-28 -left-28 h-[300px] w-[300px] rounded-full border border-[#D4AF37]/20"
-            />
+           
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -bottom-16 -left-16 h-[180px] w-[180px] rounded-full bg-[#e2a10d]/10 blur-2xl"

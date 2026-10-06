@@ -59,15 +59,16 @@ export default function ContactHero() {
         />
 
         {/* Overlays */}
-       <div className="absolute inset-0 hidden bg-gradient-to-r from-[#1a2a22] via-[#1a2a22]/75 to-transparent lg:block" />
+        {/* Mobile / tablet: top-to-bottom gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a2a22]/90 via-[#1a2a22]/75 to-[#1a2a22]/55 lg:hidden" />
+        {/* Desktop: left-to-right gradient (unchanged) */}
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-[#1a2a22] via-[#1a2a22]/75 to-transparent lg:block" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1a2a22]/60 via-transparent to-transparent" />
 
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-32 top-1/3 h-[380px] w-[380px] rounded-full bg-[#e2a10d]/10 blur-3xl"
         />
-
-        
 
         <div className="relative mx-auto flex min-h-[620px] max-w-7xl flex-col justify-center px-5 pb-36 pt-20 sm:px-8 lg:min-h-[720px] lg:pb-44 lg:pt-28">
           <motion.div
@@ -92,9 +93,9 @@ export default function ContactHero() {
             />
 
             <p className="mt-7 max-w-lg text-[15px] leading-relaxed text-[#FAF9F6]/75 sm:text-base">
-              Have a question, project idea, or need expert guidance? Our team is
-              here to help you with the right information and support. Reach out
-              and we’ll get back to you with the right guidance.
+              Have a question, project idea, or need expert guidance? Our team
+              is here to help you with the right information and support. Reach
+              out and we’ll get back to you with the right guidance.
             </p>
 
             <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
@@ -136,7 +137,9 @@ export default function ContactHero() {
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-sm text-[#0f2645]">Call Us Directly</p>
-              <p className="mt-0.5 truncate text-sm text-[#0f2645]/70">{PHONE}</p>
+              <p className="mt-0.5 truncate text-sm text-[#0f2645]/70">
+                {PHONE}
+              </p>
             </div>
             <a
               href={PHONE_HREF}

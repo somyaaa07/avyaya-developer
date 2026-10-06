@@ -131,9 +131,9 @@ export default function HomeHero() {
             >
               <span className={`h-px w-10 ${goldBg}`} aria-hidden="true" />
               <span
-                className={`text-xs font-semibold uppercase tracking-[0.28em] ${goldText}`}
+                className={`text-[8px] md:text-[10px] lg:text-[12px] font-semibold nowrap uppercase tracking-[0.22em] ${goldText}`}
               >
-                Trusted Avayay Developers  · Greater Noida
+                Trusted Avyaya Developers · Greater Noida
               </span>
             </motion.div>
 
@@ -144,9 +144,8 @@ export default function HomeHero() {
               custom={1}
               className={`${marcellus.className} mt-6 text-[clamp(2.4rem,5.5vw,4.5rem)] font-normal leading-[1.06] tracking-tight text-[#f3f0E8]`}
             >
-              Find a Place You’ll Be{" "}
-              <span className={` pr-1 ${goldText}`}>Proud</span> to Call
-              Home
+              Discover <span className={`pr-1 ${goldText}`}>Exceptional</span>{" "}
+              Spaces Designed for Better Living
             </motion.h1>
 
             <motion.p

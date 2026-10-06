@@ -4,7 +4,7 @@ export const EMAIL = "info@avyayadeveloper.com";
 export const WHATSAPP_URL = "https://wa.me/917004397655";
 
 export const heroImage = {
-  src: "/building1.png",
+  src: "/banner/contact-banner.png",
   alt: "Modern residential towers at dusk",
 };
 

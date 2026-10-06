@@ -46,7 +46,7 @@ function Logo() {
       <img
         src="/logo.png"
         alt="Estate"
-        className="h-25 w-auto object-contain sm:h-15"
+        className="h-15 w-auto object-contain sm:h-15"
       />
     </Link>
   );
@@ -142,7 +142,7 @@ function NavbarInner() {
     <Link
       href="/signup"
       onClick={onClick}
-      className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-[#0F1F3D] bg-[#0F1F3D] px-4 py-2 text-sm font-medium text-white transition hover:border-[#1A3260] hover:bg-[#1A3260] ${focusRing} ${extra}`}
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-[#e2220d] bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D] px-4 py-2 text-sm font-medium text-white transition hover:border-[#1A3260] hover:bg-[#1A3260] ${focusRing} ${extra}`}
     >
       Free Property Listing
     </Link>
