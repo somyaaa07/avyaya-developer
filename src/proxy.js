@@ -1,11 +1,13 @@
 import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
 
+const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/signup'];
+
 export async function proxy(req) {
   const { pathname } = req.nextUrl;
 
-  // Login page is public
-  if (pathname === '/admin/login') {
+  // Login and signup pages are public
+  if (PUBLIC_ADMIN_PATHS.includes(pathname)) {
     return NextResponse.next();
   }
 

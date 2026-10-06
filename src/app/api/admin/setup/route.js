@@ -16,6 +16,14 @@ export async function GET() {
 export async function POST(req) {
   await dbInit();
 
+  const admins = await User.count({ where: { role: 'admin' } });
+  if (admins > 0) {
+    return NextResponse.json(
+      { error: 'Setup already completed. Please log in.' },
+      { status: 403 }
+    );
+  }
+
   const { name, email, password } = await req.json();
 
   if (!name || !email || !password) {
@@ -30,13 +38,8 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
   }
 
-  // Pehla account (jab tak koi admin nahi hai) admin banega, baaki sab user.
-  // role request body se kabhi nahi liya jata.
-  const adminCount = await User.count({ where: { role: 'admin' } });
-  const role = adminCount === 0 ? 'admin' : 'user';
-
   const hashed = await bcrypt.hash(password, 12);
-  await User.create({ name, email, password: hashed, role });
+  await User.create({ name, email, password: hashed, role: 'admin' });
 
   return NextResponse.json({ message: 'Account Created!' });
 }

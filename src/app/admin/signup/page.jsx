@@ -140,15 +140,15 @@ export default function SignupPage() {
   const [checking, setChecking] = useState(true);
 
   // If an admin already exists, signup is closed — send to login
-  useEffect(() => {
-    fetch('/api/signup')
-      .then((r) => r.json())
-      .then((d) => {
-        if (!d.needsSetup) router.replace('/admin/login');
-        else setChecking(false);
-      })
-      .catch(() => setChecking(false));
-  }, [router]);
+useEffect(() => {
+  fetch('/api/signup')
+    .then((r) => r.json())
+    .then((d) => {
+      if (d.needsSetup === false) router.replace('/admin/login');
+      else setChecking(false);
+    })
+    .catch(() => setChecking(false));
+}, [router]);
 
   const getStrength = (val) => {
     let score = 0;
