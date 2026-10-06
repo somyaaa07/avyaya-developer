@@ -19,7 +19,13 @@ const marcellus = Marcellus({
   display: "swap",
 });
 
-const initialState = { name: "", phone: "", email: "", enquiryType: "", message: "" };
+const initialState = {
+  name: "",
+  phone: "",
+  email: "",
+  enquiryType: "",
+  message: "",
+};
 
 const fieldClass =
   "w-full rounded-xl border border-[#0f2645]/15 bg-[#faf9f6] px-4 py-3 text-base text-[#0f2645] placeholder:text-[#0f2645]/45 transition-all duration-300 hover:border-[#e2a10d]/60 focus:border-[#e2a10d] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ffcd39]/20 disabled:opacity-60";
@@ -131,7 +137,7 @@ export default function EnquiryModal({ open, onClose }) {
               type="button"
               onClick={onClose}
               aria-label="Close enquiry form"
-              className="absolute right-4 top-4 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-[#0f2645]/20 bg-[#faf9f6] text-[#0f2645] transition duration-300 hover:rotate-90 hover:border-transparent hover:bg-gradient-to-br hover:from-[#F5D77A] hover:to-[#B8902F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] lg:border-[#faf9f6]/0"
+              className="absolute right-4 top-4 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-[#0f2645]/20 bg-[#faf9f6] text-[#0f2645] transition duration-300 hover:rotate-90 hover:border-transparent hover:bg-gradient-to-br hover:from-[#F5D77A] hover:to-[#B8902F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
             >
               <X size={18} aria-hidden="true" />
             </button>
@@ -148,7 +154,10 @@ export default function EnquiryModal({ open, onClose }) {
               />
 
               <div className="relative flex h-full flex-col">
-                <span aria-hidden="true" className="mb-6 flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="mb-6 flex items-center gap-3"
+                >
                   <span className="block h-px w-12 bg-[#D4AF37]" />
                   <span className="block h-1.5 w-1.5 rotate-45 bg-[#D4AF37]" />
                 </span>
@@ -392,6 +401,6 @@ export default function EnquiryModal({ open, onClose }) {
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 }
