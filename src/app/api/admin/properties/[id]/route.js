@@ -2,12 +2,24 @@ import { NextResponse } from 'next/server';
 import dbInit, { Property, PropertyImage } from '@/lib/dbInit';
 import { requireAdmin } from '@/lib/auth';
 
-// Admin can manage any property; a user can manage only their own.
-function canManage(user, property) {
-  const isAdmin = user?.role?.toLowerCase() === 'admin';
-  const isOwner = String(property.user_id) === String(user?.id);
-  return isAdmin || isOwner;
-}
+const imagesInclude = [{ model: PropertyImage, as: 'images' }];
+const imagesOrder = [[{ model: PropertyImage, as: 'images' }, 'order', 'ASC']];
+
+// Empty string ko null banana hai (INT / ENUM columns me '' error deta hai)
+const NULLABLE_FIELDS = [
+  'area',
+  'bedrooms',
+  'bathrooms',
+  'balcony',
+  'total_floors',
+  'age_of_property',
+  'furnishing',
+  'transaction_type',
+  'parking',
+  'facing',
+  'construction_type',
+  'agent_id',
+];
 
 // GET — public
 export async function GET(req, { params }) {
@@ -15,57 +27,67 @@ export async function GET(req, { params }) {
   await dbInit();
 
   const property = await Property.findByPk(id, {
-    include: [{ model: PropertyImage, as: 'images' }],
-    order: [[{ model: PropertyImage, as: 'images' }, 'order', 'ASC']],
+    include: imagesInclude,
+    order: imagesOrder,
   });
 
   if (!property) {
-    return NextResponse.json({ error: 'Didnt find property' }, { status: 404 });
+    return NextResponse.json({ error: 'Property not found' }, { status: 404 });
   }
 
   return NextResponse.json(property);
 }
 
-// PUT — ADMIN or the property's OWNER
+// PUT — ADMIN only (requireAdmin already check karta hai)
 export async function PUT(req, { params }) {
-  const { error, user } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
-  const { id } = await params;
-  await dbInit();
+  try {
+    const { id } = await params;
+    await dbInit();
 
-  const existing = await Property.findByPk(id);
-  if (!existing) {
-    return NextResponse.json({ error: 'Didnt find property' }, { status: 404 });
-  }
+    const existing = await Property.findByPk(id);
+    if (!existing) {
+      return NextResponse.json({ error: 'Property not found' }, { status: 404 });
+    }
 
-  if (!canManage(user, existing)) {
+    const body = await req.json();
+
+    // Ye fields request body se kabhi update nahi hone chahiye
+    const { id: _id, user_id, created_at, updated_at, images, ...updates } = body;
+
+    // Empty string -> null
+    for (const key of NULLABLE_FIELDS) {
+      if (updates[key] === '') updates[key] = null;
+    }
+
+    if (updates.type) updates.type = String(updates.type).toLowerCase();
+    if (updates.property_type) {
+      updates.property_type = String(updates.property_type).toLowerCase();
+    }
+
+    await existing.update(updates);
+
+    const property = await Property.findByPk(id, {
+      include: imagesInclude,
+      order: imagesOrder,
+    });
+
+    return NextResponse.json(property);
+  } catch (err) {
+    console.error('Update error:', err);
+    const isValidation = err.name === 'SequelizeValidationError';
     return NextResponse.json(
-      { error: 'You can only edit your own properties.' },
-      { status: 403 }
+      { error: isValidation ? 'Invalid data' : 'Error in updating property' },
+      { status: isValidation ? 400 : 500 }
     );
   }
-
-  const body = await req.json();
-
-  // These fields must never be updated from the request body
-  const { id: _id, user_id, created_at, images, ...updates } = body;
-
-  if (updates.type) updates.type = String(updates.type).toLowerCase();
-
-  await Property.update(updates, { where: { id } });
-
-  const property = await Property.findByPk(id, {
-    include: [{ model: PropertyImage, as: 'images' }],
-    order: [[{ model: PropertyImage, as: 'images' }, 'order', 'ASC']],
-  });
-
-  return NextResponse.json(property);
 }
 
-// DELETE — ADMIN or the property's OWNER
+// DELETE — ADMIN only
 export async function DELETE(req, { params }) {
-  const { error, user } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return error;
 
   try {
@@ -74,20 +96,12 @@ export async function DELETE(req, { params }) {
 
     const property = await Property.findByPk(id);
     if (!property) {
-      return NextResponse.json(
-        { error: 'Didnt find property' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Property not found' }, { status: 404 });
     }
 
-    if (!canManage(user, property)) {
-      return NextResponse.json(
-        { error: 'You can only delete your own properties.' },
-        { status: 403 }
-      );
-    }
-
+    await PropertyImage.destroy({ where: { property_id: id } });
     await property.destroy();
+
     return NextResponse.json({ message: 'Property deleted' });
   } catch (err) {
     console.error('Delete error:', err);
