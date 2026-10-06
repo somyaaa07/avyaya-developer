@@ -57,31 +57,47 @@ export default function CTACallback({ image = null }) {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("loading");
-    setErrorMsg("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          email: "",
-          enquiryType: "General Enquiry",
-          message: "Callback request from website CTA",
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || data.error || "Something went wrong.");
-      }
-      setStatus("success");
-      setForm({ name: "", phone: "" });
-    } catch (err) {
-      setErrorMsg(err.message || "Unable to send. Please try again.");
-      setStatus("error");
+  e.preventDefault();
+
+  setStatus("loading");
+  setErrorMsg("");
+
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: form.name,
+        phone: form.phone,
+        email: "",
+        enquiryType: "Callback Request",
+        message: "Customer requested a callback from the website.",
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Something went wrong.");
     }
-  };
+
+    setStatus("success");
+    setForm({
+      name: "",
+      phone: "",
+    });
+  } catch (error) {
+    console.error("Callback request error:", error);
+
+    setErrorMsg(
+      error.message || "Unable to submit callback request. Please try again."
+    );
+
+    setStatus("error");
+  }
+};
 
   const loading = status === "loading";
 
