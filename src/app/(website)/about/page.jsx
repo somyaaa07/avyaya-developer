@@ -41,20 +41,18 @@ const SITE_URL = "https://www.bringorealestates.com";
 
 const BUSINESS = {
   name: "Bringo Real Estates",
-  phoneDisplay: "9999300301",
-  phoneTel: "+919999300301",
-  email: "bringo.realstates@gmail.com",
+  phoneDisplay: "7004397655",
+  phoneTel: "+917004397655",
+  email: "nfo@avyayadeveloper.com",
   addressLines: [
-    "FF01, FF02 Kaveri City Center, Delta 1,",
-    "Greater Noida, Gautam Buddha Nagar,",
-    "Uttar Pradesh 201306",
+    'Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4 Greater Noida,Uttar Pradesh - 201009'
   ],
   schemaAddress: {
     "@type": "PostalAddress",
-    streetAddress: "FF01, FF02 Kaveri City Center, Delta 1",
+    streetAddress: "Office Number 1529, 15th Floor Galaxy Diamond Plaza, Sector 4",
     addressLocality: "Greater Noida",
     addressRegion: "Uttar Pradesh",
-    postalCode: "201306",
+    postalCode: "201009",
     addressCountry: "IN",
   },
 };
@@ -63,7 +61,7 @@ const BUSINESS = {
    SEO
 ---------------------------------------------------------------- */
 export const metadata = {
-  title: "About Bringo Real Estates | Property Dealers in Greater Noida",
+  title: "About Avyaya Developer | Property Dealers in Greater Noida",
   description:
     "Bringo Real Estates helps families and investors buy, sell and invest in residential and commercial properties in Greater Noida. Transparent deals, verified projects and end-to-end support. Call 99993 00301.",
   keywords: [
@@ -88,7 +86,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Bringo Real Estates",
+    title: "About Avyaya Developer",
     description: "More than properties, we build futures.",
     images: ["/image/about.png"],
   },
