@@ -1,6 +1,5 @@
 import Navbar from '@/component/Navbar';
 import Footer from '@/component/Footer';
-import AutoEnquiryModal from '@/component/AutoEnquiryModal';
 
 export default function WebsiteLayout({ children }) {
   return (
@@ -8,7 +7,7 @@ export default function WebsiteLayout({ children }) {
       <Navbar />
       {children}
       <Footer />
-      <AutoEnquiryModal />
+     
     </>
   );
 }

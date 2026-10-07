@@ -206,6 +206,7 @@ export default function Footer() {
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#52685B]/50 py-6 text-center sm:flex-row sm:text-left">
           <p className="text-xs text-[#f3f0E8]/60 sm:text-sm">
             © {new Date().getFullYear()} Avyaya Developers. All rights reserved.
+            Developed by <a href="https://deboxtechnology.com">DEBOX TECHNOLOGY</a> 
           </p>
           <div className="flex items-center gap-5 text-xs sm:text-sm">
             

@@ -133,7 +133,7 @@ export default function HomeHero() {
               <span
                 className={`text-[8px] md:text-[10px] lg:text-[12px] font-semibold nowrap uppercase tracking-[0.22em] ${goldText}`}
               >
-                Trusted Avyaya Developers · Greater Noida
+                Trusted Avyaya Developers 
               </span>
             </motion.div>
 

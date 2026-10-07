@@ -23,10 +23,10 @@ const serif = `${marcellus.className} font-normal`;
 
 const goldBg = "bg-gradient-to-r from-[#e2a10d] via-[#ffcd39] to-[#e2a10d]";
 
-
 const PHONE = "+91 7004397655";
 const PHONE_HREF = "tel:+917004397655";
-const WHATSAPP_URL = "https://wa.me/+917004397655";
+const WHATSAPP_NUMBER = "917004397655"; // digits only, no "+"
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 const HOURS = " 9 AM – 8 PM";
 
 const contactLinks = [
@@ -57,47 +57,66 @@ export default function CTACallback({ image = null }) {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  setStatus("loading");
-  setErrorMsg("");
+    setStatus("loading");
+    setErrorMsg("");
 
-  try {
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: form.name,
-        phone: form.phone,
-        email: "",
-        enquiryType: "Callback Request",
-        message: "Customer requested a callback from the website.",
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "Something went wrong.");
-    }
-
-    setStatus("success");
-    setForm({
-      name: "",
-      phone: "",
-    });
-  } catch (error) {
-    console.error("Callback request error:", error);
-
-    setErrorMsg(
-      error.message || "Unable to submit callback request. Please try again."
+    // Pre-filled WhatsApp message
+    const waText = encodeURIComponent(
+      `*Callback Request*\nName: ${form.name}\nPhone: ${form.phone}`
     );
 
-    setStatus("error");
-  }
-};
+    // Open the tab synchronously (inside the click handler) so popup
+    // blockers don't stop it. We set its URL after the API call succeeds.
+    const waWindow = window.open("", "_blank");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: "",
+          enquiryType: "Callback Request",
+          message: "Customer requested a callback from the website.",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong.");
+      }
+
+      // Email sent -> send the enquiry to WhatsApp as well
+      if (waWindow) {
+        waWindow.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
+      } else {
+        // Popup was blocked: fall back to navigating in the same tab
+        window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
+      }
+
+      setStatus("success");
+      setForm({
+        name: "",
+        phone: "",
+      });
+    } catch (error) {
+      console.error("Callback request error:", error);
+
+      if (waWindow) waWindow.close();
+
+      setErrorMsg(
+        error.message || "Unable to submit callback request. Please try again."
+      );
+
+      setStatus("error");
+    }
+  };
 
   const loading = status === "loading";
 
@@ -129,7 +148,7 @@ export default function CTACallback({ image = null }) {
             )}
 
             {/* concentric rings */}
-           
+
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -bottom-16 -left-16 h-[180px] w-[180px] rounded-full bg-[#e2a10d]/10 blur-2xl"
