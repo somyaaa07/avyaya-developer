@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['sequelize', 'mysql2'],
- images: {
+images: {
   remotePatterns: [
     {
       protocol: "https",
-      hostname: "example.com",
+      hostname: "avyayadeveloper.com",
+    },
+    {
+      protocol: "http",
+      hostname: "localhost",
     },
   ],
 },
