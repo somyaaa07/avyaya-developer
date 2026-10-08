@@ -172,7 +172,7 @@ function NavbarInner() {
       </span>
 
       <span className="relative">
-        <span className="sm:hidden">List</span>
+        <span className="sm:hidden">List Property</span>
         <span className="hidden sm:inline">List Property</span>
       </span>
 

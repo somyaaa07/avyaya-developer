@@ -1,5 +1,5 @@
 
-const SITE_URL = "https://yourdomain.com";
+const SITE_URL = "https://www.avyayadeveloper.com";
 
 export default function sitemap() {
   const lastModified = new Date();
