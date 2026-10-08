@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Marcellus, Jost } from "next/font/google";
-import { FiMenu, FiX, FiLogOut } from "react-icons/fi";
+import { FiMenu, FiX, FiLogOut, FiPlus } from "react-icons/fi";
 
 const marcellus = Marcellus({
   subsets: ["latin"],
@@ -23,6 +23,7 @@ const jost = Jost({
   cream : #F3F0E8  (header + mobile menu surface)
   navy  : #0F1F3D  (text, borders, primary buttons)
   navy+ : #1A3260  (primary button hover)
+  gold  : #E2A10D / #FFCD39 (List Property CTA)
 */
 
 const links = [
@@ -31,8 +32,7 @@ const links = [
   { label: "Buy", href: "/properties?type=buy" },
   { label: "Sell", href: "/properties?type=sell" },
   { label: "Rent", href: "/properties?type=rent" },
-    { label: "About", href: "/about" },
-
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -62,7 +62,7 @@ function NavbarInner() {
   const [scrolled, setScrolled] = useState(false);
 
   const isAdmin = session?.user?.role?.toLowerCase() === "admin";
-  const allLinks = isAdmin ? [...links] : links;
+  const allLinks = links;
   const firstName = session?.user?.name?.split(" ")[0];
   const initial = session?.user?.name?.charAt(0).toUpperCase();
 
@@ -139,13 +139,57 @@ function NavbarInner() {
     </Link>
   );
 
-  const listPropertyBtn = (extra = "", onClick) => (
+  /* ---------- Unique "List Property" CTA with popping FREE badge ---------- */
+  const listPropertyBtn = (extra = "") => (
     <Link
       href="/signup"
-      onClick={onClick}
-      className={`inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-[#e2220d] bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D] px-4 py-2 text-sm font-medium text-white transition hover:border-[#1A3260] hover:bg-[#1A3260] ${focusRing} ${extra}`}
+      aria-label="List your property for free"
+      className={`group relative inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-[#0F1F3D]/20 bg-gradient-to-r from-[#E2A10D] via-[#FFCD39] to-[#E2A10D] px-3 py-2 text-[13px] font-semibold text-[#0F1F3D] shadow-[0_6px_16px_-6px_rgba(226,161,13,0.8)] transition duration-300 hover:-translate-y-0.5 hover:border-[#0F1F3D] hover:shadow-[0_10px_22px_-8px_rgba(15,31,61,0.55)] sm:px-4 sm:text-sm ${focusRing} ${extra}`}
     >
-      Free Property Listing
+      {/* shimmer sweep */}
+      <span
+        className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg"
+        aria-hidden="true"
+      >
+        <motion.span
+          className="absolute inset-y-0 w-1/3 -skew-x-12 bg-white/50 blur-[2px]"
+          initial={{ x: "-150%" }}
+          animate={{ x: "400%" }}
+          transition={{
+            duration: 1.4,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatDelay: 2.2,
+          }}
+        />
+      </span>
+
+      <span
+        className="relative flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0F1F3D] text-[#FFCD39] transition-transform duration-300 group-hover:rotate-90"
+        aria-hidden="true"
+      >
+        <FiPlus size={13} strokeWidth={3} />
+      </span>
+
+      <span className="relative">
+        <span className="sm:hidden">List</span>
+        <span className="hidden sm:inline">List Property</span>
+      </span>
+
+      {/* FREE popup badge */}
+      <span
+        className="pointer-events-none absolute -right-2 -top-2.5"
+        aria-hidden="true"
+      >
+        <span className="absolute inset-0 animate-ping rounded-full bg-[#FFCD39] opacity-60" />
+        <motion.span
+          className="relative block rounded-full bg-[#0F1F3D] px-1.5 py-[2px] text-[9px] font-bold uppercase leading-none tracking-wider text-[#FFCD39] shadow-md"
+          animate={{ scale: [1, 1.18, 1], rotate: [-8, -4, -8] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          Free
+        </motion.span>
+      </span>
     </Link>
   );
 
@@ -198,21 +242,25 @@ function NavbarInner() {
           )}
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          aria-label={open ? "Close menu" : "Open menu"}
-          className={`flex h-11 w-11 items-center justify-center rounded-lg border border-[#0F1F3D]/25 text-[#0F1F3D] transition hover:bg-[#0F1F3D]/5 lg:hidden ${focusRing}`}
-        >
-          {open ? (
-            <FiX size={22} aria-hidden="true" />
-          ) : (
-            <FiMenu size={22} aria-hidden="true" />
-          )}
-        </button>
+        {/* Mobile + Tablet: List Property button beside menu toggle */}
+        <div className="flex items-center gap-3 lg:hidden">
+          {!session && listPropertyBtn()}
+
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            className={`flex h-11 w-11 items-center justify-center rounded-lg border border-[#0F1F3D]/25 text-[#0F1F3D] transition hover:bg-[#0F1F3D]/5 ${focusRing}`}
+          >
+            {open ? (
+              <FiX size={22} aria-hidden="true" />
+            ) : (
+              <FiMenu size={22} aria-hidden="true" />
+            )}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
@@ -271,10 +319,7 @@ function NavbarInner() {
                       {logoutBtn("flex-1 py-3")}
                     </>
                   ) : (
-                    <>
-                      {loginBtn("flex-1 py-3", () => setOpen(false))}
-                      {listPropertyBtn("flex-1 py-3", () => setOpen(false))}
-                    </>
+                    loginBtn("flex-1 py-3", () => setOpen(false))
                   )}
                 </div>
               </div>

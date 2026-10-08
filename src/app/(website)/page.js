@@ -7,9 +7,9 @@ import HowWeHelp from "@/component/home/HowWeHelp";
 import AboutSection from "@/component/home/AboutSection";
 
 export const metadata = {
-  title: "avyaya developer| Premium Properties in Greater Noida",
+  title: "Avyaya developer| Premium Properties in Greater Noida",
   description:
-    "avyaya developer helps you discover premium residential and commercial properties in Greater Noida. Visit us at FF01, FF02 Kaveri City Center, Delta 1, Greater Noida, Gautam Buddha Nagar, UP 201306.",
+    "Avyaya developer helps you discover premium residential and commercial properties in Greater Noida. Visit us at FF01, FF02 Kaveri City Center, Delta 1, Greater Noida, Gautam Buddha Nagar, UP 201306.",
   keywords: [
     "avyaya developer Real Estates",
     "real estate Greater Noida",
