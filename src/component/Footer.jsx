@@ -21,9 +21,10 @@ const goldStroke = { stroke: "url(#footer-gold)" };
 
 const quickLinks = [
   { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
   { label: "Properties", href: "/properties" },
-  { label: "Contact", href: "/contact" },
+    { label: "About Us", href: "/about" },
+
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const services = [
@@ -119,7 +120,7 @@ export default function Footer() {
 >
   <img
     src="/logo1.png"
-    alt="Avyaya Developers"
+    alt="avyaya developer"
     className="h-20 w-auto object-contain"
   />
 </Link>
@@ -203,10 +204,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#52685B]/50 py-6 text-center sm:flex-row sm:text-left">
+        <div className="mt-12 flex flex-col items-center justify-center gap-4 border-t border-[#52685B]/50 py-6 text-center sm:text-left">
           <p className="text-xs text-[#f3f0E8]/60 sm:text-sm">
-            © {new Date().getFullYear()} Avyaya Developers. All rights reserved.
-            Developed by <a href="https://deboxtechnology.com">DEBOX TECHNOLOGY</a> 
+            © {new Date().getFullYear()} avyaya developer. All rights reserved. <br/>
+            <span className="block text-center">Developed by <a href="https://deboxtechnology.com">DEBOX TECHNOLOGY</a> 
+</span>
           </p>
           <div className="flex items-center gap-5 text-xs sm:text-sm">
             

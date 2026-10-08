@@ -27,11 +27,12 @@ const jost = Jost({
 
 const links = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
   { label: "All Properties", href: "/properties" },
   { label: "Buy", href: "/properties?type=buy" },
   { label: "Sell", href: "/properties?type=sell" },
   { label: "Rent", href: "/properties?type=rent" },
+    { label: "About", href: "/about" },
+
   { label: "Contact", href: "/contact" },
 ];
 

@@ -24,4 +24,20 @@ export const testimonials = [
       "Finding the right commercial property can be challenging, but the team made the process simple. They understood our requirements and helped us find a property that matched our business needs and budget.",
     rating: 5,
   },
+  {
+    id: 4,
+    name: "Priya Sharma",
+    role: "Home Buyer, Ghaziabad",
+    quote:
+      "What stood out was the team's professionalism and honest approach. They explained every detail clearly, answered all our questions, and helped us choose a home that perfectly suited our family's needs.",
+    rating: 5,
+  },
+    {
+    id: 5,
+    name: "Vikram Singh",
+    role: "Property Investor, Noida",
+    quote:
+      "The team provided excellent support from the initial property search to the final decision. Their knowledge of the local market and straightforward guidance gave me confidence in my investment.",
+    rating: 5,
+  },
 ];

@@ -185,7 +185,7 @@ export default function LoginPage() {
         </Link>
 
         <div className="relative">
-          <h2 className="mt-3 text-5xl leading-[1.1] xl:text-6xl">Avyaya Developers</h2>
+          <h2 className="mt-3 text-5xl leading-[1.1] xl:text-6xl">avyaya developer</h2>
           <span aria-hidden="true" className={`mt-6 block h-[3px] w-16 rounded-full ${goldBg}`} />
           <p className="mt-6 max-w-sm font-sans text-base leading-relaxed text-[#FAF9F6]/70">
             Manage properties and inquiries from one place.

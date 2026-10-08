@@ -103,7 +103,7 @@ export default function AboutSection() {
             />
 
             <p className="mt-7 max-w-xl text-base leading-[1.8] text-[#52685B]">
-              At Avyaya Developers, we create and present thoughtfully planned residential, commercial, and investment opportunities in promising locations. With a focus on quality, transparency, and long-term value, we help our customers make confident property decisions and build a better future.
+              At avyaya developer, we create and present thoughtfully planned residential, commercial, and investment opportunities in promising locations. With a focus on quality, transparency, and long-term value, we help our customers make confident property decisions and build a better future.
             </p>
 
             {/* points: 2 x 2 grid */}

@@ -8,6 +8,7 @@ import {
   FiHome,
   FiSearch,
   FiTag,
+    FiClock,
 } from "react-icons/fi";
 
 const marcellus = Marcellus({
@@ -34,6 +35,12 @@ const budgets = [
   "₹50 Lac – ₹1 Cr",
   "₹1 Cr – ₹2 Cr",
   "Above ₹2 Cr",
+];
+const timings = [
+  "Anytime",
+  "Morning",
+  "Afternoon",
+  "Evening",
 ];
 
 const fadeUp = {
@@ -129,11 +136,10 @@ export default function HomeHero() {
               custom={0}
               className="flex items-center gap-3"
             >
-              <span className={`h-px w-10 ${goldBg}`} aria-hidden="true" />
               <span
-                className={`text-[8px] md:text-[10px] lg:text-[12px] font-semibold nowrap uppercase tracking-[0.22em] ${goldText}`}
+                className={`text-[9px] md:text-[10px] lg:text-[12px] font-bold nowrap uppercase tracking-[0.22em] ${goldText}`}
               >
-                Trusted Avyaya Developers 
+                Trusted avyaya developer 
               </span>
             </motion.div>
 
@@ -219,7 +225,7 @@ export default function HomeHero() {
         method="GET"
         role="search"
         aria-label="Search properties"
-        className="relative z-20 mx-4 -mt-24 grid max-w-6xl gap-4 overflow-hidden rounded-2xl border border-[#1a2a22]/10 bg-[#f3f0E8] p-5 shadow-[0_25px_60px_-25px_rgba(26,42,34,0.5)] sm:mx-6 sm:grid-cols-2 sm:p-6 lg:mx-auto lg:-mt-20 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end"
+        className="relative z-20 mx-4 -mt-24 grid max-w-6xl gap-4 overflow-hidden rounded-2xl border border-[#1a2a22]/10 bg-[#f3f0E8] p-5 shadow-[0_25px_60px_-25px_rgba(26,42,34,0.5)] sm:mx-6 sm:grid-cols-2 sm:p-6 lg:mx-auto lg:-mt-20 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] lg:items-end"
       >
         {/* Gold gradient top accent */}
         <span
@@ -286,6 +292,25 @@ export default function HomeHero() {
             ))}
           </select>
         </div>
+        <div className="relative">
+  <label htmlFor="hero-timing" className={labelClass}>
+    Timing
+  </label>
+    <FiClock className={iconClass} aria-hidden="true" />
+      <select
+    id="hero-timing"
+    name="timing"
+    defaultValue="Anytime"
+    className={fieldClass}
+  >
+    {timings.map((time) => (
+      <option key={time} value={time}>
+        {time}
+      </option>
+    ))}
+  </select>
+  </div>
+        
 
         <button
           type="submit"

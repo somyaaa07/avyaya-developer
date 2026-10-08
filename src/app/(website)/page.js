@@ -7,11 +7,11 @@ import HowWeHelp from "@/component/home/HowWeHelp";
 import AboutSection from "@/component/home/AboutSection";
 
 export const metadata = {
-  title: "Avyaya Developers| Premium Properties in Greater Noida",
+  title: "avyaya developer| Premium Properties in Greater Noida",
   description:
-    "Avyaya Developers helps you discover premium residential and commercial properties in Greater Noida. Visit us at FF01, FF02 Kaveri City Center, Delta 1, Greater Noida, Gautam Buddha Nagar, UP 201306.",
+    "avyaya developer helps you discover premium residential and commercial properties in Greater Noida. Visit us at FF01, FF02 Kaveri City Center, Delta 1, Greater Noida, Gautam Buddha Nagar, UP 201306.",
   keywords: [
-    "Avyaya Developers Real Estates",
+    "avyaya developer Real Estates",
     "real estate Greater Noida",
     "properties in Greater Noida",
     "property dealer Greater Noida",
@@ -19,17 +19,17 @@ export const metadata = {
     "commercial property Greater Noida",
     
   ],
-  authors: [{ name: "Avyaya Developers" }],
-  creator: "Avyaya Developers",
-  publisher: "Avyaya Developers",
+  authors: [{ name: "avyaya developer" }],
+  creator: "avyaya developer",
+  publisher: "avyaya developer",
 
   openGraph: {
-    title: "Avyaya Developers Real Estates | Premium Properties in Greater Noida",
+    title: "avyaya developer Real Estates | Premium Properties in Greater Noida",
     description:
-      "Explore residential and commercial properties with Avyaya Developers in Greater Noida.",
+      "Explore residential and commercial properties with avyaya developer in Greater Noida.",
     type: "website",
     locale: "en_IN",
-    siteName: "Avyaya Developers",
+    siteName: "avyaya developer",
   },
 
   robots: {

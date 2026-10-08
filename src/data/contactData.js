@@ -59,7 +59,7 @@ export const workingHours = " 9 AM – 8 PM";
 
 // data/contactData.js — replace only the mapData export
 export const mapData = {
-  name: "Avyaya Developers",
+  name: "avyaya developer",
   address:
     "Office Number 1529, 15th Floor, Galaxy Diamond Plaza, Sector 4, Greater Noida, Uttar Pradesh - 201009",
   src: "https://www.google.com/maps?q=Office+Number+1529,+15th+Floor,+Galaxy+Diamond+Plaza,+Sector+4,+Greater+Noida,+Uttar+Pradesh+201009&output=embed",

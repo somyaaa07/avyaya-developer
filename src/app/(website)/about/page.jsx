@@ -67,15 +67,15 @@ const MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
 )}`;
 
 export const metadata = {
-  title: "About Avyaya Developers | Real Estate in Greater Noida",
+  title: "About avyaya developer | Real Estate in Greater Noida",
 
   description:
-    "Avyaya Developers offers premium residential, commercial and property investment opportunities in Greater Noida. Explore thoughtfully planned properties with trusted guidance and long-term value.",
+    "avyaya developer offers premium residential, commercial and property investment opportunities in Greater Noida. Explore thoughtfully planned properties with trusted guidance and long-term value.",
 
   keywords: [
-    "Avyaya Developers",
+    "avyaya developer",
     "Avyaya Developer",
-    "Avyaya Developers Greater Noida",
+    "avyaya developer Greater Noida",
     "real estate Greater Noida",
     "property developers in Greater Noida",
     "real estate company Greater Noida",
@@ -91,10 +91,10 @@ export const metadata = {
   },
 
   openGraph: {
-    title: "About Avyaya Developers | Building Spaces, Creating Futures",
+    title: "About avyaya developer | Building Spaces, Creating Futures",
 
     description:
-      "Discover Avyaya Developers — creating thoughtfully planned residential, commercial and investment opportunities in Greater Noida with a focus on quality, transparency and lasting value.",
+      "Discover avyaya developer — creating thoughtfully planned residential, commercial and investment opportunities in Greater Noida with a focus on quality, transparency and lasting value.",
 
     url: `${SITE_URL}/about`,
 
@@ -105,7 +105,7 @@ export const metadata = {
         url: "/image/about.png",
         width: 1200,
         height: 630,
-        alt: "Avyaya Developers - Real Estate Greater Noida",
+        alt: "avyaya developer - Real Estate Greater Noida",
       },
     ],
 

@@ -62,7 +62,7 @@ function SidebarContent({ pathname, user, onNavigate }) {
           onClick={onNavigate}
           className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4AF37]"
         >
-          <h2 className={`${marcellus.className} text-2xl leading-tight`}>Avyaya Developers</h2>
+          <h2 className={`${marcellus.className} text-2xl leading-tight`}>avyaya developer</h2>
           <p className="mt-1 text-sm text-[#F5D77A]">Admin panel</p>
         </Link>
       </div>
